@@ -1,14 +1,9 @@
 group = "net.endercube"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-}
+    implementation(project(":Common"))
 
-tasks.test {
-    useJUnitPlatform()
+    // Polar
+    implementation("dev.hollowcube:polar:1.3.1")
 }

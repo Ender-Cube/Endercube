@@ -8,7 +8,14 @@ plugins {
 group = "net.endercube"
 version = "1.0-SNAPSHOT"
 
+dependencies {
+    implementation(project(":Common"))
+    implementation(project(":Parkour"))
+    implementation(project(":Hub"))
 
+    // Logger
+    implementation("ch.qos.logback:logback-classic:1.4.7")
+}
 
 // Global stuff
 allprojects {
@@ -17,6 +24,11 @@ allprojects {
     repositories {
         mavenCentral()
         maven("https://jitpack.io")
+
+        // Adventure dev builds
+        maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+            name = "sonatype-oss-snapshots"
+        }
     }
 
     dependencies {
@@ -27,7 +39,9 @@ allprojects {
         implementation("org.spongepowered:configurate-hocon:4.1.2")
 
         // Kyori stuff (Adventure)
+        implementation("net.kyori:adventure-text-serializer-plain:4.13.1")
         implementation("net.kyori:adventure-text-minimessage:4.13.1")
+        implementation("net.kyori:adventure-text-serializer-ansi:4.14.0-SNAPSHOT")
     }
 }
 
