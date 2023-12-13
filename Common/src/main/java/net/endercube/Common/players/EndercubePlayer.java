@@ -1,9 +1,13 @@
 package net.endercube.Common.players;
 
+import net.endercube.Common.events.MinigamePlayerJoinEvent;
+import net.endercube.Common.events.MinigamePlayerLeaveEvent;
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.network.player.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class EndercubePlayer extends Player {
@@ -21,9 +25,20 @@ public class EndercubePlayer extends Player {
     }
 
     /**
+     * Sets the player's current minigame
+     */
+    public void setCurrentMinigame(String minigame) {
+        // TODO: implement
+    }
+
+    /**
      * Teleport the player to the hub
      */
     public void gotoHub() {
-        // TODO: implement
+        if (Objects.equals(this.getCurrentMinigame(), "hub")) {
+            this.sendMessage("You are already in the hub! Going to the hub failed");
+        }
+        MinecraftServer.getGlobalEventHandler().call(new MinigamePlayerLeaveEvent(this.getCurrentMinigame(), this));
+        MinecraftServer.getGlobalEventHandler().call(new MinigamePlayerJoinEvent("hub", this));
     }
 }

@@ -35,12 +35,13 @@ import java.util.function.Consumer;
  */
 public class EndercubeServer {
 
-    private Collection<EndercubeMinigame> minigames;
+    private ArrayList<EndercubeMinigame> minigames = new ArrayList<>();
     private final EventNode<Event> globalEvents;
-
-    private static final Logger logger;
     private CommentedConfigurationNode globalConfig;
     private ConfigUtils globalConfigUtils;
+
+    private static final Logger logger;
+
 
     // Initializes the logger, only on the first initialization of this class
     static {
@@ -48,101 +49,23 @@ public class EndercubeServer {
     }
 
     private EndercubeServer(EndercubeServerBuilder builder) {
-        this.minigames = builder.minigames;
         this.globalEvents = builder.globalEvents;
+        this.globalConfig = builder.globalConfig;
+        this.globalConfigUtils = builder.globalConfigUtils;
     }
 
     /**
-     * Creates and loads the global config
+     * Add a minigame to the server
+     * @param minigame The minigame to add
+     * @return The builder
      */
-    private void initGlobalConfig() {
-        String fileName = "globalConfig.conf";
-
-        // Create config directories
-        if (!Files.exists(Paths.get("./config/worlds/"))) {
-            logger.info("Creating configuration files");
-
-            try {
-                Files.createDirectories(Paths.get("./config/worlds/"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
-                .path(Paths.get("./config/globalConfig.conf"))
-                .build();
-
-        try {
-            globalConfig = loader.load();
-        } catch (ConfigurateException e) {
-            logger.error("An error occurred while loading " + fileName + ": " + e.getMessage());
-            logger.error(Arrays.toString(e.getStackTrace()));
-            MinecraftServer.stopCleanly();
-        }
-
-        globalConfigUtils = new ConfigUtils(loader, globalConfig);
+    public EndercubeServer addMinigame(EndercubeMinigame minigame) {
+        minigames.add(minigame);
+        minigame.registerEventNode();
+        return this;
     }
 
-    /**
-     * Start Minestom and the like
-     */
-    public void startServer() {
-        this.initGlobalConfig();
 
-        // Server Initialization
-        MinecraftServer minecraftServer = MinecraftServer.init();
-
-        // Add global events
-        MinecraftServer.getGlobalEventHandler().addChild(globalEvents);
-
-        // Register block handlers
-        MinecraftServer.getBlockManager().registerHandler(NamespaceID.from("minecraft:sign"), Sign::new);
-        MinecraftServer.getBlockManager().registerHandler(NamespaceID.from("minecraft:skull"), Skull::new);
-        logger.debug("Set block handlers");
-
-        // Set encryption
-        EncryptionMode encryptionMode;
-        try {
-            encryptionMode = EncryptionMode.valueOf(globalConfigUtils.getOrSetDefault(globalConfig.node("connection", "mode"), "online").toUpperCase());
-        } catch (IllegalArgumentException e) {
-            logger.warn("Cannot read encryption mode from config, falling back to ONLINE");
-            encryptionMode = EncryptionMode.ONLINE;
-        }
-        initEncryption(encryptionMode, globalConfigUtils.getOrSetDefault(globalConfig.node("connection", "velocitySecret"), ""));
-
-        // Start server
-        int port = Integer.parseInt(globalConfigUtils.getOrSetDefault(globalConfig.node("connection", "port"), "25565"));
-        minecraftServer.start("0.0.0.0", port);
-
-        // Set player provider
-        MinecraftServer.getConnectionManager().setPlayerProvider(EndercubePlayer::new);
-        logger.debug("Set player provider");
-
-        // Register the void
-        // Register minecraft:the_void
-        MinecraftServer.getBiomeManager().addBiome(Biome
-                .builder()
-                .name(NamespaceID.from("minecraft:the_void"))
-                .build()
-        );
-    }
-
-    enum EncryptionMode {
-        ONLINE,
-        VELOCITY
-    }
-
-    private void initEncryption(EncryptionMode mode, String velocitySecret) {
-        switch (mode) {
-            case ONLINE -> MojangAuth.init();
-            case VELOCITY -> {
-                if (!Objects.equals(velocitySecret, "")) {
-                    VelocityProxy.enable(velocitySecret);
-                }
-            }
-        }
-    }
 
     public @NotNull CommentedConfigurationNode getGlobalConfig() {
         return globalConfig;
@@ -160,23 +83,14 @@ public class EndercubeServer {
      * A builder for EndercubeServer
      */
     public static class EndercubeServerBuilder {
-
-        private ArrayList<EndercubeMinigame> minigames = new ArrayList<>();
         private final EventNode<Event> globalEvents;
+        private CommentedConfigurationNode globalConfig;
+        private ConfigUtils globalConfigUtils;
 
         public EndercubeServerBuilder() {
             globalEvents = EventNode.all("globalListeners");
         }
 
-        /**
-         * Add a minigame to the server
-         * @param minigame The minigame to add
-         * @return The builder
-         */
-        public EndercubeServerBuilder addMinigame(EndercubeMinigame minigame) {
-            minigames.add(minigame);
-            return this;
-        }
 
         /**
          * Add a global event, will be called regardless of minigame
@@ -199,8 +113,102 @@ public class EndercubeServer {
             return this;
         }
 
+        /**
+         * Creates and loads the global config
+         */
+        private void initGlobalConfig() {
+            String fileName = "globalConfig.conf";
 
-        public EndercubeServer build() {
+            // Create config directories
+            if (!Files.exists(Paths.get("./config/worlds/"))) {
+                logger.info("Creating configuration files");
+
+                try {
+                    Files.createDirectories(Paths.get("./config/worlds/"));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
+                    .path(Paths.get("./config/globalConfig.conf"))
+                    .build();
+
+            try {
+                globalConfig = loader.load();
+            } catch (ConfigurateException e) {
+                logger.error("An error occurred while loading " + fileName + ": " + e.getMessage());
+                logger.error(Arrays.toString(e.getStackTrace()));
+                MinecraftServer.stopCleanly();
+            }
+
+            globalConfigUtils = new ConfigUtils(loader, globalConfig);
+        }
+
+        /**
+         * Start Minestom and the like
+         */
+        public void createServer() {
+            this.initGlobalConfig();
+
+            // Server Initialization
+            MinecraftServer minecraftServer = MinecraftServer.init();
+
+            // Add global events
+            MinecraftServer.getGlobalEventHandler().addChild(globalEvents);
+
+            // Register block handlers
+            MinecraftServer.getBlockManager().registerHandler(NamespaceID.from("minecraft:sign"), Sign::new);
+            MinecraftServer.getBlockManager().registerHandler(NamespaceID.from("minecraft:skull"), Skull::new);
+            logger.debug("Set block handlers");
+
+            // Set encryption
+            EncryptionMode encryptionMode;
+            try {
+                encryptionMode = EncryptionMode.valueOf(globalConfigUtils.getOrSetDefault(globalConfig.node("connection", "mode"), "online").toUpperCase());
+            } catch (IllegalArgumentException e) {
+                logger.warn("Cannot read encryption mode from config, falling back to ONLINE");
+                encryptionMode = EncryptionMode.ONLINE;
+            }
+            initEncryption(encryptionMode, globalConfigUtils.getOrSetDefault(globalConfig.node("connection", "velocitySecret"), ""));
+
+            // Start server
+            int port = Integer.parseInt(globalConfigUtils.getOrSetDefault(globalConfig.node("connection", "port"), "25565"));
+            minecraftServer.start("0.0.0.0", port);
+
+            // Set player provider
+            MinecraftServer.getConnectionManager().setPlayerProvider(EndercubePlayer::new);
+            logger.debug("Set player provider");
+
+            // Register the void
+            // Register minecraft:the_void
+            MinecraftServer.getBiomeManager().addBiome(Biome
+                    .builder()
+                    .name(NamespaceID.from("minecraft:the_void"))
+                    .build()
+            );
+        }
+
+        enum EncryptionMode {
+            ONLINE,
+            VELOCITY
+        }
+
+        private void initEncryption(EncryptionMode mode, String velocitySecret) {
+            switch (mode) {
+                case ONLINE -> MojangAuth.init();
+                case VELOCITY -> {
+                    if (!Objects.equals(velocitySecret, "")) {
+                        VelocityProxy.enable(velocitySecret);
+                    }
+                }
+            }
+        }
+
+
+        public EndercubeServer startServer() {
+            createServer();
+
             return new EndercubeServer(this);
         }
     }

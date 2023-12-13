@@ -18,11 +18,9 @@ public class Main {
         logger.info("Starting Server");
 
         endercubeServer = new EndercubeServer.EndercubeServerBuilder()
-                .addMinigame(new HubMinigame())
-                .addMinigame(new ParkourMinigame())
                 .addGlobalEvent(new PlayerLogin())
-                .build();
-
-        endercubeServer.startServer();
+                .startServer()
+//                .addMinigame(new ParkourMinigame())
+                .addMinigame(new HubMinigame());
     }
 }

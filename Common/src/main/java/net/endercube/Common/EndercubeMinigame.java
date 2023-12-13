@@ -4,8 +4,11 @@ import net.endercube.Common.utils.ConfigUtils;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.Event;
+import net.minestom.server.event.EventFilter;
 import net.minestom.server.event.EventNode;
+import net.minestom.server.event.trait.InstanceEvent;
 import net.minestom.server.instance.InstanceContainer;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.configurate.CommentedConfigurationNode;
@@ -13,6 +16,7 @@ import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -20,10 +24,11 @@ import java.util.Arrays;
  */
 public abstract class EndercubeMinigame {
 
-    protected static final Logger logger;
+    public static final Logger logger;
     private HoconConfigurationLoader configLoader;
     protected CommentedConfigurationNode config;
     protected ConfigUtils configUtils;
+    protected @NotNull EventNode<Event> eventNode;
 
     static {
         logger = LoggerFactory.getLogger(EndercubeMinigame.class);
@@ -54,11 +59,13 @@ public abstract class EndercubeMinigame {
         configUtils.saveConfig();
     }
 
-    public abstract EventNode<Event> getEventNode();
-
     public abstract String getName();
 
-    public abstract InstanceContainer getInstance();
+    public abstract ArrayList<InstanceContainer> getInstances();
 
     public abstract Pos[] getSpawnPositions();
+
+    public void registerEventNode() {
+        MinecraftServer.getGlobalEventHandler().addChild(eventNode);
+    }
 }

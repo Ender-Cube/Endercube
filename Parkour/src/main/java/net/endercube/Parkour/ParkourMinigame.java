@@ -4,7 +4,10 @@ import net.endercube.Common.EndercubeMinigame;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.Event;
 import net.minestom.server.event.EventNode;
+import net.minestom.server.event.trait.InstanceEvent;
 import net.minestom.server.instance.InstanceContainer;
+
+import java.util.ArrayList;
 
 /**
  * This is the entrypoint for Parkour
@@ -12,18 +15,12 @@ import net.minestom.server.instance.InstanceContainer;
 public class ParkourMinigame extends EndercubeMinigame {
 
     @Override
-    public EventNode<Event> getEventNode() {
-
-        return EventNode.all("parkour");
-    }
-
-    @Override
     public String getName() {
         return "parkour";
     }
 
     @Override
-    public InstanceContainer getInstance() {
+    public ArrayList<InstanceContainer> getInstances() {
         return null;
     }
 
