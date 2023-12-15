@@ -126,7 +126,7 @@ public class ConfigUtils {
             return new Pos(pointList[0], pointList[1], pointList[2], pointList[3], pointList[4]);
         }
 
-        logger.warn("Position value in config's length is out of bounds or blank");
+        logger.warn("Reading position value: \"" + configNode.path().toString() + "\" failed for some reason");
         return null;
     }
 

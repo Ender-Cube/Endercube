@@ -3,6 +3,7 @@ package net.endercube.Endercube;
 import net.endercube.Endercube.listeners.PlayerLogin;
 import net.endercube.Hub.HubMinigame;
 import net.endercube.Parkour.ParkourMinigame;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,11 @@ import org.slf4j.LoggerFactory;
  */
 public class Main {
 
+
+
+
     public static final Logger logger = LoggerFactory.getLogger(Main.class);
+    @Nullable
     public static EndercubeServer endercubeServer;
 
     public static void main(String[] args) {
@@ -20,7 +25,9 @@ public class Main {
         endercubeServer = new EndercubeServer.EndercubeServerBuilder()
                 .addGlobalEvent(new PlayerLogin())
                 .startServer()
-//                .addMinigame(new ParkourMinigame())
+                .addMinigame(new ParkourMinigame())
                 .addMinigame(new HubMinigame());
     }
+
+
 }

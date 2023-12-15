@@ -5,13 +5,13 @@ import net.endercube.Common.events.MinigamePlayerJoinEvent;
 import net.endercube.Common.players.EndercubePlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.ansi.ANSIComponentSerializer;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.adventure.audience.Audiences;
-import net.minestom.server.entity.GameMode;
-import net.minestom.server.entity.Player;
+import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerLoginEvent;
-import net.kyori.adventure.text.serializer.ansi.ANSIComponentSerializer;
+import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,8 +26,15 @@ public class PlayerLogin implements EventListener<PlayerLoginEvent> {
 
     @Override
     public @NotNull Result run(@NotNull PlayerLoginEvent event) {
-        @Nullable EndercubeMinigame hubMinigame = endercubeServer.getMinigameByName("hub");
         EndercubePlayer player = (EndercubePlayer) event.getPlayer();
+        if (endercubeServer == null) {
+            logger.warn(player.getUsername() + " Tried to log in before endercubeServer was initialised");
+            player.kick("Please try again");
+            return Result.EXCEPTION;
+        }
+        @Nullable EndercubeMinigame hubMinigame = endercubeServer.getMinigameByName("hub");
+
+
         if (hubMinigame == null) {
             logger.error("hub minigame does not exist. Please create a minigame called \"hub\"");
             MinecraftServer.stopCleanly();
@@ -45,7 +52,10 @@ public class PlayerLogin implements EventListener<PlayerLoginEvent> {
 
         // Set the spawning instance and position
         event.setSpawningInstance(hubMinigame.getInstances().get(0));
-        player.setRespawnPoint(hubMinigame.getSpawnPositions()[0]);
+
+        // Set the respawnPoint
+        Pos[] respawnPoints = hubMinigame.getInstances().get(0).getTag(Tag.Transient("spawnPositions"));
+        player.setRespawnPoint(respawnPoints[0]);
 
         // Tell the hub that someone joined
         MinecraftServer.getGlobalEventHandler().call(new MinigamePlayerJoinEvent("hub", player));

@@ -1,5 +1,6 @@
 package net.endercube.Endercube;
 
+import ch.qos.logback.classic.Level;
 import net.endercube.Common.EndercubeMinigame;
 import net.endercube.Common.players.EndercubePlayer;
 import net.endercube.Common.utils.ConfigUtils;
@@ -26,7 +27,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -35,10 +35,9 @@ import java.util.function.Consumer;
  */
 public class EndercubeServer {
 
-    private ArrayList<EndercubeMinigame> minigames = new ArrayList<>();
-    private final EventNode<Event> globalEvents;
-    private CommentedConfigurationNode globalConfig;
-    private ConfigUtils globalConfigUtils;
+    private final ArrayList<EndercubeMinigame> minigames = new ArrayList<>();
+    private final CommentedConfigurationNode globalConfig;
+    private final ConfigUtils globalConfigUtils;
 
     private static final Logger logger;
 
@@ -49,7 +48,6 @@ public class EndercubeServer {
     }
 
     private EndercubeServer(EndercubeServerBuilder builder) {
-        this.globalEvents = builder.globalEvents;
         this.globalConfig = builder.globalConfig;
         this.globalConfigUtils = builder.globalConfigUtils;
     }
@@ -61,7 +59,6 @@ public class EndercubeServer {
      */
     public EndercubeServer addMinigame(EndercubeMinigame minigame) {
         minigames.add(minigame);
-        minigame.registerEventNode();
         return this;
     }
 
@@ -69,6 +66,9 @@ public class EndercubeServer {
 
     public @NotNull CommentedConfigurationNode getGlobalConfig() {
         return globalConfig;
+    }
+    public @NotNull ConfigUtils getGlobalConfigUtils() {
+        return globalConfigUtils;
     }
 
     @Nullable
@@ -149,7 +149,6 @@ public class EndercubeServer {
          * Start Minestom and the like
          */
         public void createServer() {
-            this.initGlobalConfig();
 
             // Server Initialization
             MinecraftServer minecraftServer = MinecraftServer.init();
@@ -205,9 +204,34 @@ public class EndercubeServer {
             }
         }
 
+        /**
+         * Sets the logback logging level
+         * @param level The level to set to, INFO by default
+         */
+        private static void setLoggingLevel(Level level) {
+            // https://stackoverflow.com/a/9787965/13247146
+            ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+            root.setLevel(level);
+        }
+
 
         public EndercubeServer startServer() {
-            createServer();
+            // Init config
+            this.initGlobalConfig();
+
+            // Make logging level configurable
+            Level logLevel = Level.toLevel(
+                    globalConfigUtils.getOrSetDefault(
+                            globalConfig.node("logLevel"),
+                            "INFO"
+                    )
+            );
+
+            setLoggingLevel(logLevel);
+            logger.trace("Log level is: " + logLevel.levelStr);
+
+            // Start the server
+            this.createServer();
 
             return new EndercubeServer(this);
         }

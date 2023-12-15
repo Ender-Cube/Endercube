@@ -1,14 +1,9 @@
-package net.endercube.Hub.listeners;
+package net.endercube.Parkour.listeners;
 
 import net.endercube.Common.events.MinigamePlayerJoinEvent;
 import net.endercube.Common.players.EndercubePlayer;
-import net.kyori.adventure.sound.Sound;
-import net.minestom.server.entity.GameMode;
 import net.minestom.server.event.EventListener;
-import net.minestom.server.sound.SoundEvent;
 import org.jetbrains.annotations.NotNull;
-
-import static net.endercube.Common.EndercubeMinigame.logger;
 
 public class MinigamePlayerJoinEventListener implements EventListener<MinigamePlayerJoinEvent> {
     @Override
@@ -19,10 +14,8 @@ public class MinigamePlayerJoinEventListener implements EventListener<MinigamePl
     @Override
     public @NotNull Result run(@NotNull MinigamePlayerJoinEvent event) {
         EndercubePlayer player = event.getPlayer();
-        logger.info(player.getUsername() + " Joined the Hub (from hub player join event) and this is the minigame: " + event.getMinigame());
-        player.setGameMode(GameMode.ADVENTURE);
+        player.sendMessage("Sending you to Easy-1");
 
-        player.playSound(Sound.sound(SoundEvent.ENTITY_FIREWORK_ROCKET_LAUNCH, Sound.Source.AMBIENT, 1f, 1f), player.getPosition());
         return Result.SUCCESS;
     }
 }
