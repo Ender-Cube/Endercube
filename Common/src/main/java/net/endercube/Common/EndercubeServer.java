@@ -1,17 +1,15 @@
-package net.endercube.Endercube;
+package net.endercube.Common;
 
 import ch.qos.logback.classic.Level;
-import net.endercube.Common.EndercubeMinigame;
 import net.endercube.Common.players.EndercubePlayer;
 import net.endercube.Common.utils.ConfigUtils;
-import net.endercube.Endercube.blocks.Sign;
-import net.endercube.Endercube.blocks.Skull;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.Event;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.EventNode;
 import net.minestom.server.extras.MojangAuth;
 import net.minestom.server.extras.velocity.VelocityProxy;
+import net.minestom.server.instance.block.BlockHandler;
 import net.minestom.server.utils.NamespaceID;
 import net.minestom.server.world.biomes.Biome;
 import org.jetbrains.annotations.NotNull;
@@ -27,8 +25,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * The "abstract" endercubeServer that Main.java calls. Most of the main server's logic is in here
@@ -58,6 +59,7 @@ public class EndercubeServer {
      * @return The builder
      */
     public EndercubeServer addMinigame(EndercubeMinigame minigame) {
+        minigame.setEndercubeServer(this);
         minigames.add(minigame);
         return this;
     }
@@ -86,6 +88,7 @@ public class EndercubeServer {
         private final EventNode<Event> globalEvents;
         private CommentedConfigurationNode globalConfig;
         private ConfigUtils globalConfigUtils;
+        private HashMap<NamespaceID, Supplier<BlockHandler>> blockHandlers = new HashMap<>();
 
         public EndercubeServerBuilder() {
             globalEvents = EventNode.all("globalListeners");
@@ -110,6 +113,18 @@ public class EndercubeServer {
          */
         public <E extends Event> EndercubeServerBuilder addGlobalEvent(@NotNull Class<E> eventType, @NotNull Consumer<E> listener) {
             globalEvents.addListener(eventType, listener);
+            return this;
+        }
+
+        /**
+         * Add a block handler
+         * @param namespace The namespace name for this block
+         * @param handlerSupplier THe handler for this block
+         * @return The builder
+         */
+        public EndercubeServerBuilder addBlockHandler(NamespaceID namespace, Supplier<BlockHandler> handlerSupplier) {
+            // Add block handlers
+            blockHandlers.put(namespace, handlerSupplier);
             return this;
         }
 
@@ -156,10 +171,11 @@ public class EndercubeServer {
             // Add global events
             MinecraftServer.getGlobalEventHandler().addChild(globalEvents);
 
-            // Register block handlers
-            MinecraftServer.getBlockManager().registerHandler(NamespaceID.from("minecraft:sign"), Sign::new);
-            MinecraftServer.getBlockManager().registerHandler(NamespaceID.from("minecraft:skull"), Skull::new);
-            logger.debug("Set block handlers");
+            // Init block handlers
+            for(Map.Entry<NamespaceID, Supplier<BlockHandler>> entry : blockHandlers.entrySet()) {
+                MinecraftServer.getBlockManager().registerHandler(entry.getKey(), entry.getValue());
+                logger.debug("Added a block handler for " + entry.getKey());
+            }
 
             // Set encryption
             EncryptionMode encryptionMode;

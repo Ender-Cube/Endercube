@@ -13,8 +13,7 @@ dependencies {
     implementation(project(":Parkour"))
     implementation(project(":Hub"))
 
-    // Logger
-    implementation("ch.qos.logback:logback-classic:1.4.7")
+
 }
 
 // Global stuff
@@ -42,6 +41,9 @@ allprojects {
         implementation("net.kyori:adventure-text-serializer-plain:4.13.1")
         implementation("net.kyori:adventure-text-minimessage:4.13.1")
         implementation("net.kyori:adventure-text-serializer-ansi:4.14.0-SNAPSHOT")
+
+        // Logger
+        implementation("ch.qos.logback:logback-classic:1.4.7")
     }
 }
 

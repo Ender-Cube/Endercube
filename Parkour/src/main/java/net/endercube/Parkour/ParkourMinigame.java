@@ -2,6 +2,7 @@ package net.endercube.Parkour;
 
 import net.endercube.Common.EndercubeMinigame;
 import net.endercube.Common.dimensions.FullbrightDimension;
+import net.endercube.Parkour.listeners.MinigamePlayerJoinEventListener;
 import net.hollowcube.polar.PolarLoader;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.instance.InstanceContainer;
@@ -18,6 +19,16 @@ import java.util.ArrayList;
  * This is the entrypoint for Parkour
  */
 public class ParkourMinigame extends EndercubeMinigame {
+
+    public static ParkourMinigame parkourMinigame;
+
+    public ParkourMinigame() {
+        parkourMinigame = this;
+
+        // Register events
+        eventNode
+                .addListener(new MinigamePlayerJoinEventListener());
+    }
 
     @Override
     public String getName() {
@@ -55,7 +66,6 @@ public class ParkourMinigame extends EndercubeMinigame {
                 currentInstance.setTag(Tag.Transient("finishPos"), configUtils.getPosFromConfig(configNode.node("finish")));
                 currentInstance.setTag(Tag.Integer("order"), configNode.node("order").getInt());
                 currentInstance.setTag(Tag.Transient("spawnPos"), configUtils.getPosFromConfig(configNode.node("spawn")));
-
                 instances.add(currentInstance);
 
                 logger.info("Added the Parkour map: " + mapName);

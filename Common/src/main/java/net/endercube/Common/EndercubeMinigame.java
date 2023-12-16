@@ -30,6 +30,7 @@ public abstract class EndercubeMinigame {
     protected ConfigUtils configUtils;
     protected @NotNull EventNode<Event> eventNode;
     protected ArrayList<InstanceContainer> instances;
+    private EndercubeServer endercubeServer;
 
     // Create an instance of the logger
     static {
@@ -80,6 +81,14 @@ public abstract class EndercubeMinigame {
      */
     public ArrayList<InstanceContainer> getInstances() {
         return instances;
+    }
+
+    public void setEndercubeServer(EndercubeServer server) {
+        endercubeServer = server;
+    }
+
+    public EndercubeServer getEndercubeServer() {
+        return endercubeServer;
     }
 
     private void createConfig() {
