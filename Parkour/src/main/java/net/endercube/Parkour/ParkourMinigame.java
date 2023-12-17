@@ -2,9 +2,13 @@ package net.endercube.Parkour;
 
 import net.endercube.Common.EndercubeMinigame;
 import net.endercube.Common.dimensions.FullbrightDimension;
-import net.endercube.Parkour.listeners.MinigamePlayerJoinEventListener;
+import net.endercube.Common.players.EndercubePlayer;
+import net.endercube.Parkour.listeners.MinigamePlayerJoin;
+import net.endercube.Parkour.listeners.PlayerMove;
 import net.hollowcube.polar.PolarLoader;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.coordinate.Pos;
+import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.tag.Tag;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -27,7 +31,8 @@ public class ParkourMinigame extends EndercubeMinigame {
 
         // Register events
         eventNode
-                .addListener(new MinigamePlayerJoinEventListener());
+                .addListener(new PlayerMove())
+                .addListener(new MinigamePlayerJoin());
     }
 
     @Override
@@ -66,6 +71,7 @@ public class ParkourMinigame extends EndercubeMinigame {
                 currentInstance.setTag(Tag.Transient("finishPos"), configUtils.getPosFromConfig(configNode.node("finish")));
                 currentInstance.setTag(Tag.Integer("order"), configNode.node("order").getInt());
                 currentInstance.setTag(Tag.Transient("spawnPos"), configUtils.getPosFromConfig(configNode.node("spawn")));
+                currentInstance.setTag(Tag.String("name"), mapName);
                 instances.add(currentInstance);
 
                 logger.info("Added the Parkour map: " + mapName);
@@ -76,11 +82,28 @@ public class ParkourMinigame extends EndercubeMinigame {
                 logger.debug("finishPos: " + currentInstance.getTag(Tag.Transient("finishPos")));
                 logger.debug("order: " + currentInstance.getTag(Tag.Integer("order")));
                 logger.debug("spawnPos: " + currentInstance.getTag(Tag.Transient("spawnPos")));
+                logger.debug("name: " + currentInstance.getTag(Tag.String("name")));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         return instances;
+    }
+
+    /**
+     * Teleports the player back to the checkpoint they are on
+     * @param player The player to teleport
+     */
+    public static void sendToCheckpoint(EndercubePlayer player) {
+        int currentCheckpoint = player.getTag(Tag.Integer("parkour_checkpoint"));
+        Instance currentInstance = player.getInstance();
+        Pos[] checkpoints = currentInstance.getTag(Tag.Transient("checkpointsPosArray"));
+
+        if (currentCheckpoint == -1) {
+            player.teleport(currentInstance.getTag(Tag.Transient("spawnPos")));
+        } else {
+            player.teleport(checkpoints[currentCheckpoint]);
+        }
     }
 }

@@ -5,7 +5,7 @@ import net.endercube.Common.NPC;
 import net.endercube.Common.dimensions.FullbrightDimension;
 import net.endercube.Common.events.MinigamePlayerJoinEvent;
 import net.endercube.Common.players.EndercubePlayer;
-import net.endercube.Hub.listeners.MinigamePlayerJoinEventListener;
+import net.endercube.Hub.listeners.MinigamePlayerJoin;
 import net.hollowcube.polar.PolarLoader;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
@@ -22,8 +22,10 @@ import java.util.ArrayList;
  */
 public class HubMinigame extends EndercubeMinigame {
 
-    public HubMinigame() {
+    public static HubMinigame hubMinigame;
 
+    public HubMinigame() {
+        hubMinigame = this;
 
         // Create NPC(s)
         new NPC("Parkour", PlayerSkin.fromUsername("Jeb_"), getInstances().get(0), new Pos(0.5, 71, -5.5),
@@ -31,7 +33,7 @@ public class HubMinigame extends EndercubeMinigame {
 
         // Register events
         eventNode
-                .addListener(new MinigamePlayerJoinEventListener());
+                .addListener(new MinigamePlayerJoin());
     }
 
 

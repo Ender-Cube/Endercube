@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import static net.endercube.Common.EndercubeMinigame.logger;
 import static net.endercube.Parkour.ParkourMinigame.parkourMinigame;
 
-public class MinigamePlayerJoinEventListener implements EventListener<MinigamePlayerJoinEvent> {
+public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent> {
     @Override
     public @NotNull Class<MinigamePlayerJoinEvent> eventType() {
         return MinigamePlayerJoinEvent.class;
@@ -22,9 +22,13 @@ public class MinigamePlayerJoinEventListener implements EventListener<MinigamePl
         EndercubePlayer player = event.getPlayer();
         logger.info("Sending " + player.getUsername() + " To a parkour map");
         player.sendMessage("Sending you to Easy-1");
+
         InstanceContainer instance = parkourMinigame.getEndercubeServer().getMinigameByName("parkour").getInstances().get(0);
         player.setInstance(instance);
         player.teleport(instance.getTag(Tag.Transient("spawnPos")));
+
+        // Init tags
+        player.setTag(Tag.Integer("parkour_checkpoint"), -1);
 
         return Result.SUCCESS;
     }
