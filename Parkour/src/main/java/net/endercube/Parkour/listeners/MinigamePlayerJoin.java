@@ -43,6 +43,7 @@ public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent
 
         // Init tags
         player.setTag(Tag.Integer("parkour_checkpoint"), -1);
+        player.setTag(Tag.Boolean("parkour_timerStarted"), false);
 
         return Result.SUCCESS;
     }
