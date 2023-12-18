@@ -72,6 +72,8 @@ public class ParkourMinigame extends EndercubeMinigame {
                 currentInstance.setTag(Tag.Integer("order"), configNode.node("order").getInt());
                 currentInstance.setTag(Tag.Transient("spawnPos"), configUtils.getPosFromConfig(configNode.node("spawn")));
                 currentInstance.setTag(Tag.String("name"), mapName);
+                currentInstance.setTag(Tag.String("UI_material"), configNode.node("UIMaterial", "material").getString());
+                currentInstance.setTag(Tag.String("UI_name"), configNode.node("UIMaterial", "name").getString());
                 instances.add(currentInstance);
 
                 logger.info("Added the Parkour map: " + mapName);
@@ -83,6 +85,8 @@ public class ParkourMinigame extends EndercubeMinigame {
                 logger.debug("order: " + currentInstance.getTag(Tag.Integer("order")));
                 logger.debug("spawnPos: " + currentInstance.getTag(Tag.Transient("spawnPos")));
                 logger.debug("name: " + currentInstance.getTag(Tag.String("name")));
+                logger.debug("UI_material: " + currentInstance.getTag(Tag.String("UI_material")));
+                logger.debug("UI_name: " + currentInstance.getTag(Tag.String("UI_name")));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

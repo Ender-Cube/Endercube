@@ -39,6 +39,6 @@ public class EndercubePlayer extends Player {
             this.sendMessage("You are already in the hub! Going to the hub failed");
         }
         MinecraftServer.getGlobalEventHandler().call(new MinigamePlayerLeaveEvent(this.getCurrentMinigame(), this));
-        MinecraftServer.getGlobalEventHandler().call(new MinigamePlayerJoinEvent("hub", this));
+        MinecraftServer.getGlobalEventHandler().call(new MinigamePlayerJoinEvent("hub", this, null));
     }
 }

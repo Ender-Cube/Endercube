@@ -18,12 +18,26 @@ public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent
 
     @Override
     public @NotNull Result run(@NotNull MinigamePlayerJoinEvent event) {
-
         EndercubePlayer player = event.getPlayer();
+        String mapName = event.getMap();
+
         logger.info("Sending " + player.getUsername() + " To a parkour map");
         player.sendMessage("Sending you to Easy-1");
 
-        InstanceContainer instance = parkourMinigame.getEndercubeServer().getMinigameByName("parkour").getInstances().get(0);
+        InstanceContainer instance = parkourMinigame
+                .getInstances()
+                .stream()
+                .filter(
+                        (mapInstance) -> mapInstance.getTag(Tag.String("name")).equals(mapName)
+                )
+                .findFirst()
+                .orElse(null);
+
+        if (instance == null) {
+            logger.error("Parkour was given a map name that does not exist. something really broke good...");
+            return Result.INVALID;
+        }
+
         player.setInstance(instance);
         player.teleport(instance.getTag(Tag.Transient("spawnPos")));
 
