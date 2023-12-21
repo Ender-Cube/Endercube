@@ -1,6 +1,7 @@
 package net.endercube.Hub;
 
 import net.endercube.Common.EndercubeMinigame;
+import net.endercube.Common.EndercubeServer;
 import net.endercube.Common.NPC;
 import net.endercube.Common.dimensions.FullbrightDimension;
 import net.endercube.Hub.listeners.MinigamePlayerJoin;
@@ -23,7 +24,8 @@ public class HubMinigame extends EndercubeMinigame {
 
     public static HubMinigame hubMinigame;
 
-    public HubMinigame() {
+    public HubMinigame(EndercubeServer endercubeServer) {
+        super(endercubeServer);
         hubMinigame = this;
 
         // Create NPC(s)

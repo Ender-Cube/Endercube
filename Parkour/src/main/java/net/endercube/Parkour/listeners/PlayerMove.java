@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static net.endercube.Common.EndercubeMinigame.logger;
 import static net.endercube.Common.utils.ComponentUtils.toHumanReadableTime;
+import static net.endercube.Parkour.ParkourMinigame.database;
 
 /**
  * Most of the logic for the game is in here... I should really clean this code up
@@ -62,7 +63,6 @@ public class PlayerMove implements EventListener<PlayerMoveEvent> {
                     })
             );
 
-
             return Result.SUCCESS;
         }
 
@@ -91,6 +91,9 @@ public class PlayerMove implements EventListener<PlayerMoveEvent> {
                 // Stop the action bar timer
                 Task actionbarTimerTask = player.getTag(Tag.Transient("actionbarTimerTask"));
                 actionbarTimerTask.cancel();
+
+                // Add the player's time to the database
+                database.addTime(player, mapName, timeTakenMS);
 
                 player.gotoHub();
                 player.sendMessage("Well done! You finished " + mapName + " in " + toHumanReadableTime(timeTakenMS));

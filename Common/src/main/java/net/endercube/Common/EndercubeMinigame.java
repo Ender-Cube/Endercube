@@ -1,5 +1,6 @@
 package net.endercube.Common;
 
+import net.endercube.Common.database.AbstractDatabase;
 import net.endercube.Common.events.eventTypes.PlayerMinigameEvent;
 import net.endercube.Common.utils.ConfigUtils;
 import net.minestom.server.MinecraftServer;
@@ -9,11 +10,13 @@ import net.minestom.server.event.EventNode;
 import net.minestom.server.event.trait.InstanceEvent;
 import net.minestom.server.instance.InstanceContainer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
+import redis.clients.jedis.JedisPooled;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -37,7 +40,9 @@ public abstract class EndercubeMinigame {
         logger = LoggerFactory.getLogger(EndercubeMinigame.class);
     }
 
-    protected EndercubeMinigame() {
+    protected EndercubeMinigame(EndercubeServer endercubeServer) {
+        this.endercubeServer = endercubeServer;
+
         createConfig();
 
         // Initialise instances
@@ -87,8 +92,22 @@ public abstract class EndercubeMinigame {
         endercubeServer = server;
     }
 
+    @Nullable
     public EndercubeServer getEndercubeServer() {
         return endercubeServer;
+    }
+
+    /**
+     * Creates a database object
+     * @param clazz The class extending AbstractDatabase to use
+     * @return An instance of the database
+     */
+    public <T extends AbstractDatabase> T createDatabase(Class<T> clazz) throws Exception {
+        CommentedConfigurationNode globalConfigNode = this.getEndercubeServer().getGlobalConfig();
+        String jedisURL = this.getEndercubeServer().getGlobalConfigUtils().getOrSetDefault(globalConfigNode.node("database", "redis", "url"), "localhost");
+        int jedisPort = Integer.parseInt(this.getEndercubeServer().getGlobalConfigUtils().getOrSetDefault(globalConfigNode.node("database", "redis", "port"), "6379"));
+
+        return clazz.getConstructor(JedisPooled.class, String.class).newInstance(new JedisPooled(jedisURL, jedisPort), this.getName());
     }
 
     private void createConfig() {

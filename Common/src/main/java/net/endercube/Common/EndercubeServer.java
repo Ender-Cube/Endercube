@@ -64,8 +64,6 @@ public class EndercubeServer {
         return this;
     }
 
-
-
     public @NotNull CommentedConfigurationNode getGlobalConfig() {
         return globalConfig;
     }

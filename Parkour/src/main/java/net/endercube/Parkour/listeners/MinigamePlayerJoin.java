@@ -2,6 +2,7 @@ package net.endercube.Parkour.listeners;
 
 import net.endercube.Common.events.MinigamePlayerJoinEvent;
 import net.endercube.Common.players.EndercubePlayer;
+import net.endercube.Parkour.InventoryItems;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.tag.Tag;
@@ -11,6 +12,10 @@ import static net.endercube.Common.EndercubeMinigame.logger;
 import static net.endercube.Parkour.ParkourMinigame.parkourMinigame;
 
 public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent> {
+
+
+
+
     @Override
     public @NotNull Class<MinigamePlayerJoinEvent> eventType() {
         return MinigamePlayerJoinEvent.class;
@@ -45,6 +50,15 @@ public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent
         player.setTag(Tag.Integer("parkour_checkpoint"), -1);
         player.setTag(Tag.Boolean("parkour_timerStarted"), false);
 
+        addInventoryButtons(player);
+
         return Result.SUCCESS;
+    }
+
+    private void addInventoryButtons(EndercubePlayer player) {
+        player.getInventory().setItemStack(0, InventoryItems.CHECKPOINT_ITEM);
+        player.getInventory().setItemStack(1, InventoryItems.RESTART_ITEM);
+        player.getInventory().setItemStack(4, InventoryItems.VISIBILITY_ITEM_INVISIBLE);
+        player.getInventory().setItemStack(8, InventoryItems.HUB_ITEM);
     }
 }

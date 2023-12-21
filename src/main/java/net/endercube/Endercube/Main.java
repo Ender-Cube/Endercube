@@ -26,10 +26,10 @@ public class Main {
                 .addGlobalEvent(new PlayerLogin())
                 .addBlockHandler(NamespaceID.from("minecraft:sign"), Sign::new)
                 .addBlockHandler(NamespaceID.from("minecraft:skull"), Skull::new)
-                .startServer()
-                .addMinigame(new ParkourMinigame())
-                .addMinigame(new HubMinigame());
+                .startServer();
+
+        endercubeServer
+                .addMinigame(new ParkourMinigame(endercubeServer))
+                .addMinigame(new HubMinigame(endercubeServer));
     }
-
-
 }

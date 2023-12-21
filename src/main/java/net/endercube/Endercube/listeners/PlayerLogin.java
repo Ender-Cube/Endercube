@@ -59,6 +59,9 @@ public class PlayerLogin implements EventListener<PlayerLoginEvent> {
         Pos[] respawnPoints = hubMinigame.getInstances().get(0).getTag(Tag.Transient("spawnPositions"));
         player.setRespawnPoint(respawnPoints[0]);
 
+        // Init the current minigame
+        player.setCurrentMinigame("hub");
+
         player.setGameMode(GameMode.ADVENTURE);
 
         player.playSound(Sound.sound(SoundEvent.ENTITY_FIREWORK_ROCKET_LAUNCH, Sound.Source.AMBIENT, 1f, 1f), player.getPosition());

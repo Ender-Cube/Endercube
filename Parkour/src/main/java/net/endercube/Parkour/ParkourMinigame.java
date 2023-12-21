@@ -1,13 +1,19 @@
 package net.endercube.Parkour;
 
 import net.endercube.Common.EndercubeMinigame;
+import net.endercube.Common.EndercubeServer;
 import net.endercube.Common.dimensions.FullbrightDimension;
 import net.endercube.Common.players.EndercubePlayer;
+import net.endercube.Parkour.database.ParkourDatabase;
 import net.endercube.Parkour.listeners.MinigamePlayerJoin;
+import net.endercube.Parkour.listeners.MinigamePlayerLeave;
 import net.endercube.Parkour.listeners.PlayerMove;
+import net.endercube.Parkour.listeners.PlayerUseItem;
 import net.hollowcube.polar.PolarLoader;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.event.inventory.InventoryPreClickEvent;
+import net.minestom.server.event.player.PlayerSwapItemEvent;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.tag.Tag;
@@ -25,22 +31,33 @@ import java.util.ArrayList;
 public class ParkourMinigame extends EndercubeMinigame {
 
     public static ParkourMinigame parkourMinigame;
+    public static ParkourDatabase database;
 
-    public ParkourMinigame() {
+    public ParkourMinigame(EndercubeServer endercubeServer) {
+        super(endercubeServer);
         parkourMinigame = this;
 
         // Register events
         eventNode
                 .addListener(new PlayerMove())
-                .addListener(new MinigamePlayerJoin());
+                .addListener(new PlayerUseItem())
+                .addListener(new MinigamePlayerJoin())
+                .addListener(new MinigamePlayerLeave())
+                .addListener(InventoryPreClickEvent.class, event -> event.setCancelled(true))
+                .addListener(PlayerSwapItemEvent.class, event -> event.setCancelled(true));
+
+        try {
+            database = this.createDatabase(ParkourDatabase.class);
+        } catch (Exception e) {
+            logger.error("Failed to create a ParkourDatabase");
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public String getName() {
         return "parkour";
     }
-
-
 
     @Override
     protected ArrayList<InstanceContainer> initInstances() {
@@ -106,6 +123,7 @@ public class ParkourMinigame extends EndercubeMinigame {
 
         if (currentCheckpoint == -1) {
             player.teleport(currentInstance.getTag(Tag.Transient("spawnPos")));
+            player.setTag(Tag.Long("parkour_startTime"), System.currentTimeMillis()); // Reset timer
         } else {
             player.teleport(checkpoints[currentCheckpoint]);
         }

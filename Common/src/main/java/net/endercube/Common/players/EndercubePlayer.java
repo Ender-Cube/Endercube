@@ -5,6 +5,7 @@ import net.endercube.Common.events.MinigamePlayerLeaveEvent;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.network.player.PlayerConnection;
+import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -20,15 +21,14 @@ public class EndercubePlayer extends Player {
      * @return the name of the minigame or "hub" if in the hub
      */
     public String getCurrentMinigame() {
-        // TODO: implement
-        return "To be implemented";
+        return this.getTag(Tag.String("minigame"));
     }
 
     /**
      * Sets the player's current minigame
      */
     public void setCurrentMinigame(String minigame) {
-        // TODO: implement
+        this.setTag(Tag.String("minigame"), minigame);
     }
 
     /**
