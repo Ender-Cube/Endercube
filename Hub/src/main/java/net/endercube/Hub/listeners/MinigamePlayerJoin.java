@@ -19,10 +19,10 @@ public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent
     @Override
     public @NotNull Result run(@NotNull MinigamePlayerJoinEvent event) {
         Instance hubInstance = hubMinigame.getInstances().get(0);
-        Pos[] spawnPositions = hubInstance.getTag(Tag.Transient("spawnPositions"));
+        Pos spawnPosition = hubInstance.getTag(Tag.Transient("spawnPos"));
         EndercubePlayer player = event.getPlayer();
         player.setInstance(hubInstance);
-        player.teleport(spawnPositions[0]);
+        player.teleport(spawnPosition);
         return Result.SUCCESS;
     }
 }

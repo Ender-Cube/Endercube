@@ -1,9 +1,11 @@
 package net.endercube.Common;
 
+import net.endercube.Common.commands.GenericRootCommand;
 import net.endercube.Common.database.AbstractDatabase;
 import net.endercube.Common.events.eventTypes.PlayerMinigameEvent;
 import net.endercube.Common.utils.ConfigUtils;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.command.builder.Command;
 import net.minestom.server.event.Event;
 import net.minestom.server.event.EventFilter;
 import net.minestom.server.event.EventNode;
@@ -65,6 +67,11 @@ public abstract class EndercubeMinigame {
 
         // Register the event node
         MinecraftServer.getGlobalEventHandler().addChild(eventNode);
+
+        // Init and register commands
+        MinecraftServer.getCommandManager().register(
+                this.initCommands(new GenericRootCommand(this.getName()))
+        );
     }
 
 
@@ -79,6 +86,13 @@ public abstract class EndercubeMinigame {
      * @return An ArrayList of InstanceContainer's
      */
     protected abstract ArrayList<InstanceContainer> initInstances();
+
+    /**
+     * Called to add subcommands to the rootCommand given
+     * @param rootCommand The root command (/<this.getName())
+     * @return The root command with extra commands added to it (or not! I don't mind)
+     */
+    protected abstract Command initCommands(Command rootCommand);
 
     /**
      * Get the instances associated with this minigame

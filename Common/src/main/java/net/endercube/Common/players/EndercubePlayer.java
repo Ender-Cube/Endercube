@@ -36,8 +36,11 @@ public class EndercubePlayer extends Player {
      */
     public void gotoHub() {
         if (Objects.equals(this.getCurrentMinigame(), "hub")) {
-            this.sendMessage("You are already in the hub! Going to the hub failed");
+            this.sendMessage("Sending you to the hub spawn");
+            this.teleport(this.getInstance().getTag(Tag.Transient("spawnPos")));
+            return;
         }
+        this.sendMessage("Sending you to the hub");
         MinecraftServer.getGlobalEventHandler().call(new MinigamePlayerLeaveEvent(this.getCurrentMinigame(), this));
         MinecraftServer.getGlobalEventHandler().call(new MinigamePlayerJoinEvent("hub", this, null));
     }

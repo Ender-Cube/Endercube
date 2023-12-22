@@ -4,6 +4,7 @@ import net.endercube.Common.EndercubeMinigame;
 import net.endercube.Common.EndercubeServer;
 import net.endercube.Common.dimensions.FullbrightDimension;
 import net.endercube.Common.players.EndercubePlayer;
+import net.endercube.Parkour.commands.LeaderboardCommand;
 import net.endercube.Parkour.database.ParkourDatabase;
 import net.endercube.Parkour.listeners.MinigamePlayerJoin;
 import net.endercube.Parkour.listeners.MinigamePlayerLeave;
@@ -11,6 +12,7 @@ import net.endercube.Parkour.listeners.PlayerMove;
 import net.endercube.Parkour.listeners.PlayerUseItem;
 import net.hollowcube.polar.PolarLoader;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.command.builder.Command;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.event.player.PlayerSwapItemEvent;
@@ -110,6 +112,17 @@ public class ParkourMinigame extends EndercubeMinigame {
         }
 
         return instances;
+    }
+
+    /**
+     * Adds a leaderboard command
+     * @param rootCommand The root command (/<this.getName())
+     * @return The modified root command
+     */
+    @Override
+    protected Command initCommands(Command rootCommand) {
+        rootCommand.addSubcommand(new LeaderboardCommand());
+        return rootCommand;
     }
 
     /**

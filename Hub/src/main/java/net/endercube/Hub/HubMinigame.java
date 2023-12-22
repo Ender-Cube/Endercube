@@ -4,10 +4,12 @@ import net.endercube.Common.EndercubeMinigame;
 import net.endercube.Common.EndercubeServer;
 import net.endercube.Common.NPC;
 import net.endercube.Common.dimensions.FullbrightDimension;
+import net.endercube.Common.players.EndercubePlayer;
 import net.endercube.Hub.listeners.MinigamePlayerJoin;
 import net.endercube.Parkour.inventories.ParkourMapInventory;
 import net.hollowcube.polar.PolarLoader;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.command.builder.Command;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.PlayerSkin;
 import net.minestom.server.instance.InstanceContainer;
@@ -65,8 +67,23 @@ public class HubMinigame extends EndercubeMinigame {
         }
 
         // Set the spawn positions
-        hubInstance.setTag(Tag.Transient("spawnPositions"), configUtils.getPosListFromConfig(config.node("world", "spawnPositions")));
+        hubInstance.setTag(Tag.Transient("spawnPos"), configUtils.getPosFromConfig(config.node("world", "spawnPosition")));
         instances.add(hubInstance);
         return instances;
+    }
+
+
+    /**
+     * Sends the player to the hub
+     * @param rootCommand The root command (/<this.getName())
+     * @return the modified rootCommand
+     */
+    @Override
+    protected Command initCommands(Command rootCommand) {
+        rootCommand.setDefaultExecutor(((sender, context) -> {
+            EndercubePlayer player = (EndercubePlayer) sender;
+            player.gotoHub();
+        }));
+        return rootCommand;
     }
 }

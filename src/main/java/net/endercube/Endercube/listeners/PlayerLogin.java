@@ -56,8 +56,8 @@ public class PlayerLogin implements EventListener<PlayerLoginEvent> {
         event.setSpawningInstance(hubMinigame.getInstances().get(0));
 
         // Set the respawnPoint
-        Pos[] respawnPoints = hubMinigame.getInstances().get(0).getTag(Tag.Transient("spawnPositions"));
-        player.setRespawnPoint(respawnPoints[0]);
+        Pos respawnPoint = hubMinigame.getInstances().get(0).getTag(Tag.Transient("spawnPos"));
+        player.setRespawnPoint(respawnPoint);
 
         // Init the current minigame
         player.setCurrentMinigame("hub");
