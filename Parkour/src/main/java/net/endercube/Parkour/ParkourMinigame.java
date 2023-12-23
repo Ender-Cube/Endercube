@@ -54,6 +54,8 @@ public class ParkourMinigame extends EndercubeMinigame {
             logger.error("Failed to create a ParkourDatabase");
             throw new RuntimeException(e);
         }
+
+        this.registerCommands();
     }
 
     @Override
@@ -82,6 +84,8 @@ public class ParkourMinigame extends EndercubeMinigame {
                         FullbrightDimension.INSTANCE,
                         new PolarLoader(Path.of(worldFile.getPath()))
                 );
+
+                currentInstance.setTimeRate(0);
 
                 // Set all tags from config
                 currentInstance.setTag(Tag.Transient("checkpointsPosArray"), configUtils.getPosListFromConfig(configNode.node("checkpoints")));

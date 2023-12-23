@@ -27,7 +27,6 @@ public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent
         String mapName = event.getMap();
 
         logger.info("Sending " + player.getUsername() + " To a parkour map");
-        player.sendMessage("Sending you to Easy-1");
 
         InstanceContainer instance = parkourMinigame
                 .getInstances()

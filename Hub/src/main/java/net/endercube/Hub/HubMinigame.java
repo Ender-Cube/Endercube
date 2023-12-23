@@ -37,6 +37,8 @@ public class HubMinigame extends EndercubeMinigame {
         // Register events
         eventNode
                 .addListener(new MinigamePlayerJoin());
+
+        this.registerCommands();
     }
 
 
@@ -65,6 +67,8 @@ public class HubMinigame extends EndercubeMinigame {
             logger.error("Could not load the hub world in ./config/worlds/hub.polar");
             throw new RuntimeException(e);
         }
+
+        hubInstance.setTimeRate(0);
 
         // Set the spawn positions
         hubInstance.setTag(Tag.Transient("spawnPos"), configUtils.getPosFromConfig(config.node("world", "spawnPosition")));

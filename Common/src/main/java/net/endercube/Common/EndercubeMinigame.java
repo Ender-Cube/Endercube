@@ -68,10 +68,7 @@ public abstract class EndercubeMinigame {
         // Register the event node
         MinecraftServer.getGlobalEventHandler().addChild(eventNode);
 
-        // Init and register commands
-        MinecraftServer.getCommandManager().register(
-                this.initCommands(new GenericRootCommand(this.getName()))
-        );
+
     }
 
 
@@ -93,6 +90,13 @@ public abstract class EndercubeMinigame {
      * @return The root command with extra commands added to it (or not! I don't mind)
      */
     protected abstract Command initCommands(Command rootCommand);
+
+    protected void registerCommands() {
+        // Init and register commands
+        MinecraftServer.getCommandManager().register(
+                this.initCommands(new GenericRootCommand(this.getName()))
+        );
+    }
 
     /**
      * Get the instances associated with this minigame

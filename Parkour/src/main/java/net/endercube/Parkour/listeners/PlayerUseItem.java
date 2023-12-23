@@ -26,6 +26,7 @@ public class PlayerUseItem implements EventListener<PlayerUseItemEvent> {
             // TODO: restart confirm toggle option?
             case "restart" -> {
                 player.teleport(player.getInstance().getTag(Tag.Transient("spawnPos")));
+                player.setTag(Tag.Integer("parkour_checkpoint"), -1);
                 player.setTag(Tag.Long("parkour_startTime"), System.currentTimeMillis()); // Reset timer
             }
             case "checkpoint" -> {

@@ -3,6 +3,7 @@ package net.endercube.Parkour.database;
 
 import net.endercube.Common.database.AbstractDatabase;
 import net.minestom.server.entity.Player;
+import net.minestom.server.utils.mojang.MojangUtils;
 import org.jetbrains.annotations.Nullable;
 import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.resps.Tuple;
@@ -71,7 +72,16 @@ public class ParkourDatabase extends AbstractDatabase {
     @Nullable
     public List<Tuple> getLeaderboard(String course, int minRange, int maxRange) {
         logger.debug("Getting leaderboard for " + course + " in range " + minRange + " to " + maxRange);
-        return jedis.zrangeWithScores(nameSpace + course + ":times", minRange, maxRange);
+        List<Tuple> databaseTuple = jedis.zrangeWithScores(nameSpace + course + ":times", minRange, maxRange);
+
+        return databaseTuple.stream()
+                .map((tuple ->
+                        new Tuple(
+                                MojangUtils.fromUuid(tuple.getElement()).get("name").getAsString(),
+                                tuple.getScore())
+                        )
+                )
+                .toList();
 
     }
 }
