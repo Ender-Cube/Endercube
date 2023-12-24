@@ -1,0 +1,47 @@
+name: CI/CD Build with Gradle
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  Gradle-build-and-Docker-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Execute Gradle build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Endercube
+          path: build/libs/Endercube-*.*.*.jar
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build, and push to Docker Hub
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/endercube:latest
+          platforms: linux/amd64,linux/arm64/v8
