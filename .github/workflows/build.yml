@@ -35,6 +35,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: actions/download-artifact@v4
+        with:
+          name: Endercube
+          path: /build/libs/
+
+      - name: Unzip artifact archive
+        run: unzip /build/libs/Endercube.zip
+        shell: bash
+
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
