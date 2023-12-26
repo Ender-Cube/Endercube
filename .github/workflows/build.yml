@@ -29,11 +29,19 @@ jobs:
           path: build/libs/Endercube-*.*.*.jar
 
 
+
+
   docker-push:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      # Set ${{ steps.version.outputs.VERSION }}
+      - name: Retrieve version
+        run: |
+          echo "VERSION=$(./gradlew properties | grep -Po '(?<=version: ).*')" >> $GITHUB_OUTPUT
+        id: version
 
       - uses: actions/download-artifact@v4
         with:
@@ -55,5 +63,5 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/endercube:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/endercube:latest, ${{ secrets.DOCKERHUB_USERNAME }}/endercube:${{ steps.version.outputs.VERSION }}
           platforms: linux/amd64,linux/arm64/v8

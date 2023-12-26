@@ -66,7 +66,3 @@ tasks {
         archiveClassifier.set("") // Prevent the -all suffix
     }
 }
-
-task("getVersion") {
-    println(project.version)
-}
