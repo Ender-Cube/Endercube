@@ -41,9 +41,7 @@ jobs:
           path: build/libs
 
       - name: Unzip artifact archive
-        run: |
-          ls build/libs
-          unzip build/libs/Endercube.zip
+        run: unzip build/libs/*.zip
         shell: bash
 
       - name: Login to Docker Hub
