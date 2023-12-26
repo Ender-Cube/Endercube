@@ -41,7 +41,7 @@ allprojects {
         implementation("net.kyori:adventure-text-serializer-ansi:4.14.0-SNAPSHOT")
 
         // Logger
-        implementation("ch.qos.logback:logback-classic:1.4.7")
+        implementation("ch.qos.logback:logback-classic:1.4.14")
     }
 }
 
