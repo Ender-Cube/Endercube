@@ -41,7 +41,7 @@ jobs:
           path: build/libs
 
       - name: Unzip artifact archive
-        run: unzip build/libs/*.zip
+        run: unzip build/libs/\*.zip
         shell: bash
 
       - name: Login to Docker Hub
