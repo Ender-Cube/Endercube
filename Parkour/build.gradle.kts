@@ -8,5 +8,5 @@ dependencies {
     implementation("redis.clients:jedis:5.1.0")
 
     // Polar
-    implementation("dev.hollowcube:polar:1.3.1")
+    implementation("dev.hollowcube:polar:1.6.1")
 }

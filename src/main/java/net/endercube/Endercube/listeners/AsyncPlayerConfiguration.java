@@ -11,7 +11,7 @@ import net.minestom.server.adventure.audience.Audiences;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.event.EventListener;
-import net.minestom.server.event.player.PlayerLoginEvent;
+import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
 import net.minestom.server.sound.SoundEvent;
 import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
@@ -20,14 +20,14 @@ import org.jetbrains.annotations.Nullable;
 import static net.endercube.Endercube.Main.endercubeServer;
 import static net.endercube.Endercube.Main.logger;
 
-public class PlayerLogin implements EventListener<PlayerLoginEvent> {
+public class AsyncPlayerConfiguration implements EventListener<AsyncPlayerConfigurationEvent> {
     @Override
-    public @NotNull Class<PlayerLoginEvent> eventType() {
-        return PlayerLoginEvent.class;
+    public @NotNull Class<AsyncPlayerConfigurationEvent> eventType() {
+        return AsyncPlayerConfigurationEvent.class;
     }
 
     @Override
-    public @NotNull Result run(@NotNull PlayerLoginEvent event) {
+    public @NotNull Result run(@NotNull AsyncPlayerConfigurationEvent event) {
         EndercubePlayer player = (EndercubePlayer) event.getPlayer();
         if (endercubeServer == null) {
             logger.warn(player.getUsername() + " Tried to log in before endercubeServer was initialised");
