@@ -34,7 +34,16 @@ public class ParkourDatabase extends AbstractDatabase {
      * @param time   The time in milliseconds
      */
     public void addTime(Player player, String course, Long time) {
-        jedis.zadd(nameSpace + course + ":times", time, player.getUuid().toString());
+        String key = nameSpace + course + ":times";
+        String uuid = player.getUuid().toString();
+
+        Double oldTime = jedis.zscore(key, uuid);
+        if (oldTime <= time) {
+            logger.trace("Did not add new time for " + player.getUsername() + " because their current time of " + oldTime + " Is greater than than the new time of " + time);
+            return;
+        }
+
+        jedis.zadd(key, time, uuid);
         logger.debug("Added run to the database with:");
         logger.debug("    player: " + player.getUsername());
         logger.debug("    course: " + course);
@@ -60,7 +69,6 @@ public class ParkourDatabase extends AbstractDatabase {
     @Nullable
     public List<Tuple> getLeaderboard(String course, int maxRange) {
         return getLeaderboard(course, 0, maxRange);
-
     }
 
     /**

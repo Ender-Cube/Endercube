@@ -188,6 +188,7 @@ public class EndercubeServer {
             // Start server
             int port = Integer.parseInt(globalConfigUtils.getOrSetDefault(globalConfig.node("connection", "port"), "25565"));
             minecraftServer.start("0.0.0.0", port);
+            logger.info("Started server on port " + port + " with " + encryptionMode + " encryption");
 
             // Set player provider
             MinecraftServer.getConnectionManager().setPlayerProvider(EndercubePlayer::new);
@@ -213,6 +214,10 @@ public class EndercubeServer {
                 case VELOCITY -> {
                     if (!Objects.equals(velocitySecret, "")) {
                         VelocityProxy.enable(velocitySecret);
+                        logger.debug("Velocity enabled: " + VelocityProxy.isEnabled());
+                    } else {
+                        logger.error("Velocity is enabled but no secret is specified. Stopping server");
+                        MinecraftServer.stopCleanly();
                     }
                 }
             }
