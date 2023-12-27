@@ -66,10 +66,6 @@ public class LeaderboardCommand extends Command {
                     );
         }
 
-
-
-
-
         // Tell the player what happened if there are no times
         if (leaderboardTuple.isEmpty()) {
             return Component.text("")
@@ -79,13 +75,13 @@ public class LeaderboardCommand extends Command {
         }
 
         // Add places 1-3
-        if (leaderboardTuple.size() >= 1) {
+        if (leaderboardTuple.size() >= 1) { // This is always true. Leaving it in to make this easier to read
                 placementComponent = placementComponent.append(leaderboardEntry("#FFD700",
                         leaderboardTuple.get(0).getElement(),
                         leaderboardTuple.get(0).getScore(),
                         1)
                 );
-            }
+        }
 
         if (leaderboardTuple.size() >= 2) {
                 placementComponent = placementComponent.append(leaderboardEntry("#808080",
