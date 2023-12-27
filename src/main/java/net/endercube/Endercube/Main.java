@@ -3,6 +3,7 @@ package net.endercube.Endercube;
 import net.endercube.Common.EndercubeServer;
 import net.endercube.Endercube.blocks.Sign;
 import net.endercube.Endercube.blocks.Skull;
+import net.endercube.Endercube.listeners.PlayerDisconnect;
 import net.endercube.Endercube.listeners.PlayerLogin;
 import net.endercube.Hub.HubMinigame;
 import net.endercube.Parkour.ParkourMinigame;
@@ -24,6 +25,7 @@ public class Main {
 
         endercubeServer = new EndercubeServer.EndercubeServerBuilder()
                 .addGlobalEvent(new PlayerLogin())
+                .addGlobalEvent(new PlayerDisconnect())
                 .addBlockHandler(NamespaceID.from("minecraft:sign"), Sign::new)
                 .addBlockHandler(NamespaceID.from("minecraft:skull"), Skull::new)
                 .startServer();

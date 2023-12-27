@@ -28,9 +28,6 @@ jobs:
           name: Endercube
           path: build/libs/Endercube-*.*.*.jar
 
-
-
-
   docker-push:
     needs: build
     runs-on: ubuntu-latest
@@ -65,3 +62,10 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/endercube:latest, ${{ secrets.DOCKERHUB_USERNAME }}/endercube:${{ steps.version.outputs.VERSION }}
           platforms: linux/amd64,linux/arm64/v8
+
+  release:
+    needs: docker-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
