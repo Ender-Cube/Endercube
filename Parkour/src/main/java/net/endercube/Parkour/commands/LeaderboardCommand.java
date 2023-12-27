@@ -4,6 +4,7 @@ import net.endercube.Common.utils.ComponentUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
@@ -41,17 +42,43 @@ public class LeaderboardCommand extends Command {
         }), mapArgument);
     }
 
+    /**
+     * Generates a leaderboard
+     * @param mapName The map
+     * @return A leaderboard or formatted text for an error if there is one
+     */
     private TextComponent createLeaderboard(String mapName) {
+        Component placementComponent = Component.text("");
 
         // Get list of times from db
         List<Tuple> leaderboardTuple = database.getLeaderboard(mapName, 9);
 
-        logger.info("Leaderboard: " + leaderboardTuple.get(0).getElement() + " score: " + leaderboardTuple.get(0).getScore());
-        logger.info("Size: " + leaderboardTuple.size());
+        // Tell the player and the log that something went wrong if the database returns null
+        if (leaderboardTuple == null) {
+            logger.warn("The database call for leaderboards in parkour was null for some reason, continuing but something has gone wrong");
+            return Component.text("")
+                    .append(Component.text("[ERROR] ")
+                                    .color(NamedTextColor.RED)
+                                    .decorate(TextDecoration.BOLD)
+                    )
+                    .append(Component.text("Something went wrong when reading the database. Please contact admins on the Endercube Discord")
+                            .color(NamedTextColor.RED)
+                    );
+        }
+
+
+
+
+
+        // Tell the player what happened if there are no times
+        if (leaderboardTuple.isEmpty()) {
+            return Component.text("")
+                    .append(Component.text("No times exist for ").color(NamedTextColor.AQUA))
+                    .append(Component.text(mapName).color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
+                    .append(Component.text(" yet! Why not set some?").color(NamedTextColor.AQUA));
+        }
 
         // Add places 1-3
-        Component placementComponent = Component.text("");
-
         if (leaderboardTuple.size() >= 1) {
                 placementComponent = placementComponent.append(leaderboardEntry("#FFD700",
                         leaderboardTuple.get(0).getElement(),
