@@ -69,3 +69,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Restart server
+        uses: appleboy/ssh-action@v1.0.1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: ~/EndercubeRelease/update.sh
+
