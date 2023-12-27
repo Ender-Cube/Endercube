@@ -74,6 +74,6 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PUBLIC_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: ~/EndercubeRelease/update.sh
 
