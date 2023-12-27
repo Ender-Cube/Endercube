@@ -2,7 +2,6 @@ package net.endercube.Endercube.listeners;
 
 import net.endercube.Common.EndercubeMinigame;
 import net.endercube.Common.players.EndercubePlayer;
-import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.ansi.ANSIComponentSerializer;
@@ -12,7 +11,6 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
-import net.minestom.server.sound.SoundEvent;
 import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -63,8 +61,6 @@ public class AsyncPlayerConfiguration implements EventListener<AsyncPlayerConfig
         player.setCurrentMinigame("hub");
 
         player.setGameMode(GameMode.ADVENTURE);
-
-        player.playSound(Sound.sound(SoundEvent.ENTITY_FIREWORK_ROCKET_LAUNCH, Sound.Source.AMBIENT, 1f, 1f), player.getPosition());
 
         return Result.SUCCESS;
     }
