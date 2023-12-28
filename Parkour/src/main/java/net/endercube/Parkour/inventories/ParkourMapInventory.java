@@ -101,7 +101,7 @@ public class ParkourMapInventory {
         if (Arrays.stream(mapSlots).anyMatch(i -> i == slot)) {
             String map = inventory.getItemStack(slot).getTag(Tag.String("map"));
             sendToMap(player, map);
-            player.sendMessage("Sending you to " + map);
+            player.sendMessage(parkourMinigame.getChatPrefix().append(Component.text("Sending you to " + map)));
         }
 
         switch (slot) {

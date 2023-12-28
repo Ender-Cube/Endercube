@@ -42,6 +42,9 @@ allprojects {
 
         // Logger
         implementation("ch.qos.logback:logback-classic:1.4.14")
+
+        // Apache Commons Lang
+        implementation("org.apache.commons:commons-lang3:3.14.0")
     }
 }
 

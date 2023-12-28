@@ -4,7 +4,10 @@ import net.endercube.Common.players.EndercubePlayer;
 import net.endercube.Parkour.ParkourMinigame;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerMoveEvent;
@@ -19,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import static net.endercube.Common.EndercubeMinigame.logger;
 import static net.endercube.Common.utils.ComponentUtils.toHumanReadableTime;
 import static net.endercube.Parkour.ParkourMinigame.database;
+import static net.endercube.Parkour.ParkourMinigame.parkourMinigame;
 
 /**
  * Most of the logic for the game is in here... I should really clean this code up
@@ -41,7 +45,7 @@ public class PlayerMove implements EventListener<PlayerMoveEvent> {
 
         // See if player is below the death barrier and if so, teleport them to current checkpoint
         if (player.getPosition().y() < instance.getTag(Tag.Integer("death-y"))) {
-            player.sendMessage("Ya died :("); // TODO: Random death message
+            player.sendMessage(parkourMinigame.getChatPrefix().append(Component.text("Ya died :("))); // TODO: Random death message
             ParkourMinigame.sendToCheckpoint(player);
             logger.debug(player.getUsername() + " died on " + mapName);
             return Result.SUCCESS;
@@ -74,7 +78,7 @@ public class PlayerMove implements EventListener<PlayerMoveEvent> {
                 player.setTag(Tag.Integer("parkour_checkpoint"), currentCheckpoint + 1);
                 currentCheckpoint = currentCheckpoint + 1; // Increment currentCheckpoint as that hasn't updated and we need it soon
 
-                player.sendMessage("Checkpoint " + (currentCheckpoint + 1) + " completed!");
+                player.sendMessage(parkourMinigame.getChatPrefix().append(Component.text("Checkpoint " + (currentCheckpoint + 1) + " completed!")));
                 logger.debug(player.getUsername() + " finished checkpoint " + (currentCheckpoint + 1) + "/" + checkpoints.length);
 
                 player.playSound(Sound.sound(SoundEvent.ENTITY_PLAYER_LEVELUP, Sound.Source.PLAYER, 1f, 1f));
@@ -96,9 +100,18 @@ public class PlayerMove implements EventListener<PlayerMoveEvent> {
                 boolean newPB = database.addTime(player, mapName, timeTakenMS);
 
                 player.gotoHub();
-                player.sendMessage("Well done! You finished " + mapName + " in " + toHumanReadableTime(timeTakenMS));
+                player.sendMessage(Component.text("")
+                        .append(parkourMinigame.getChatPrefix())
+                        .append(Component.text("Well done! You finished " + mapName + " in " + toHumanReadableTime(timeTakenMS) + ". Use "))
+                        .append(Component.text("/parkour leaderboard")
+                                .decorate(TextDecoration.ITALIC)
+                                .clickEvent(ClickEvent.suggestCommand("/parkour leaderboard "))
+                                .hoverEvent(HoverEvent.showText(Component.text("/parkour leaderboard <map>"))))
+                        .append(Component.text(" to view other's times"))
+                );
+
                 if (newPB) {
-                    player.sendMessage("That run was a PB! Nice job");
+                    player.sendMessage(parkourMinigame.getChatPrefix().append(Component.text("That run was a PB! Nice job")));
                 }
                 logger.debug(player.getUsername() + " finished " + mapName);
 
