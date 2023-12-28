@@ -31,7 +31,7 @@ public abstract class EndercubeMinigame {
 
     public static final Logger logger;
     private HoconConfigurationLoader configLoader;
-    protected CommentedConfigurationNode config;
+    public CommentedConfigurationNode config;
     protected ConfigUtils configUtils;
     protected @NotNull EventNode<Event> eventNode;
     protected ArrayList<InstanceContainer> instances;

@@ -6,6 +6,7 @@ import net.endercube.Common.NPC;
 import net.endercube.Common.dimensions.FullbrightDimension;
 import net.endercube.Common.players.EndercubePlayer;
 import net.endercube.Hub.listeners.MinigamePlayerJoin;
+import net.endercube.Hub.listeners.PlayerMove;
 import net.endercube.Parkour.inventories.ParkourMapInventory;
 import net.hollowcube.polar.PolarLoader;
 import net.minestom.server.MinecraftServer;
@@ -36,6 +37,7 @@ public class HubMinigame extends EndercubeMinigame {
 
         // Register events
         eventNode
+                .addListener(new PlayerMove())
                 .addListener(new MinigamePlayerJoin());
 
         this.registerCommands();
@@ -72,6 +74,7 @@ public class HubMinigame extends EndercubeMinigame {
 
         // Set the spawn positions
         hubInstance.setTag(Tag.Transient("spawnPos"), configUtils.getPosFromConfig(config.node("world", "spawnPosition")));
+        hubInstance.setTag(Tag.Integer("deathY"), Integer.parseInt(configUtils.getOrSetDefault(config.node("world", "deathY"), "9")));
         instances.add(hubInstance);
         return instances;
     }
