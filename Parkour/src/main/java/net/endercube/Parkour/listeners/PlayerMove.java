@@ -93,10 +93,13 @@ public class PlayerMove implements EventListener<PlayerMoveEvent> {
                 actionbarTimerTask.cancel();
 
                 // Add the player's time to the database
-                database.addTime(player, mapName, timeTakenMS);
+                boolean newPB = database.addTime(player, mapName, timeTakenMS);
 
                 player.gotoHub();
                 player.sendMessage("Well done! You finished " + mapName + " in " + toHumanReadableTime(timeTakenMS));
+                if (newPB) {
+                    player.sendMessage("That run was a PB! Nice job");
+                }
                 logger.debug(player.getUsername() + " finished " + mapName);
 
                 return Result.SUCCESS;

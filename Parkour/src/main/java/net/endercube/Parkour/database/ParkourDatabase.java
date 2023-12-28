@@ -32,8 +32,9 @@ public class ParkourDatabase extends AbstractDatabase {
      * @param player The player the time belongs to
      * @param course The {@link String} id of the course to look up
      * @param time   The time in milliseconds
+     * @return true if new pb, false if not new PB
      */
-    public void addTime(Player player, String course, Long time) {
+    public boolean addTime(Player player, String course, Long time) {
         String key = nameSpace + course + ":times";
         String uuid = player.getUuid().toString();
 
@@ -42,7 +43,7 @@ public class ParkourDatabase extends AbstractDatabase {
         if (oldTime != null) {
             if (oldTime <= time) {
                 logger.trace("Did not add new time for " + player.getUsername() + " because their current time of " + oldTime + " Is greater than than the new time of " + time);
-                return;
+                return false;
             }
         }
 
@@ -51,6 +52,7 @@ public class ParkourDatabase extends AbstractDatabase {
         logger.debug("    player: " + player.getUsername());
         logger.debug("    course: " + course);
         logger.debug("    time: " + time);
+        return true;
     }
 
     /**
