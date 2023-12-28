@@ -10,5 +10,5 @@ This project uses Gradle Subprojects. The root project is where the server is cr
 
 Run the below and find the jar in ./build/libs/
 ```shell
-geadle build
+./gradlew build
 ```
