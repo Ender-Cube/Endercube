@@ -18,6 +18,8 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.event.player.PlayerSwapItemEvent;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.InstanceContainer;
+import net.minestom.server.network.packet.server.play.TeamsPacket;
+import net.minestom.server.scoreboard.Team;
 import net.minestom.server.tag.Tag;
 import org.spongepowered.configurate.ConfigurationNode;
 
@@ -34,6 +36,13 @@ public class ParkourMinigame extends EndercubeMinigame {
 
     public static ParkourMinigame parkourMinigame;
     public static ParkourDatabase database;
+    public static Team parkourTeam;
+
+    static {
+        parkourTeam = MinecraftServer.getTeamManager().createBuilder("parkourTeam")
+                .collisionRule(TeamsPacket.CollisionRule.NEVER)
+                .build();
+    }
 
     public ParkourMinigame(EndercubeServer endercubeServer) {
         super(endercubeServer);
@@ -56,6 +65,8 @@ public class ParkourMinigame extends EndercubeMinigame {
         }
 
         this.registerCommands();
+
+
     }
 
     @Override
