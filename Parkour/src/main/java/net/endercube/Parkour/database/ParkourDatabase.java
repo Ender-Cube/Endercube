@@ -42,7 +42,7 @@ public class ParkourDatabase extends AbstractDatabase {
 
         if (oldTime != null) {
             if (oldTime <= time) {
-                logger.trace("Did not add new time for " + player.getUsername() + " because their current time of " + oldTime + " Is greater than than the new time of " + time);
+                logger.trace("Did not add new time for " + player.getUsername() + " because their current time of " + oldTime + " Is less than than the new time of " + time);
                 return false;
             }
         }

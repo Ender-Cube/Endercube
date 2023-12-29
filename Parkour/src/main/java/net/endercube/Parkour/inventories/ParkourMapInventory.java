@@ -232,12 +232,8 @@ public class ParkourMapInventory {
                 1f)
         );
 
-        logger.info("calling minigameJoinEvent");
         // Call the event to send our player to parkour
         MinecraftServer.getGlobalEventHandler().call(new MinigamePlayerJoinEvent("parkour", player, mapName));
-
-        logger.info("Sent " + player.getUsername() + " to " + mapName);
-
     }
 
     public static Inventory getInventory(boolean hubButton) {
