@@ -3,6 +3,7 @@ package net.endercube.Parkour.listeners;
 import net.endercube.Common.events.MinigamePlayerJoinEvent;
 import net.endercube.Common.players.EndercubePlayer;
 import net.endercube.Parkour.InventoryItems;
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.tag.Tag;
@@ -26,6 +27,9 @@ public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent
         EndercubePlayer player = event.getPlayer();
         String mapName = event.getMap();
 
+        // Disable player pushing
+        player.setTeam(MinecraftServer.getTeamManager().getTeam("parkourTeam"));
+
         logger.info("Sending " + player.getUsername() + " To a parkour map");
 
         InstanceContainer instance = parkourMinigame
@@ -42,8 +46,7 @@ public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent
             return Result.INVALID;
         }
 
-        player.setInstance(instance);
-        player.teleport(instance.getTag(Tag.Transient("spawnPos")));
+        player.setInstance(instance, instance.getTag(Tag.Transient("spawnPos")));
 
         // Init tags
         player.setTag(Tag.Integer("parkour_checkpoint"), -1);

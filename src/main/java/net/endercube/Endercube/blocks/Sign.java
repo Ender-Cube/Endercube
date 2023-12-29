@@ -8,23 +8,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.List;
 
-public class Sign implements BlockHandler {
-    @Override
-    public @NotNull NamespaceID getNamespaceId() {
-        return NamespaceID.from("minecraft", "sign");
-    }
+public final class Sign implements BlockHandler {
 
     @Override
     public @NotNull Collection<Tag<?>> getBlockEntityTags() {
         return List.of(
-                Tag.Byte("GlowingText"),
-                Tag.String("Color"),
-                Tag.String("Text1"),
-                Tag.String("Text2"),
-                Tag.String("Text3"),
-                Tag.String("Text4")
+                Tag.Boolean("is_waxed"),
+                Tag.NBT("front_text"),
+                Tag.NBT("back_text")
         );
     }
 
-
+    @Override
+    public @NotNull NamespaceID getNamespaceId() {
+        return NamespaceID.from("minecraft:sign");
+    }
 }

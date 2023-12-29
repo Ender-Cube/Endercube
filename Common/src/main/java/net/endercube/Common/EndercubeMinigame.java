@@ -4,6 +4,10 @@ import net.endercube.Common.commands.GenericRootCommand;
 import net.endercube.Common.database.AbstractDatabase;
 import net.endercube.Common.events.eventTypes.PlayerMinigameEvent;
 import net.endercube.Common.utils.ConfigUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.event.Event;
@@ -11,6 +15,7 @@ import net.minestom.server.event.EventFilter;
 import net.minestom.server.event.EventNode;
 import net.minestom.server.event.trait.InstanceEvent;
 import net.minestom.server.instance.InstanceContainer;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -90,6 +95,13 @@ public abstract class EndercubeMinigame {
      * @return The root command with extra commands added to it (or not! I don't mind)
      */
     protected abstract Command initCommands(Command rootCommand);
+
+    public TextComponent getChatPrefix() {
+        return Component.text("")
+                .append(Component.text("[").color(NamedTextColor.DARK_GRAY))
+                .append(Component.text(StringUtils.capitalize(this.getName())).color(NamedTextColor.AQUA).decorate(TextDecoration.BOLD))
+                .append(Component.text("] ").color(NamedTextColor.DARK_GRAY));
+    }
 
     protected void registerCommands() {
         // Init and register commands

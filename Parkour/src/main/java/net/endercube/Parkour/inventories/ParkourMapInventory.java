@@ -101,7 +101,7 @@ public class ParkourMapInventory {
         if (Arrays.stream(mapSlots).anyMatch(i -> i == slot)) {
             String map = inventory.getItemStack(slot).getTag(Tag.String("map"));
             sendToMap(player, map);
-            player.sendMessage("Sending you to " + map);
+            player.sendMessage(parkourMinigame.getChatPrefix().append(Component.text("Sending you to " + map)));
         }
 
         switch (slot) {
@@ -232,12 +232,8 @@ public class ParkourMapInventory {
                 1f)
         );
 
-        logger.info("calling minigameJoinEvent");
         // Call the event to send our player to parkour
         MinecraftServer.getGlobalEventHandler().call(new MinigamePlayerJoinEvent("parkour", player, mapName));
-
-        logger.info("Sent " + player.getUsername() + " to " + mapName);
-
     }
 
     public static Inventory getInventory(boolean hubButton) {

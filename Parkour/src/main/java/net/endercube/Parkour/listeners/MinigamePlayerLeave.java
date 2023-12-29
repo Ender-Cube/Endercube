@@ -21,6 +21,10 @@ public class MinigamePlayerLeave implements EventListener<MinigamePlayerLeaveEve
         // Stop the action bar timer
         Task actionbarTimerTask = player.getTag(Tag.Transient("actionbarTimerTask"));
         actionbarTimerTask.cancel();
+        
+        // Clean up team
+        player.setTeam(null);
+
         return Result.SUCCESS;
     }
 }
