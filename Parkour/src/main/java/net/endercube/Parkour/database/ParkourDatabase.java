@@ -12,6 +12,7 @@ import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.resps.Tuple;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * An abstracted interface to Redis for parkour
@@ -67,6 +68,17 @@ public class ParkourDatabase extends AbstractDatabase {
     public void removeTime(Player player, String course) {
         jedis.zrem(nameSpace + course + ":times", player.getUuid().toString());
         logger.debug("Removed " + player.getUsername() + "'s times for " + course);
+    }
+
+    /**
+     * Removes a player's times from the leaderboard
+     *
+     * @param playerUUID The player's UUID whose times are to be removed
+     * @param course The course to remove times from
+     */
+    public void removeTime(UUID playerUUID, String course) {
+        jedis.zrem(nameSpace + course + ":times", playerUUID.toString());
+        logger.debug("Removed " + playerUUID + "'s times for " + course);
     }
 
     /**
