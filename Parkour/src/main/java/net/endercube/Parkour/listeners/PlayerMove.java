@@ -3,6 +3,7 @@ package net.endercube.Parkour.listeners;
 import net.endercube.Common.players.EndercubePlayer;
 import net.endercube.Parkour.ParkourMinigame;
 import net.endercube.Parkour.inventories.ParkourMapInventory;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -77,8 +78,18 @@ public class PlayerMove implements EventListener<PlayerMoveEvent> {
         if (playerPosition.sameBlock(instance.getTag(Tag.Transient("finishPos")))) {
             if (currentCheckpoint == checkpoints.length - 1) {
                 handleFinish();
-                return Result.SUCCESS;
+
+            } else {
+                player.sendMessage(parkourMinigame.getChatPrefix()
+                        .append(Component.text("You've missed some checkpoints! Go back and grab them or use the"))
+                        .append(Component.text(" blaze powder ")
+                                .hoverEvent(HoverEvent.showItem(HoverEvent.ShowItem.showItem(Key.key("minecraft:blaze_powder"), 1)))
+                                .decorate(TextDecoration.BOLD)
+                        )
+                        .append(Component.text("to restart the course"))
+                );
             }
+            return Result.SUCCESS;
         }
 
 
