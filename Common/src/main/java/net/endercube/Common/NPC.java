@@ -1,6 +1,5 @@
 package net.endercube.Common;
 
-import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityCreature;
@@ -10,7 +9,6 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.entity.PlayerSkin;
 import net.minestom.server.entity.ai.GoalSelector;
 import net.minestom.server.entity.metadata.PlayerMeta;
-import net.minestom.server.event.EventNode;
 import net.minestom.server.event.entity.EntityAttackEvent;
 import net.minestom.server.event.player.PlayerEntityInteractEvent;
 import net.minestom.server.instance.Instance;
@@ -27,7 +25,7 @@ public final class NPC extends EntityCreature {
     private final Consumer<Player> onClick;
 
     public NPC(@NotNull String name, @NotNull PlayerSkin skin, @NotNull Instance instance,
-               @NotNull Point spawn, @NotNull Consumer<Player> onClick) {
+               @NotNull Pos spawn, @NotNull Consumer<Player> onClick) {
 
         super(EntityType.PLAYER);
         this.name = name;
