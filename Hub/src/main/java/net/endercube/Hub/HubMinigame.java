@@ -32,8 +32,19 @@ public class HubMinigame extends EndercubeMinigame {
         hubMinigame = this;
 
         // Create NPC(s)
-        new NPC("Parkour", PlayerSkin.fromUsername("Jeb_"), getInstances().get(0), new Pos(0.5, 71, -5.5),
+        new NPC("Parkour", PlayerSkin.fromUsername("Jeb_"), getInstances().getFirst(), new Pos(0.5, 71, -5.5),
                 player -> player.openInventory(ParkourMapInventory.getInventory(false)));
+
+        new NPC("Rambino_PorkChop", PlayerSkin.fromUsername("Rambino_PorkChop"), getInstances().getFirst(), new Pos(-39.5, 71, 1.5, -90, 0),
+                player -> player.openInventory(ParkourMapInventory.getInventory(false)));
+
+        new NPC("Zax71", PlayerSkin.fromUsername("Zax71"), getInstances().get(0), new Pos(-39.5, 71, 0.5, -90, 0),
+                player -> player.openInventory(ParkourMapInventory.getInventory(false)));
+
+        new NPC("david123rob", PlayerSkin.fromUsername("david123rob"), getInstances().getFirst(), new Pos(-39.5, 72, -0.5, -90, 0),
+                player -> player.openInventory(ParkourMapInventory.getInventory(false)));
+
+
 
         // Register events
         eventNode
