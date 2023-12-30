@@ -133,11 +133,7 @@ public abstract class EndercubeMinigame {
      * @return An instance of the database
      */
     public <T extends AbstractDatabase> T createDatabase(Class<T> clazz) throws Exception {
-        CommentedConfigurationNode globalConfigNode = this.getEndercubeServer().getGlobalConfig();
-        String jedisURL = this.getEndercubeServer().getGlobalConfigUtils().getOrSetDefault(globalConfigNode.node("database", "redis", "url"), "localhost");
-        int jedisPort = Integer.parseInt(this.getEndercubeServer().getGlobalConfigUtils().getOrSetDefault(globalConfigNode.node("database", "redis", "port"), "6379"));
-
-        return clazz.getConstructor(JedisPooled.class, String.class).newInstance(new JedisPooled(jedisURL, jedisPort), this.getName());
+        return clazz.getConstructor(JedisPooled.class, String.class).newInstance(this.getEndercubeServer().getJedisPooled(), this.getName());
     }
 
     private void createConfig() {

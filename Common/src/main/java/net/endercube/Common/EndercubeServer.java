@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
+import redis.clients.jedis.JedisPooled;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -77,6 +78,13 @@ public class EndercubeServer {
                 .filter(((endercubeMinigame) -> endercubeMinigame.getName().equals(name)))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @NotNull
+    public JedisPooled getJedisPooled() {
+        String jedisURL = globalConfigUtils.getOrSetDefault(globalConfig.node("database", "redis", "url"), "localhost");
+        int jedisPort = Integer.parseInt(globalConfigUtils.getOrSetDefault(globalConfig.node("database", "redis", "port"), "6379"));
+        return new JedisPooled(jedisURL, jedisPort);
     }
 
     /**

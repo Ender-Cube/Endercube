@@ -33,7 +33,7 @@ public class ResetTimeCommand extends Command {
         // Something wrong
         mapArgument.setCallback(((sender, exception) -> {
             final String input = exception.getInput();
-            sender.sendMessage(Component.text("[ERROR] The thing " + input + " does not exist!").color(NamedTextColor.RED));
+            sender.sendMessage(Component.text("[ERROR] The map " + input + " does not exist!").color(NamedTextColor.RED));
         }));
 
         // Actually execute command

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static net.endercube.Endercube.Main.endercubeServer;
+import static net.endercube.Endercube.Main.jedis;
 import static net.endercube.Endercube.Main.logger;
 
 public class AsyncPlayerConfiguration implements EventListener<AsyncPlayerConfigurationEvent> {
@@ -31,6 +32,12 @@ public class AsyncPlayerConfiguration implements EventListener<AsyncPlayerConfig
     @Override
     public @NotNull Result run(@NotNull AsyncPlayerConfigurationEvent event) {
         EndercubePlayer player = (EndercubePlayer) event.getPlayer();
+
+        if (isBanned(player)) {
+            player.kick(getBanMessage(player));
+            return Result.SUCCESS;
+        }
+
         if (endercubeServer == null) {
             logger.warn(player.getUsername() + " Tried to log in before endercubeServer was initialised");
             player.kick("Please try again");
@@ -80,5 +87,13 @@ public class AsyncPlayerConfiguration implements EventListener<AsyncPlayerConfig
         if (operators.contains(player.getUuid())) {
             player.addPermission(new Permission("operator"));
         }
+    }
+
+    private boolean isBanned(EndercubePlayer player) {
+        return jedis.exists("banned:" + player.getUuid());
+    }
+
+    private String getBanMessage(EndercubePlayer player) {
+        return jedis.get("banned:" + player.getUuid());
     }
 }
