@@ -6,6 +6,7 @@ import net.endercube.Common.dimensions.FullbrightDimension;
 import net.endercube.Common.players.EndercubePlayer;
 import net.endercube.Parkour.commands.LeaderboardCommand;
 import net.endercube.Parkour.database.ParkourDatabase;
+import net.endercube.Parkour.listeners.InventoryPreClick;
 import net.endercube.Parkour.listeners.MinigamePlayerJoin;
 import net.endercube.Parkour.listeners.MinigamePlayerLeave;
 import net.endercube.Parkour.listeners.PlayerMove;
@@ -14,7 +15,6 @@ import net.hollowcube.polar.PolarLoader;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.coordinate.Pos;
-import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.event.player.PlayerSwapItemEvent;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.InstanceContainer;
@@ -54,7 +54,7 @@ public class ParkourMinigame extends EndercubeMinigame {
                 .addListener(new PlayerUseItem())
                 .addListener(new MinigamePlayerJoin())
                 .addListener(new MinigamePlayerLeave())
-                .addListener(InventoryPreClickEvent.class, event -> event.setCancelled(true))
+                .addListener(new InventoryPreClick())
                 .addListener(PlayerSwapItemEvent.class, event -> event.setCancelled(true));
 
         try {
@@ -155,5 +155,11 @@ public class ParkourMinigame extends EndercubeMinigame {
         } else {
             player.teleport(checkpoints[currentCheckpoint]);
         }
+    }
+
+    public static void restartMap(EndercubePlayer player) {
+        player.teleport(player.getInstance().getTag(Tag.Transient("spawnPos")));
+        player.setTag(Tag.Boolean("parkour_timerStarted"), false);
+        player.setTag(Tag.Integer("parkour_checkpoint"), -1);
     }
 }

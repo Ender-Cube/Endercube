@@ -10,6 +10,7 @@ import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 
 import static net.endercube.Common.EndercubeMinigame.logger;
+import static net.endercube.Parkour.ParkourMinigame.database;
 import static net.endercube.Parkour.ParkourMinigame.parkourMinigame;
 
 public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent> {
@@ -62,5 +63,12 @@ public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent
         player.getInventory().setItemStack(1, InventoryItems.RESTART_ITEM);
         player.getInventory().setItemStack(4, InventoryItems.VISIBILITY_ITEM_INVISIBLE);
         player.getInventory().setItemStack(8, InventoryItems.HUB_ITEM);
+
+        switch (database.getGrindMode(player)) {
+            case HUB -> player.getInventory().setItemStack(17, InventoryItems.GRIND_MODE_HUB);
+            case MENU -> player.getInventory().setItemStack(17, InventoryItems.GRIND_MODE_MENU);
+            case RESTART -> player.getInventory().setItemStack(17, InventoryItems.GRIND_MODE_RESTART);
+        }
+
     }
 }
