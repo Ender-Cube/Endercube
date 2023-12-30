@@ -2,8 +2,11 @@ package net.endercube.Parkour.database;
 
 
 import net.endercube.Common.database.AbstractDatabase;
+import net.endercube.Common.players.EndercubePlayer;
+import net.endercube.Parkour.enums.GrindMode;
 import net.minestom.server.entity.Player;
 import net.minestom.server.utils.mojang.MojangUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.resps.Tuple;
@@ -96,5 +99,29 @@ public class ParkourDatabase extends AbstractDatabase {
                 )
                 .toList();
 
+    }
+
+    /**
+     * Set the grinding mode
+     * @param player The player to set for
+     * @param grindMode The grind mode to set
+     */
+    public void setGrindMode(EndercubePlayer player, @NotNull GrindMode grindMode) {
+        jedis.set(nameSpace + "grindMode:" + player.getUuid(), grindMode.name());
+    }
+
+    /**
+     * Get the player's specified grindMode. HUB if none has been set
+     * @param player the player to get for
+     * @return The selected grindMode
+     */
+    @NotNull
+    public GrindMode getGrindMode(EndercubePlayer player) {
+        @Nullable String stringGrindMode = jedis.get(nameSpace + "grindMode:" + player.getUuid());
+        if (stringGrindMode == null) {
+            this.setGrindMode(player, GrindMode.HUB);
+            return GrindMode.HUB;
+        }
+        return GrindMode.valueOf(stringGrindMode);
     }
 }
