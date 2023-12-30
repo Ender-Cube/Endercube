@@ -5,6 +5,7 @@ import net.endercube.Common.commands.GenericRootCommand;
 import net.endercube.Endercube.blocks.Sign;
 import net.endercube.Endercube.blocks.Skull;
 import net.endercube.Endercube.commands.BanCommand;
+import net.endercube.Endercube.commands.KickCommand;
 import net.endercube.Endercube.commands.ResetTimeCommand;
 import net.endercube.Endercube.commands.UnbanCommand;
 import net.endercube.Endercube.listeners.AsyncPlayerConfiguration;
@@ -53,6 +54,7 @@ public class Main {
         adminCommand.addSubcommand(new ResetTimeCommand());
         adminCommand.addSubcommand(new BanCommand());
         adminCommand.addSubcommand(new UnbanCommand());
+        adminCommand.addSubcommand(new KickCommand());
         MinecraftServer.getCommandManager().register(adminCommand);
     }
 }
