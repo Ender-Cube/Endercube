@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":Common"))
     implementation(project(":Parkour"))
     implementation(project(":Hub"))
+    implementation(project(":Iceboat"))
 
     // Jedis (Redis lib)
     implementation("redis.clients:jedis:5.1.0")

@@ -11,6 +11,7 @@ import net.endercube.Endercube.commands.UnbanCommand;
 import net.endercube.Endercube.listeners.AsyncPlayerConfiguration;
 import net.endercube.Endercube.listeners.PlayerDisconnect;
 import net.endercube.Hub.HubMinigame;
+import net.endercube.IceboatMinigame;
 import net.endercube.Parkour.ParkourMinigame;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.permission.Permission;
@@ -41,6 +42,7 @@ public class Main {
 
         endercubeServer
                 .addMinigame(new ParkourMinigame(endercubeServer))
+                .addMinigame(new IceboatMinigame(endercubeServer))
                 .addMinigame(new HubMinigame(endercubeServer));
 
         jedis = endercubeServer.getJedisPooled();
