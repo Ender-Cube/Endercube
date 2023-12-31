@@ -29,7 +29,7 @@ public class ItemClickHandler {
                 );
 
                 player.getInventory().setItemStack(4, InventoryItems.VISIBILITY_ITEM_VISIBLE);
-                showPlayers(player);
+                player.updateViewerRule(playerVisible -> true);
             }
             case "hidePlayers" -> {
                 player.playSound(Sound.sound(
@@ -40,8 +40,7 @@ public class ItemClickHandler {
                 );
 
                 player.getInventory().setItemStack(4, InventoryItems.VISIBILITY_ITEM_INVISIBLE);
-                hidePlayers(player);
-
+                player.updateViewerRule(playerVisible -> false);
             }
             case "set_grindMode_menu" -> {
                 player.getInventory().setItemStack(17, InventoryItems.GRIND_MODE_MENU);
@@ -61,14 +60,6 @@ public class ItemClickHandler {
             default -> logger.error(player.getUsername() + " used an item with an invalid tag");
 
         }
-    }
-
-    private static void showPlayers(EndercubePlayer player) {
-        player.updateViewerRule(playerVisible -> true);
-    }
-
-    private static void hidePlayers(EndercubePlayer player) {
-        player.updateViewerRule(playerVisible -> false);
     }
 
     private static void playPling(EndercubePlayer player) {

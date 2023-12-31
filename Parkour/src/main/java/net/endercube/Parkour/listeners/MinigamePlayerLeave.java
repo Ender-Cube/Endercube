@@ -25,6 +25,9 @@ public class MinigamePlayerLeave implements EventListener<MinigamePlayerLeaveEve
         // Clean up team
         player.setTeam(null);
 
+        // Make sure the player can see hub NPCs
+        player.updateViewerRule(playerVisible -> true);
+
         return Result.SUCCESS;
     }
 }

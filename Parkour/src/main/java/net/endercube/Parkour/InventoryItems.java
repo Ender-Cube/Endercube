@@ -20,15 +20,14 @@ public class InventoryItems {
             .displayName(Component.text("Teleport back to hub"))
             .build()
             .withTag(Tag.String("action"), "hub");
-    public static final ItemStack VISIBILITY_ITEM_INVISIBLE = ItemStack.builder(Material.ENDER_PEARL)
-            .displayName(Component.text("Click to make players ghosts"))
-            .build()
-            .withTag(Tag.String("action"), "showPlayers");
     public static final ItemStack VISIBILITY_ITEM_VISIBLE = ItemStack.builder(Material.ENDER_EYE)
             .displayName(Component.text("Click to hide players"))
             .build()
             .withTag(Tag.String("action"), "hidePlayers");
-
+    public static final ItemStack VISIBILITY_ITEM_INVISIBLE = ItemStack.builder(Material.ENDER_PEARL)
+            .displayName(Component.text("Click to show players"))
+            .build()
+            .withTag(Tag.String("action"), "showPlayers");
     public static final ItemStack GRIND_MODE_HUB = ItemStack.builder(Material.YELLOW_BED)
             .displayName(Component.text("Click to toggle grind mode"))
             .lore(
