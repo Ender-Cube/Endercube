@@ -5,6 +5,7 @@ import net.endercube.Common.commands.GenericRootCommand;
 import net.endercube.Endercube.blocks.Sign;
 import net.endercube.Endercube.blocks.Skull;
 import net.endercube.Endercube.commands.BanCommand;
+import net.endercube.Endercube.commands.DiscordCommand;
 import net.endercube.Endercube.commands.KickCommand;
 import net.endercube.Endercube.commands.ResetTimeCommand;
 import net.endercube.Endercube.commands.UnbanCommand;
@@ -56,5 +57,6 @@ public class Main {
         adminCommand.addSubcommand(new UnbanCommand());
         adminCommand.addSubcommand(new KickCommand());
         MinecraftServer.getCommandManager().register(adminCommand);
+        MinecraftServer.getCommandManager().register(new DiscordCommand());
     }
 }
