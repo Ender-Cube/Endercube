@@ -36,13 +36,13 @@ public class HubMinigame extends EndercubeMinigame {
                 player -> player.openInventory(ParkourMapInventory.getInventory(false)));
 
         new NPC("Rambino_PorkChop", PlayerSkin.fromUsername("Rambino_PorkChop"), getInstances().getFirst(), new Pos(-39.5, 71, 1.5, -90, 0),
-                player -> player.openInventory(ParkourMapInventory.getInventory(false)));
+                player -> {});
 
         new NPC("Zax71", PlayerSkin.fromUsername("Zax71"), getInstances().get(0), new Pos(-39.5, 71, 0.5, -90, 0),
-                player -> player.openInventory(ParkourMapInventory.getInventory(false)));
+                player -> {player.sendMessage("I do the dev work on the server!");});
 
         new NPC("david123rob", PlayerSkin.fromUsername("david123rob"), getInstances().getFirst(), new Pos(-39.5, 72, -0.5, -90, 0),
-                player -> player.openInventory(ParkourMapInventory.getInventory(false)));
+                player -> {player.sendMessage("I built the hub!");});
 
 
 
