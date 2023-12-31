@@ -10,16 +10,21 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.title.Title;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerMoveEvent;
 import net.minestom.server.instance.Instance;
+import net.minestom.server.network.packet.server.play.EntityStatusPacket;
 import net.minestom.server.sound.SoundEvent;
 import net.minestom.server.tag.Tag;
 import net.minestom.server.timer.Scheduler;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
 import org.jetbrains.annotations.NotNull;
+
+import java.time.Duration;
+import java.util.Objects;
 
 import static net.endercube.Common.EndercubeMinigame.logger;
 import static net.endercube.Common.utils.ComponentUtils.toHumanReadableTime;
@@ -158,9 +163,25 @@ public class PlayerMove implements EventListener<PlayerMoveEvent> {
                 .append(Component.text(" to view other's times"))
         );
 
+        logger.debug(player.getUsername() + " finished " + mapName);
+
+        if (Objects.equals(database.getLeaderboard(mapName, 1).getFirst().getElement(), player.getUsername())) {
+            showWRAnimation();
+            return;
+        }
         if (newPB) {
             player.sendMessage(parkourMinigame.getChatPrefix().append(Component.text("That run was a PB! Nice job")));
         }
-        logger.debug(player.getUsername() + " finished " + mapName);
+    }
+
+    private void showWRAnimation() {
+        byte totemEffect = (byte) 35;
+        player.sendPacket(new EntityStatusPacket(player.getEntityId(), totemEffect));
+
+        final Title.Times times = Title.Times.times(Duration.ofMillis(100), Duration.ofMillis(1500), Duration.ofMillis(500));
+        final Title title = Title.title(Component.text("New world record!"), Component.empty(), times);
+        player.showTitle(title);
+
+        player.sendMessage(parkourMinigame.getChatPrefix().append(Component.text("That was a new world record!")));
     }
 }
