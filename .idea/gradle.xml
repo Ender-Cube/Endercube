@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/Common" />
             <option value="$PROJECT_DIR$/Hub" />
             <option value="$PROJECT_DIR$/Parkour" />
+            <option value="$PROJECT_DIR$/Spleef" />
           </set>
         </option>
       </GradleProjectSettings>

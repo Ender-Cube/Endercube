@@ -4,6 +4,7 @@ import net.endercube.Common.EndercubeMinigame;
 import net.endercube.Common.EndercubeServer;
 import net.endercube.Common.NPC;
 import net.endercube.Common.dimensions.FullbrightDimension;
+import net.endercube.Common.events.MinigamePlayerJoinEvent;
 import net.endercube.Common.players.EndercubePlayer;
 import net.endercube.Hub.listeners.MinigamePlayerJoin;
 import net.endercube.Hub.listeners.PlayerMove;
@@ -31,19 +32,23 @@ public class HubMinigame extends EndercubeMinigame {
         super(endercubeServer);
         hubMinigame = this;
 
-        // Create NPC(s)
+        // Create game NPCs
         new NPC("Parkour", PlayerSkin.fromUsername("Jeb_"), getInstances().getFirst(), new Pos(0.5, 101, -5.5),
                 player -> player.openInventory(ParkourMapInventory.getInventory(false)));
 
-        new NPC("Rambino_PorkChop", PlayerSkin.fromUsername("Rambino_PorkChop"), getInstances().getFirst(), new Pos(-39.5, 101, 1.5, -90, 0),
-                player -> {});
+        new NPC("Spleef", PlayerSkin.fromUsername("MinieChaos"), getInstances().getFirst(), new Pos(-2.5, 101, -5.5),
+                player -> MinecraftServer.getGlobalEventHandler().call(new MinigamePlayerJoinEvent("spleef", (EndercubePlayer) player, "")));
 
-        new NPC("Zax71", PlayerSkin.fromUsername("Zax71"), getInstances().get(0), new Pos(-39.5, 101, 0.5, -90, 0),
-                player -> {player.sendMessage("I do the dev work on the server!");});
+        // Create credits NPCs
+        new NPC("Rambino_PorkChop", PlayerSkin.fromUsername("Rambino_PorkChop"), getInstances().getFirst(), new Pos(-39.5, 101, 1.5, -90, 0),
+                player -> {
+                });
+
+        new NPC("Zax71", PlayerSkin.fromUsername("Zax71"), getInstances().getFirst(), new Pos(-39.5, 101, 0.5, -90, 0),
+                player -> player.sendMessage("I do the dev work on the server!"));
 
         new NPC("david123rob", PlayerSkin.fromUsername("david123rob"), getInstances().getFirst(), new Pos(-39.5, 101, -0.5, -90, 0),
-                player -> {player.sendMessage("I built the hub!");});
-
+                player -> player.sendMessage("I built the hub!"));
 
 
         // Register events
@@ -55,7 +60,6 @@ public class HubMinigame extends EndercubeMinigame {
     }
 
 
-
     @Override
     public String getName() {
         return "hub";
@@ -63,23 +67,19 @@ public class HubMinigame extends EndercubeMinigame {
 
     /**
      * There is only one hub, so only one item
+     *
      * @return An {@code ArrayList} containing the hub instance
      */
     @Override
-    public ArrayList<InstanceContainer> initInstances() {
+    public ArrayList<InstanceContainer> initInstances() throws IOException {
         ArrayList<InstanceContainer> instances = new ArrayList<>();
         InstanceContainer hubInstance;
         // Load the map
-        try {
-            logger.info("Loading Hub world");
-            hubInstance = MinecraftServer.getInstanceManager().createInstanceContainer(
-                    FullbrightDimension.INSTANCE,
-                    new PolarLoader(Paths.get("./config/worlds/hub.polar"))
-            );
-        } catch (IOException e) {
-            logger.error("Could not load the hub world in ./config/worlds/hub.polar");
-            throw new RuntimeException(e);
-        }
+        logger.info("Loading Hub world");
+        hubInstance = MinecraftServer.getInstanceManager().createInstanceContainer(
+                FullbrightDimension.INSTANCE,
+                new PolarLoader(Paths.get("./config/worlds/hub.polar"))
+        );
 
         hubInstance.setTimeRate(0);
 
@@ -93,6 +93,7 @@ public class HubMinigame extends EndercubeMinigame {
 
     /**
      * Sends the player to the hub
+     *
      * @param rootCommand The root command (/<this.getName())
      * @return the modified rootCommand
      */

@@ -25,6 +25,7 @@ import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import redis.clients.jedis.JedisPooled;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +40,7 @@ public abstract class EndercubeMinigame {
     public CommentedConfigurationNode config;
     protected ConfigUtils configUtils;
     protected @NotNull EventNode<Event> eventNode;
-    protected ArrayList<InstanceContainer> instances;
+    private ArrayList<InstanceContainer> instances;
     private EndercubeServer endercubeServer;
 
     // Create an instance of the logger
@@ -54,7 +55,14 @@ public abstract class EndercubeMinigame {
 
         // Initialise instances
         instances = new ArrayList<>();
-        instances = initInstances();
+
+
+        try {
+            instances = initInstances();
+        } catch (IOException e) {
+            logger.error("Failed to load instances for " + getName());
+            throw new RuntimeException(e);
+        }
 
         // Create the eventNode
         // Filter if the event is an instanceEvent happening in our instances or a minigameEvent on this minigame
@@ -79,18 +87,21 @@ public abstract class EndercubeMinigame {
 
     /**
      * The name of this minigame. must be unique
+     *
      * @return The name
      */
     public abstract String getName();
 
     /**
      * Loads all the instances
+     *
      * @return An ArrayList of InstanceContainer's
      */
-    protected abstract ArrayList<InstanceContainer> initInstances();
+    protected abstract ArrayList<InstanceContainer> initInstances() throws IOException;
 
     /**
      * Called to add subcommands to the rootCommand given
+     *
      * @param rootCommand The root command (/<this.getName())
      * @return The root command with extra commands added to it (or not! I don't mind)
      */
@@ -112,6 +123,7 @@ public abstract class EndercubeMinigame {
 
     /**
      * Get the instances associated with this minigame
+     *
      * @return The instances
      */
     public ArrayList<InstanceContainer> getInstances() {
@@ -129,6 +141,7 @@ public abstract class EndercubeMinigame {
 
     /**
      * Creates a database object
+     *
      * @param clazz The class extending AbstractDatabase to use
      * @return An instance of the database
      */

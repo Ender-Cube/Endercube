@@ -11,6 +11,7 @@ version = "1.0.0"
 dependencies {
     implementation(project(":Common"))
     implementation(project(":Parkour"))
+    implementation(project(":Spleef"))
     implementation(project(":Hub"))
 
     // Jedis (Redis lib)
