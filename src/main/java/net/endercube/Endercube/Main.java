@@ -9,7 +9,7 @@ import net.endercube.Endercube.listeners.AsyncPlayerConfiguration;
 import net.endercube.Endercube.listeners.PlayerDisconnect;
 import net.endercube.Hub.HubMinigame;
 import net.endercube.Parkour.ParkourMinigame;
-import net.endercube.spleef.SpleefMinigame;
+import net.endercube.spleef.minigame.SpleefMinigame;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.permission.Permission;
 import net.minestom.server.utils.NamespaceID;

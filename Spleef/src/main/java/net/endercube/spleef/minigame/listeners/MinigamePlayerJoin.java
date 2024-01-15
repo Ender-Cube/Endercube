@@ -1,14 +1,15 @@
-package net.endercube.spleef.listeners;
+package net.endercube.spleef.minigame.listeners;
 
 import net.endercube.Common.events.MinigamePlayerJoinEvent;
 import net.endercube.Common.players.EndercubePlayer;
-import net.endercube.spleef.SpleefActiveGame;
-import net.endercube.spleef.SpleefMinigame;
+import net.endercube.spleef.activeGame.SpleefActiveGame;
+import net.endercube.spleef.minigame.SpleefMinigame;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.instance.Instance;
+import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,6 +47,7 @@ public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent
         player.setInstance(hub, spawnPos);
         player.sendMessage(chatPrefix.append(Component.text("Welcome to the spleef hub! A game will start soon")));
 
+        // TODO: Do proper join checking
         if (hub.getPlayers().size() == maximumPlayers) {
             startGame();
         }
@@ -56,12 +58,18 @@ public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent
 
     private void startGame() {
         // String selectedMapName = hub.getTag(Tag.String("selectedMap"));
+        // TODO: implement map voting
         String selectedMapName = "spleef-1";
-        
-        Instance selectedMap = SpleefMinigame.spleefMinigame.getInstances().stream()
+
+        InstanceContainer selectedMap = SpleefMinigame.spleefMinigame.getInstances().stream()
                 .filter((map) -> map.getTag(Tag.String("name")).equals(selectedMapName))
                 .findFirst()
                 .orElse(null);
+
+        if (selectedMap == null) {
+            logger.error("The selected map's name does not exist. Something has really gone wrong!");
+            return;
+        }
 
         new SpleefActiveGame(
                 selectedMap,

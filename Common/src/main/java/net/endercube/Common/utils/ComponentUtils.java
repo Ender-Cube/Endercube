@@ -22,6 +22,29 @@ public final class ComponentUtils {
     private final static int CENTER_PX = 154;
 
     /**
+     * Adds ordinals(st,nd,rd,th to a number)
+     *
+     * @param number The number to apply
+     * @return A component containing the number and ordinal (e.g: 1st)
+     */
+    public static Component addOrdinals(int number) {
+        final String prefix;
+
+        if (number >= 11 && number <= 13) {
+            return Component.text(number + "th");
+        }
+        
+        switch (number % 10) {
+            case 1 -> prefix = "st";
+            case 2 -> prefix = "nd";
+            case 3 -> prefix = "rd";
+            default -> prefix = "th";
+        }
+
+        return Component.text(number + prefix);
+    }
+
+    /**
      * Changes a number of milliseconds to the HH:mm:ss.SSS format
      *
      * @param milliseconds The number of milliseconds

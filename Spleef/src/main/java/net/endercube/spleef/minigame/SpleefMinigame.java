@@ -1,9 +1,9 @@
-package net.endercube.spleef;
+package net.endercube.spleef.minigame;
 
 import net.endercube.Common.EndercubeMinigame;
 import net.endercube.Common.EndercubeServer;
 import net.endercube.Common.dimensions.FullbrightDimension;
-import net.endercube.spleef.listeners.MinigamePlayerJoin;
+import net.endercube.spleef.minigame.listeners.MinigamePlayerJoin;
 import net.hollowcube.polar.PolarLoader;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.Command;
@@ -90,6 +90,7 @@ public class SpleefMinigame extends EndercubeMinigame {
 
             // Add tags
             currentInstance.setTag(Tag.Transient("spawnPos"), configUtils.getPosFromConfig(configNode.node("spawn")));
+            currentInstance.setTag(Tag.Integer("deathY"), configNode.node("deathY").getInt());
             currentInstance.setTag(Tag.String("name"), mapName);
 
 

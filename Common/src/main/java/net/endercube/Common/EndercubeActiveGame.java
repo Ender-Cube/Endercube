@@ -1,27 +1,29 @@
 package net.endercube.Common;
 
+import net.endercube.Common.events.MinigameStartEvent;
 import net.endercube.Common.players.EndercubePlayer;
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.EntityType;
+import net.minestom.server.event.EventFilter;
 import net.minestom.server.event.EventNode;
 import net.minestom.server.event.instance.RemoveEntityFromInstanceEvent;
 import net.minestom.server.event.trait.InstanceEvent;
 import net.minestom.server.instance.Instance;
+import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Set;
+import java.util.UUID;
 
 public abstract class EndercubeActiveGame {
 
-    private static final Logger logger;
-
-
+    protected static final Logger logger;
     private final Instance instance;
-
-
     private final Set<EndercubePlayer> players;
     private final EventNode<InstanceEvent> eventNode;
+    private final EventNode<InstanceEvent> activeEventNode;
 
     static {
         logger = LoggerFactory.getLogger(EndercubeActiveGame.class);
@@ -36,13 +38,36 @@ public abstract class EndercubeActiveGame {
     public EndercubeActiveGame(@NotNull Instance instance, @NotNull Set<EndercubePlayer> players) {
         this.instance = instance;
         this.players = players;
-        this.eventNode = instance.eventNode();
+
 
         // The instance should not contain players
         if (!instance.getPlayers().isEmpty()) {
             logger.error("The provided instance for an active game contains players! " + instance.getPlayers() + " are currently in the instance");
         }
 
+        // Init tags
+        instance.setTag(Tag.Boolean("activeGameStarted"), false);
+
+        eventNode = instance.eventNode();
+
+        // EventNode that will only call when the game has started
+        activeEventNode = EventNode.event(
+                "ActiveGameActiveEventNode-" + UUID.randomUUID(),
+                EventFilter.INSTANCE,
+                (InstanceEvent event) -> {
+                    if (!event.getInstance().equals(instance)) {
+                        return false;
+                    }
+
+                    return event.getInstance().getTag(Tag.Boolean("activeGameStarted"));
+                }
+        );
+        MinecraftServer.getGlobalEventHandler().addChild(activeEventNode);
+
+        this.registerDefaultEvents();
+    }
+
+    private void registerDefaultEvents() {
         // Automatically call minigameLeave on player leave
         eventNode.addListener(RemoveEntityFromInstanceEvent.class, event -> {
             if (event.getEntity().getEntityType() != EntityType.PLAYER) {
@@ -54,6 +79,11 @@ public abstract class EndercubeActiveGame {
             players.remove(player);
             logger.debug(player.getUsername() + " Just left an active minigame, removing from the players and calling custom tasks");
             this.onPlayerLeave();
+        });
+
+        // Automatically set "activeGameStarted" tag on minigame start
+        eventNode.addListener(MinigameStartEvent.class, event -> {
+            event.getInstance().setTag(Tag.Boolean("activeGameStarted"), true);
         });
     }
 
@@ -75,6 +105,15 @@ public abstract class EndercubeActiveGame {
      */
     protected EventNode<InstanceEvent> getEventNode() {
         return eventNode;
+    }
+
+    /**
+     * Get the event node for once the game has started, does not include minigameEvents as these should be handled elsewhere
+     *
+     * @return The eventNode
+     */
+    public EventNode<InstanceEvent> getActiveEventNode() {
+        return activeEventNode;
     }
 
     /**
