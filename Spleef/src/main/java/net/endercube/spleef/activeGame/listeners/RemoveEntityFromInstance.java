@@ -44,7 +44,7 @@ public class RemoveEntityFromInstance implements EventListener<RemoveEntityFromI
             return Result.SUCCESS;
         }
 
-        int placement = gameInstance.getPlayers().size() + 1;
+        int placement = gameInstance.getPlayers().size();
         player.sendMessage(SpleefMinigame.spleefMinigame.getChatPrefix()
                 .append(Component.text("You got "))
                 .append(ComponentUtils.addOrdinals(placement).decorate(TextDecoration.BOLD))
