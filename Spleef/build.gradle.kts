@@ -9,4 +9,7 @@ dependencies {
 
     // Polar
     implementation("dev.hollowcube:polar:1.6.1")
+
+    // GoldenStack/window
+    implementation("com.github.GoldenStack:window:-SNAPSHOT")
 }

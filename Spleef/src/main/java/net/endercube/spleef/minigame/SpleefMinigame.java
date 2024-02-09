@@ -3,6 +3,7 @@ package net.endercube.spleef.minigame;
 import net.endercube.Common.EndercubeMinigame;
 import net.endercube.Common.EndercubeServer;
 import net.endercube.Common.dimensions.FullbrightDimension;
+import net.endercube.spleef.minigame.commands.VoteCommand;
 import net.endercube.spleef.minigame.listeners.MinigamePlayerJoin;
 import net.hollowcube.polar.PolarLoader;
 import net.minestom.server.MinecraftServer;
@@ -10,7 +11,7 @@ import net.minestom.server.command.builder.Command;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.tag.Tag;
-import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.CommentedConfigurationNode;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +81,7 @@ public class SpleefMinigame extends EndercubeMinigame {
                 continue;
             }
 
-            ConfigurationNode configNode = config.node("maps", mapName);
+            CommentedConfigurationNode configNode = config.node("maps", mapName);
 
             // Load instance
             InstanceContainer currentInstance = MinecraftServer.getInstanceManager().createInstanceContainer(
@@ -89,9 +90,14 @@ public class SpleefMinigame extends EndercubeMinigame {
             );
 
             // Add tags
+            var loadRadiusNode = configNode.node("chunkLoadRadius");
+            loadRadiusNode.comment("The radius to load chunks around when copying the map. Should contain the whole map.\n0 is 1 chunk and 2 is a 3x3");
+            logger.debug("Load Radius for " + mapName + " is: " + loadRadiusNode.getInt());
+
             currentInstance.setTag(Tag.Transient("spawnPos"), configUtils.getPosFromConfig(configNode.node("spawn")));
             currentInstance.setTag(Tag.Integer("deathY"), configNode.node("deathY").getInt());
             currentInstance.setTag(Tag.String("name"), mapName);
+            currentInstance.setTag(Tag.Integer("chunkLoadRadius"), loadRadiusNode.getInt());
 
 
             instances.add(currentInstance);
@@ -104,6 +110,7 @@ public class SpleefMinigame extends EndercubeMinigame {
 
     @Override
     protected Command initCommands(Command rootCommand) {
+        rootCommand.addSubcommand(new VoteCommand());
         return rootCommand;
     }
 

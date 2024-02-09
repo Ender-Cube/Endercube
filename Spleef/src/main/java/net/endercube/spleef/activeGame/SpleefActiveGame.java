@@ -38,7 +38,7 @@ public class SpleefActiveGame extends EndercubeActiveGame {
         players.forEach((player) -> {
             player.setInstance(instance, instance.getTag(Tag.Transient("spawnPos")));
             player.getInventory().setItemStack(0, ItemStack.builder(Material.GOLDEN_SHOVEL).build());
-            player.setGameMode(GameMode.SURVIVAL);
+            player.setGameMode(GameMode.ADVENTURE);
         });
 
         // Init tags
@@ -57,6 +57,9 @@ public class SpleefActiveGame extends EndercubeActiveGame {
                     final Title title = Title.title(Component.text("Go!").color(NamedTextColor.GOLD), Component.empty(), times);
                     player.showTitle(title);
                     player.playSound(Sound.sound(SoundEvent.BLOCK_NOTE_BLOCK_IMITATE_ENDER_DRAGON, Sound.Source.PLAYER, 1f, 1f));
+                    
+                    // The player can break blocks now
+                    player.setGameMode(GameMode.SURVIVAL);
 
                     // Call minigame start
                     getEventNode().call(new MinigameStartEvent(getInstance()));

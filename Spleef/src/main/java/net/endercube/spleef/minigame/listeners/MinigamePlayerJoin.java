@@ -2,11 +2,14 @@ package net.endercube.spleef.minigame.listeners;
 
 import net.endercube.Common.events.MinigamePlayerJoinEvent;
 import net.endercube.Common.players.EndercubePlayer;
+import net.endercube.Common.utils.ChunkLoader;
 import net.endercube.spleef.activeGame.SpleefActiveGame;
 import net.endercube.spleef.minigame.SpleefMinigame;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.coordinate.Vec;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.InstanceContainer;
@@ -71,8 +74,16 @@ public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent
             return;
         }
 
+        // Load the map so the chunks actually get copied
+        int loadRadius = selectedMap.getTag(Tag.Integer("chunkLoadRadius"));
+        ChunkLoader.loadRadius(selectedMap, new Vec(0, 0, 0), loadRadius);
+
+        // Copy and register the instance
+        InstanceContainer gameMap = selectedMap.copy();
+        MinecraftServer.getInstanceManager().registerInstance(gameMap);
+
         new SpleefActiveGame(
-                selectedMap,
+                gameMap,
                 hub.getPlayers()
                         .stream()
                         .map((player) -> (EndercubePlayer) player)
