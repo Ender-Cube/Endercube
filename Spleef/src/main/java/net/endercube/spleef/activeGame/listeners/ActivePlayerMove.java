@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static net.endercube.Common.EndercubeMinigame.logger;
 
-public class PlayerMove implements EventListener<PlayerMoveEvent> {
+public class ActivePlayerMove implements EventListener<PlayerMoveEvent> {
     @Override
     public @NotNull Class<PlayerMoveEvent> eventType() {
         return PlayerMoveEvent.class;

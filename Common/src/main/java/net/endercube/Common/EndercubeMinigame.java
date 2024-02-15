@@ -39,7 +39,7 @@ public abstract class EndercubeMinigame {
     private HoconConfigurationLoader configLoader;
     public CommentedConfigurationNode config;
     protected ConfigUtils configUtils;
-    protected @NotNull EventNode<Event> eventNode;
+    public @NotNull EventNode<Event> eventNode;
     private ArrayList<InstanceContainer> instances;
     private EndercubeServer endercubeServer;
 
@@ -55,7 +55,6 @@ public abstract class EndercubeMinigame {
 
         // Initialise instances
         instances = new ArrayList<>();
-
 
         try {
             instances = initInstances();
@@ -80,8 +79,6 @@ public abstract class EndercubeMinigame {
 
         // Register the event node
         MinecraftServer.getGlobalEventHandler().addChild(eventNode);
-
-
     }
 
 

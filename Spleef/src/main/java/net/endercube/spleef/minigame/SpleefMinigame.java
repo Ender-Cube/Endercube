@@ -3,8 +3,9 @@ package net.endercube.spleef.minigame;
 import net.endercube.Common.EndercubeMinigame;
 import net.endercube.Common.EndercubeServer;
 import net.endercube.Common.dimensions.FullbrightDimension;
-import net.endercube.spleef.minigame.commands.VoteCommand;
 import net.endercube.spleef.minigame.listeners.MinigamePlayerJoin;
+import net.endercube.spleef.minigame.listeners.MinigamePlayerLeave;
+import net.endercube.spleef.minigame.listeners.PlayerMove;
 import net.hollowcube.polar.PolarLoader;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.Command;
@@ -24,12 +25,16 @@ public class SpleefMinigame extends EndercubeMinigame {
 
     public static SpleefMinigame spleefMinigame;
     public Instance spleefHub;
+    private final int minimumPlayersConfigValue = config.node("minimumPlayers").getInt();
+    private final int maximumPlayersConfigValue = config.node("maximumPlayers").getInt();
 
     public SpleefMinigame(EndercubeServer endercubeServer) {
         super(endercubeServer);
         spleefMinigame = this;
 
         eventNode
+                .addListener(new PlayerMove())
+                .addListener(new MinigamePlayerLeave())
                 .addListener(new MinigamePlayerJoin());
 
         this.registerCommands();
@@ -69,6 +74,7 @@ public class SpleefMinigame extends EndercubeMinigame {
         spleefHub.setTimeRate(0);
 
         spleefHub.setTag(Tag.Transient("spawnPos"), configUtils.getPosFromConfig(config.node("hub", "spawn")));
+        spleefHub.setTag(Tag.Integer("deathY"), config.node("hub", "deathY").getInt());
 
         // Loop through all maps to load them
         for (File worldFile : worldFiles) {
@@ -110,15 +116,30 @@ public class SpleefMinigame extends EndercubeMinigame {
 
     @Override
     protected Command initCommands(Command rootCommand) {
-        rootCommand.addSubcommand(new VoteCommand());
+        // TODO: implement map voting
+        // rootCommand.addSubcommand(new VoteCommand());
         return rootCommand;
     }
 
     public int getMinimumPlayers() {
-        return config.node("minimumPlayers").getInt();
+        checkMaxMin();
+        return minimumPlayersConfigValue;
     }
 
     public int getMaximumPlayers() {
-        return config.node("maximumPlayers").getInt();
+        checkMaxMin();
+        return maximumPlayersConfigValue;
+    }
+
+    private void checkMaxMin() {
+        if (minimumPlayersConfigValue > maximumPlayersConfigValue) {
+            logger.error("The maximum player count for spleef should be larger than the minimum player count");
+            MinecraftServer.stopCleanly();
+        }
+
+        if (minimumPlayersConfigValue < 2) {
+            logger.error("There must be at least 2 players in a spleef game! Update your minimum player count to reflect this");
+            MinecraftServer.stopCleanly();
+        }
     }
 }

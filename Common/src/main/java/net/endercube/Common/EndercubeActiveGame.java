@@ -24,6 +24,7 @@ public abstract class EndercubeActiveGame {
     private final Set<EndercubePlayer> players;
     private final EventNode<InstanceEvent> eventNode;
     private final EventNode<InstanceEvent> activeEventNode;
+    private final EventNode<InstanceEvent> inactiveEventNode;
 
     static {
         logger = LoggerFactory.getLogger(EndercubeActiveGame.class);
@@ -62,7 +63,21 @@ public abstract class EndercubeActiveGame {
                     return event.getInstance().getTag(Tag.Boolean("activeGameStarted"));
                 }
         );
+
+        // EventNode that will only call when the game has not started
+        inactiveEventNode = EventNode.event(
+                "ActiveGameActiveEventNode-" + UUID.randomUUID(),
+                EventFilter.INSTANCE,
+                (InstanceEvent event) -> {
+                    if (!event.getInstance().equals(instance)) {
+                        return false;
+                    }
+
+                    return !event.getInstance().getTag(Tag.Boolean("activeGameStarted"));
+                }
+        );
         MinecraftServer.getGlobalEventHandler().addChild(activeEventNode);
+        MinecraftServer.getGlobalEventHandler().addChild(inactiveEventNode);
 
         this.registerDefaultEvents();
     }
@@ -114,6 +129,15 @@ public abstract class EndercubeActiveGame {
      */
     public EventNode<InstanceEvent> getActiveEventNode() {
         return activeEventNode;
+    }
+
+    /**
+     * Get the event node for when tje game has not started, does not include minigameEvents as these should be handled elsewhere
+     *
+     * @return The eventNode
+     */
+    public EventNode<InstanceEvent> getInactiveEventNode() {
+        return inactiveEventNode;
     }
 
     /**
