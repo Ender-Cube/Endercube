@@ -24,11 +24,7 @@ import redis.clients.jedis.JedisPooled;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -56,6 +52,7 @@ public class EndercubeServer {
 
     /**
      * Add a minigame to the server
+     *
      * @param minigame The minigame to add
      * @return The builder
      */
@@ -68,6 +65,7 @@ public class EndercubeServer {
     public @NotNull CommentedConfigurationNode getGlobalConfig() {
         return globalConfig;
     }
+
     public @NotNull ConfigUtils getGlobalConfigUtils() {
         return globalConfigUtils;
     }
@@ -103,6 +101,7 @@ public class EndercubeServer {
 
         /**
          * Add a global event, will be called regardless of minigame
+         *
          * @param listener The listener
          * @return The builder
          */
@@ -113,8 +112,9 @@ public class EndercubeServer {
 
         /**
          * Add a global event, will be called regardless of minigame
+         *
          * @param eventType The type of event to listen for
-         * @param listener The listener
+         * @param listener  The listener
          * @return The builder
          */
         public <E extends Event> EndercubeServerBuilder addGlobalEvent(@NotNull Class<E> eventType, @NotNull Consumer<E> listener) {
@@ -124,7 +124,8 @@ public class EndercubeServer {
 
         /**
          * Add a block handler
-         * @param namespace The namespace name for this block
+         *
+         * @param namespace       The namespace name for this block
          * @param handlerSupplier THe handler for this block
          * @return The builder
          */
@@ -178,7 +179,7 @@ public class EndercubeServer {
             MinecraftServer.getGlobalEventHandler().addChild(globalEvents);
 
             // Init block handlers
-            for(Map.Entry<NamespaceID, Supplier<BlockHandler>> entry : blockHandlers.entrySet()) {
+            for (Map.Entry<NamespaceID, Supplier<BlockHandler>> entry : blockHandlers.entrySet()) {
                 MinecraftServer.getBlockManager().registerHandler(entry.getKey(), entry.getValue());
                 logger.debug("Added a block handler for " + entry.getKey());
             }
@@ -193,6 +194,14 @@ public class EndercubeServer {
             }
             initEncryption(encryptionMode, globalConfigUtils.getOrSetDefault(globalConfig.node("connection", "velocitySecret"), ""));
 
+            // Register the void
+            // Register minecraft:the_void
+            MinecraftServer.getBiomeManager().addBiome(Biome
+                    .builder()
+                    .name(NamespaceID.from("minecraft:the_void"))
+                    .build()
+            );
+
             // Start server
             int port = Integer.parseInt(globalConfigUtils.getOrSetDefault(globalConfig.node("connection", "port"), "25565"));
             minecraftServer.start("0.0.0.0", port);
@@ -201,24 +210,19 @@ public class EndercubeServer {
             // Set player provider
             MinecraftServer.getConnectionManager().setPlayerProvider(EndercubePlayer::new);
             logger.debug("Set player provider");
-
-            // Register the void
-            // Register minecraft:the_void
-            MinecraftServer.getBiomeManager().addBiome(Biome
-                    .builder()
-                    .name(NamespaceID.from("minecraft:the_void"))
-                    .build()
-            );
         }
 
         enum EncryptionMode {
             ONLINE,
+            OFFLINE,
             VELOCITY
         }
 
         private void initEncryption(EncryptionMode mode, String velocitySecret) {
             switch (mode) {
                 case ONLINE -> MojangAuth.init();
+                case OFFLINE -> {
+                }
                 case VELOCITY -> {
                     if (!Objects.equals(velocitySecret, "")) {
                         VelocityProxy.enable(velocitySecret);
@@ -233,6 +237,7 @@ public class EndercubeServer {
 
         /**
          * Sets the logback logging level
+         *
          * @param level The level to set to, INFO by default
          */
         private static void setLoggingLevel(Level level) {

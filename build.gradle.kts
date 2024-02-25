@@ -11,6 +11,7 @@ version = "1.0.0"
 dependencies {
     implementation(project(":Common"))
     implementation(project(":Parkour"))
+    implementation(project(":Spleef"))
     implementation(project(":Hub"))
 
     // Jedis (Redis lib)
@@ -33,7 +34,8 @@ allprojects {
 
     dependencies {
         // Minestom
-        implementation("dev.hollowcube:minestom-ce-snapshots:1_20_4-13f9cf2ec9")
+        // implementation("dev.hollowcube:minestom-ce:5347c0b11f")
+        implementation("net.minestom:minestom-snapshots:fe46ed4ac2")
 
         // Configuration API
         implementation("org.spongepowered:configurate-hocon:4.1.2")

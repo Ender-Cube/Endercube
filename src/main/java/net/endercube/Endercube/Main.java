@@ -4,15 +4,12 @@ import net.endercube.Common.EndercubeServer;
 import net.endercube.Common.commands.GenericRootCommand;
 import net.endercube.Endercube.blocks.Sign;
 import net.endercube.Endercube.blocks.Skull;
-import net.endercube.Endercube.commands.BanCommand;
-import net.endercube.Endercube.commands.DiscordCommand;
-import net.endercube.Endercube.commands.KickCommand;
-import net.endercube.Endercube.commands.ResetTimeCommand;
-import net.endercube.Endercube.commands.UnbanCommand;
+import net.endercube.Endercube.commands.*;
 import net.endercube.Endercube.listeners.AsyncPlayerConfiguration;
 import net.endercube.Endercube.listeners.PlayerDisconnect;
 import net.endercube.Hub.HubMinigame;
 import net.endercube.Parkour.ParkourMinigame;
+import net.endercube.spleef.minigame.SpleefMinigame;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.permission.Permission;
 import net.minestom.server.utils.NamespaceID;
@@ -42,6 +39,7 @@ public class Main {
 
         endercubeServer
                 .addMinigame(new ParkourMinigame(endercubeServer))
+                .addMinigame(new SpleefMinigame(endercubeServer))
                 .addMinigame(new HubMinigame(endercubeServer));
 
         jedis = endercubeServer.getJedisPooled();

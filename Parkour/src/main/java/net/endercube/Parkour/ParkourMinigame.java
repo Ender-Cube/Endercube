@@ -6,11 +6,7 @@ import net.endercube.Common.dimensions.FullbrightDimension;
 import net.endercube.Common.players.EndercubePlayer;
 import net.endercube.Parkour.commands.LeaderboardCommand;
 import net.endercube.Parkour.database.ParkourDatabase;
-import net.endercube.Parkour.listeners.InventoryPreClick;
-import net.endercube.Parkour.listeners.MinigamePlayerJoin;
-import net.endercube.Parkour.listeners.MinigamePlayerLeave;
-import net.endercube.Parkour.listeners.PlayerMove;
-import net.endercube.Parkour.listeners.PlayerUseItem;
+import net.endercube.Parkour.listeners.*;
 import net.hollowcube.polar.PolarLoader;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.Command;
@@ -77,6 +73,7 @@ public class ParkourMinigame extends EndercubeMinigame {
     @Override
     protected ArrayList<InstanceContainer> initInstances() {
         File[] worldFiles = Paths.get("./config/worlds/parkour").toFile().listFiles();
+        ArrayList<InstanceContainer> instances = new ArrayList<>();
         if (worldFiles == null) {
             logger.error("No parkour maps are found, please place some Polar worlds in ./config/worlds/parkour/");
             MinecraftServer.stopCleanly();
@@ -131,6 +128,7 @@ public class ParkourMinigame extends EndercubeMinigame {
 
     /**
      * Adds a leaderboard command
+     *
      * @param rootCommand The root command (/<this.getName())
      * @return The modified root command
      */
@@ -142,6 +140,7 @@ public class ParkourMinigame extends EndercubeMinigame {
 
     /**
      * Teleports the player back to the checkpoint they are on
+     *
      * @param player The player to teleport
      */
     public static void sendToCheckpoint(EndercubePlayer player) {

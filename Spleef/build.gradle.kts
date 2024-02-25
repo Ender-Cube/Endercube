@@ -1,5 +1,5 @@
 group = "net.endercube"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 dependencies {
     implementation(project(":Common"))
@@ -9,4 +9,7 @@ dependencies {
 
     // Polar
     implementation("dev.hollowcube:polar:1.7.1")
+
+    // GoldenStack/window
+    implementation("com.github.GoldenStack:window:-SNAPSHOT")
 }

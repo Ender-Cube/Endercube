@@ -3,6 +3,7 @@ package net.endercube.Common.utils;
 // Credit: https://www.spigotmc.org/threads/free-code-sending-perfectly-centered-chat-message.95872/
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,6 +21,145 @@ public final class ComponentUtils {
     }
 
     private final static int CENTER_PX = 154;
+
+    public static Component convertToSmallCaps(Component input) {
+        return input.replaceText(
+                TextReplacementConfig.builder()
+                        .match(".*")
+                        .replacement((match, original) -> Component.text(convertToSmallCaps(match.group())))
+                        .build()
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static String convertToSmallCaps(String input) {
+        char[] outChars = new char[input.length()];
+        int i = 0;
+        for (char currentChar : input.toCharArray()) {
+            outChars[i] = convertToSmallCaps(currentChar);
+            i++;
+        }
+
+        return new String(outChars);
+    }
+
+    /**
+     * Converts any upper or lower case char to its small caps equivalent. Just returns the input char if it is not a letter
+     *
+     * @param inputChar The char to modify
+     * @return The small caps version of the input char
+     */
+    public static char convertToSmallCaps(char inputChar) {
+        inputChar = Character.toLowerCase(inputChar);
+        switch (inputChar) {
+            case 'a' -> {
+                return 'ᴀ';
+            }
+            case 'b' -> {
+                return 'ʙ';
+            }
+            case 'c' -> {
+                return 'ᴄ';
+            }
+            case 'd' -> {
+                return 'ᴅ';
+            }
+            case 'e' -> {
+                return 'ᴇ';
+            }
+            case 'f' -> {
+                return 'ғ';
+            }
+            case 'g' -> {
+                return 'ɢ';
+            }
+            case 'h' -> {
+                return 'ʜ';
+            }
+            case 'i' -> {
+                return 'ɪ';
+            }
+            case 'j' -> {
+                return 'ᴊ';
+            }
+            case 'k' -> {
+                return 'ᴋ';
+            }
+            case 'l' -> {
+                return 'ʟ';
+            }
+            case 'm' -> {
+                return 'ᴍ';
+            }
+            case 'n' -> {
+                return 'ɴ';
+            }
+            case 'o' -> {
+                return 'ᴏ';
+            }
+            case 'p' -> {
+                return 'ǫ';
+            }
+            case 'q' -> {
+                return 'ǫ';
+            }
+            case 'r' -> {
+                return 'ʀ';
+            }
+            case 's' -> {
+                return 's';
+            }
+            case 't' -> {
+                return 'ᴛ';
+            }
+            case 'u' -> {
+                return 'ᴜ';
+            }
+            case 'v' -> {
+                return 'ᴠ';
+            }
+            case 'w' -> {
+                return 'ᴡ';
+            }
+            case 'x' -> {
+                return 'x';
+            }
+            case 'y' -> {
+                return 'ʏ';
+            }
+            case 'z' -> {
+                return 'ᴢ';
+            }
+            default -> {
+                return inputChar;
+            }
+        }
+    }
+
+    /**
+     * Adds ordinals(st,nd,rd,th to a number)
+     *
+     * @param number The number to apply
+     * @return A component containing the number and ordinal (e.g: 1st)
+     */
+    public static Component addOrdinals(int number) {
+        final String prefix;
+
+        if (number >= 11 && number <= 13) {
+            return Component.text(number + "th");
+        }
+
+        switch (number % 10) {
+            case 1 -> prefix = "st";
+            case 2 -> prefix = "nd";
+            case 3 -> prefix = "rd";
+            default -> prefix = "th";
+        }
+
+        return Component.text(number + prefix);
+    }
 
     /**
      * Changes a number of milliseconds to the HH:mm:ss.SSS format
