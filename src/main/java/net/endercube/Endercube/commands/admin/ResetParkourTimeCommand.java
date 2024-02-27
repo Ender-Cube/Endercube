@@ -1,4 +1,4 @@
-package net.endercube.Endercube.commands;
+package net.endercube.Endercube.commands.admin;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -16,12 +16,12 @@ import java.util.UUID;
 import static net.endercube.Parkour.ParkourMinigame.database;
 import static net.endercube.Parkour.ParkourMinigame.parkourMinigame;
 
-public class ResetTimeCommand extends Command {
+public class ResetParkourTimeCommand extends Command {
 
     /**
      * Resets a player's time
      */
-    public ResetTimeCommand() {
+    public ResetParkourTimeCommand() {
         super("resetParkourTime");
         var mapArgument = ArgumentType.Word("mapArgument").from(getParkourMapsAndAll());
         var playerArgument = ArgumentType.String("player");

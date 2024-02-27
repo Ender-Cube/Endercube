@@ -1,4 +1,4 @@
-package net.endercube.Endercube.commands;
+package net.endercube.Endercube.commands.admin;
 
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;

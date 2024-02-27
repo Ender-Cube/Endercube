@@ -4,7 +4,11 @@ import net.endercube.Common.EndercubeServer;
 import net.endercube.Common.commands.GenericRootCommand;
 import net.endercube.Endercube.blocks.Sign;
 import net.endercube.Endercube.blocks.Skull;
-import net.endercube.Endercube.commands.*;
+import net.endercube.Endercube.commands.DiscordCommand;
+import net.endercube.Endercube.commands.admin.BanCommand;
+import net.endercube.Endercube.commands.admin.KickCommand;
+import net.endercube.Endercube.commands.admin.ResetParkourTimeCommand;
+import net.endercube.Endercube.commands.admin.UnbanCommand;
 import net.endercube.Endercube.listeners.AsyncPlayerConfiguration;
 import net.endercube.Endercube.listeners.PlayerDisconnect;
 import net.endercube.Hub.HubMinigame;
@@ -50,7 +54,7 @@ public class Main {
     private static void initCommands() {
         GenericRootCommand adminCommand = new GenericRootCommand("admin");
         adminCommand.setCondition(((sender, commandString) -> sender.hasPermission(new Permission("operator"))));
-        adminCommand.addSubcommand(new ResetTimeCommand());
+        adminCommand.addSubcommand(new ResetParkourTimeCommand());
         adminCommand.addSubcommand(new BanCommand());
         adminCommand.addSubcommand(new UnbanCommand());
         adminCommand.addSubcommand(new KickCommand());
