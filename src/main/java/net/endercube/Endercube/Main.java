@@ -5,6 +5,7 @@ import net.endercube.Common.commands.GenericRootCommand;
 import net.endercube.Endercube.blocks.Sign;
 import net.endercube.Endercube.blocks.Skull;
 import net.endercube.Endercube.commands.DiscordCommand;
+import net.endercube.Endercube.commands.GitHubCommand;
 import net.endercube.Endercube.commands.PerformanceCommand;
 import net.endercube.Endercube.commands.admin.BanCommand;
 import net.endercube.Endercube.commands.admin.KickCommand;
@@ -67,5 +68,6 @@ public class Main {
         MinecraftServer.getCommandManager().register(adminCommand);
         MinecraftServer.getCommandManager().register(new DiscordCommand());
         MinecraftServer.getCommandManager().register(new PerformanceCommand());
+        MinecraftServer.getCommandManager().register(new GitHubCommand());
     }
 }
