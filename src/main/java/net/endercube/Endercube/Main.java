@@ -5,12 +5,14 @@ import net.endercube.Common.commands.GenericRootCommand;
 import net.endercube.Endercube.blocks.Sign;
 import net.endercube.Endercube.blocks.Skull;
 import net.endercube.Endercube.commands.DiscordCommand;
+import net.endercube.Endercube.commands.PerformanceCommand;
 import net.endercube.Endercube.commands.admin.BanCommand;
 import net.endercube.Endercube.commands.admin.KickCommand;
 import net.endercube.Endercube.commands.admin.ResetParkourTimeCommand;
 import net.endercube.Endercube.commands.admin.UnbanCommand;
 import net.endercube.Endercube.listeners.AsyncPlayerConfiguration;
 import net.endercube.Endercube.listeners.PlayerDisconnect;
+import net.endercube.Endercube.listeners.ServerTickMonitor;
 import net.endercube.Hub.HubMinigame;
 import net.endercube.Parkour.ParkourMinigame;
 import net.endercube.spleef.minigame.SpleefMinigame;
@@ -37,6 +39,7 @@ public class Main {
         endercubeServer = new EndercubeServer.EndercubeServerBuilder()
                 .addGlobalEvent(new AsyncPlayerConfiguration())
                 .addGlobalEvent(new PlayerDisconnect())
+                .addGlobalEvent(new ServerTickMonitor())
                 .addBlockHandler(NamespaceID.from("minecraft:sign"), Sign::new)
                 .addBlockHandler(NamespaceID.from("minecraft:skull"), Skull::new)
                 .startServer();
@@ -52,13 +55,17 @@ public class Main {
     }
 
     private static void initCommands() {
+        // Add admin commands
         GenericRootCommand adminCommand = new GenericRootCommand("admin");
         adminCommand.setCondition(((sender, commandString) -> sender.hasPermission(new Permission("operator"))));
         adminCommand.addSubcommand(new ResetParkourTimeCommand());
         adminCommand.addSubcommand(new BanCommand());
         adminCommand.addSubcommand(new UnbanCommand());
         adminCommand.addSubcommand(new KickCommand());
+
+        // Add public user commands
         MinecraftServer.getCommandManager().register(adminCommand);
         MinecraftServer.getCommandManager().register(new DiscordCommand());
+        MinecraftServer.getCommandManager().register(new PerformanceCommand());
     }
 }
