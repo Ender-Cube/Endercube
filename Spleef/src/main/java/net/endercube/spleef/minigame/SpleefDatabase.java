@@ -2,6 +2,7 @@ package net.endercube.spleef.minigame;
 
 import net.endercube.Common.database.AbstractDatabase;
 import net.minestom.server.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import redis.clients.jedis.JedisPooled;
 
 public class SpleefDatabase extends AbstractDatabase {
@@ -24,11 +25,19 @@ public class SpleefDatabase extends AbstractDatabase {
     }
 
     public int getWonGames(Player player) {
-        return Integer.parseInt(jedis.get(nameSpace + "wonGames:" + player.getUuid()));
+        @Nullable String wonGames = jedis.get(nameSpace + "wonGames:" + player.getUuid());
+        if (wonGames == null) {
+            return 0;
+        }
+        return Integer.parseInt(wonGames);
     }
 
     public int getLostGames(Player player) {
-        return Integer.parseInt(jedis.get(nameSpace + "lostGames:" + player.getUuid()));
+        @Nullable String lostGames = jedis.get(nameSpace + "lostGames:" + player.getUuid());
+        if (lostGames == null) {
+            return 0;
+        }
+        return Integer.parseInt(lostGames);
     }
 
     public int getAllGames(Player player) {

@@ -2,10 +2,10 @@ package net.endercube.Endercube.commands;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.utils.MathUtils;
 
+import static net.endercube.Common.utils.ComponentUtils.getTitle;
 import static net.endercube.Endercube.listeners.ServerTickMonitor.RAW_MSPT;
 
 public class PerformanceCommand extends Command {
@@ -16,17 +16,7 @@ public class PerformanceCommand extends Command {
         double tps = Math.min(20, 1000 / mspt);
 
         setDefaultExecutor(((commandSender, commandContext) -> {
-            commandSender.sendMessage(Component.empty()
-                    .append(
-                            Component.text("    ").decorate(TextDecoration.STRIKETHROUGH).color(NamedTextColor.BLUE)
-                    )
-                    .append(
-                            Component.text(" Server Performance ").color(NamedTextColor.BLUE)
-                    )
-                    .append(
-                            Component.text("    ").decorate(TextDecoration.STRIKETHROUGH).color(NamedTextColor.BLUE)
-                    )
-                    .append(Component.newline())
+            commandSender.sendMessage(getTitle(Component.text("Server Stats"))
                     .append(
                             Component.text("MSPT: ").color(NamedTextColor.WHITE)
                     )

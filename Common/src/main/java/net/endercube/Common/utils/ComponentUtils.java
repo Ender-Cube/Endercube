@@ -4,6 +4,8 @@ package net.endercube.Common.utils;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +23,23 @@ public final class ComponentUtils {
     }
 
     private final static int CENTER_PX = 154;
+
+    public static Component getTitle(Component text) {
+        final int LINE_SIZE = 10;
+        return centerComponent(Component.empty()
+                .append(getLine(LINE_SIZE).color(NamedTextColor.BLUE))
+                .append(Component.space())
+                .append(text)
+                .append(Component.space())
+                .append(getLine(LINE_SIZE).color(NamedTextColor.BLUE))
+                .append(Component.newline())
+        );
+    }
+
+    public static Component getLine(int size) {
+        String spaces = " ".repeat(size);
+        return Component.text(spaces).decorate(TextDecoration.STRIKETHROUGH);
+    }
 
     public static Component convertToSmallCaps(Component input) {
         return input.replaceText(

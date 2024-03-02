@@ -3,6 +3,7 @@ package net.endercube.spleef.minigame;
 import net.endercube.Common.EndercubeMinigame;
 import net.endercube.Common.EndercubeServer;
 import net.endercube.Common.dimensions.FullbrightDimension;
+import net.endercube.spleef.minigame.commands.StatsCommand;
 import net.endercube.spleef.minigame.listeners.MinigamePlayerJoin;
 import net.endercube.spleef.minigame.listeners.MinigamePlayerLeave;
 import net.endercube.spleef.minigame.listeners.PlayerMove;
@@ -126,6 +127,7 @@ public class SpleefMinigame extends EndercubeMinigame {
     protected Command initCommands(Command rootCommand) {
         // TODO: implement map voting
         // rootCommand.addSubcommand(new VoteCommand());
+        rootCommand.addSubcommand(new StatsCommand());
         return rootCommand;
     }
 
