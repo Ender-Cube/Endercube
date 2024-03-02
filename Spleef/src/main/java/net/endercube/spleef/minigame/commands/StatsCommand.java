@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.entity.Player;
+import net.minestom.server.utils.MathUtils;
 
 import static net.endercube.Common.utils.ComponentUtils.getTitle;
 import static net.endercube.spleef.minigame.SpleefMinigame.database;
@@ -46,11 +47,11 @@ public class StatsCommand extends Command {
         }));
     }
 
-    private int getWinPercent(Player player) {
+    private float getWinPercent(Player player) {
         // Stop divide by 0 errors
-        if (database.getLostGames(player) == 0) {
-            return 100;
+        if (database.getAllGames(player) == 0) {
+            return 0;
         }
-        return database.getWonGames(player) / database.getLostGames(player) * 100;
+        return MathUtils.round(((float) database.getWonGames(player) / (float) database.getAllGames(player)) * 100, 1);
     }
 }
