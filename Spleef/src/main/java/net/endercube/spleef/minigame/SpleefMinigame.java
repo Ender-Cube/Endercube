@@ -3,6 +3,7 @@ package net.endercube.spleef.minigame;
 import net.endercube.Common.EndercubeMinigame;
 import net.endercube.Common.EndercubeServer;
 import net.endercube.Common.dimensions.FullbrightDimension;
+import net.endercube.spleef.minigame.commands.StatsCommand;
 import net.endercube.spleef.minigame.listeners.MinigamePlayerJoin;
 import net.endercube.spleef.minigame.listeners.MinigamePlayerLeave;
 import net.endercube.spleef.minigame.listeners.PlayerMove;
@@ -25,6 +26,7 @@ public class SpleefMinigame extends EndercubeMinigame {
 
     public static SpleefMinigame spleefMinigame;
     public Instance spleefHub;
+    public static SpleefDatabase database;
     private final int minimumPlayersConfigValue = config.node("minimumPlayers").getInt();
     private final int maximumPlayersConfigValue = config.node("maximumPlayers").getInt();
 
@@ -36,6 +38,13 @@ public class SpleefMinigame extends EndercubeMinigame {
                 .addListener(new PlayerMove())
                 .addListener(new MinigamePlayerLeave())
                 .addListener(new MinigamePlayerJoin());
+
+        try {
+            database = this.createDatabase(SpleefDatabase.class);
+        } catch (Exception e) {
+            logger.error("Failed to create a spleef database");
+            throw new RuntimeException(e);
+        }
 
         this.registerCommands();
     }
@@ -118,6 +127,7 @@ public class SpleefMinigame extends EndercubeMinigame {
     protected Command initCommands(Command rootCommand) {
         // TODO: implement map voting
         // rootCommand.addSubcommand(new VoteCommand());
+        rootCommand.addSubcommand(new StatsCommand());
         return rootCommand;
     }
 
