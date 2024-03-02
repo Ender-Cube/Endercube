@@ -25,6 +25,7 @@ public class SpleefMinigame extends EndercubeMinigame {
 
     public static SpleefMinigame spleefMinigame;
     public Instance spleefHub;
+    public static SpleefDatabase database;
     private final int minimumPlayersConfigValue = config.node("minimumPlayers").getInt();
     private final int maximumPlayersConfigValue = config.node("maximumPlayers").getInt();
 
@@ -36,6 +37,13 @@ public class SpleefMinigame extends EndercubeMinigame {
                 .addListener(new PlayerMove())
                 .addListener(new MinigamePlayerLeave())
                 .addListener(new MinigamePlayerJoin());
+
+        try {
+            database = this.createDatabase(SpleefDatabase.class);
+        } catch (Exception e) {
+            logger.error("Failed to create a spleef database");
+            throw new RuntimeException(e);
+        }
 
         this.registerCommands();
     }
