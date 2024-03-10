@@ -1,5 +1,5 @@
-rootProject.name = "Endercube"
-include("Parkour")
-include("Hub")
-include("Common")
-include("Spleef")
+rootProject.name = "endercube"
+include("parkour")
+include("hub")
+include("common")
+include("spleef")

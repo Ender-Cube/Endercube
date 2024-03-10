@@ -9,13 +9,13 @@ group = "net.endercube"
 version = "1.0.0"
 
 dependencies {
-    implementation(project(":Common"))
-    implementation(project(":Parkour"))
-    implementation(project(":Spleef"))
-    implementation(project(":Hub"))
+    implementation(project(":common"))
+    implementation(project(":parkour"))
+    implementation(project(":spleef"))
+    implementation(project(":hub"))
 
     // Jedis (Redis lib)
-    implementation("redis.clients:jedis:5.1.0")
+    implementation("redis.clients:jedis:5.1.1")
 }
 
 // Global stuff
@@ -41,8 +41,8 @@ allprojects {
         implementation("org.spongepowered:configurate-hocon:4.1.2")
 
         // Kyori stuff (Adventure)
-        implementation("net.kyori:adventure-text-serializer-plain:4.13.1")
-        implementation("net.kyori:adventure-text-minimessage:4.13.1")
+        implementation("net.kyori:adventure-text-serializer-plain:4.14.0")
+        implementation("net.kyori:adventure-text-minimessage:4.14.0")
         implementation("net.kyori:adventure-text-serializer-ansi:4.14.0-SNAPSHOT")
 
         // Logger
