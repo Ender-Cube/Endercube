@@ -22,6 +22,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SpleefMinigame extends EndercubeMinigame {
 
@@ -98,6 +101,12 @@ public class SpleefMinigame extends EndercubeMinigame {
                 continue;
             }
 
+            // We only want to deal with polar files. Ignore everything else
+            if (!isPolar(worldFile.getName())) {
+                logger.trace("Skipped " + worldFile.getName() + " because it is not a polar world");
+                continue;
+            }
+
             CommentedConfigurationNode configNode = config.node("maps", mapName);
 
             // Load instance
@@ -153,5 +162,16 @@ public class SpleefMinigame extends EndercubeMinigame {
             logger.error("There must be at least 2 players in a spleef game! Update your minimum player count to reflect this");
             MinecraftServer.stopCleanly();
         }
+    }
+
+    private boolean isPolar(String file) {
+        Pattern pattern = Pattern.compile("\\.[0-9a-z]+$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(file);
+
+        if (matcher.find()) {
+            return Objects.equals(matcher.group(), ".polar");
+        }
+
+        return false;
     }
 }
