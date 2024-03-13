@@ -62,7 +62,7 @@ java {
 tasks {
     jar {
         manifest {
-            attributes["Main-Class"] = "net.endercube.Endercube.Main"
+            attributes["Main-Class"] = "net.endercube.endercube.Main"
         }
     }
 
