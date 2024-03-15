@@ -5,6 +5,8 @@ import net.minestom.server.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import redis.clients.jedis.JedisPooled;
 
+import java.util.UUID;
+
 public class SpleefDatabase extends AbstractDatabase {
     /**
      * An Endercube database
@@ -25,7 +27,11 @@ public class SpleefDatabase extends AbstractDatabase {
     }
 
     public int getWonGames(Player player) {
-        @Nullable String wonGames = jedis.get(nameSpace + "wonGames:" + player.getUuid());
+        return getWonGames(player.getUuid());
+    }
+
+    public int getWonGames(UUID playerUUID) {
+        @Nullable String wonGames = jedis.get(nameSpace + "wonGames:" + playerUUID.toString());
         if (wonGames == null) {
             return 0;
         }
@@ -33,7 +39,11 @@ public class SpleefDatabase extends AbstractDatabase {
     }
 
     public int getLostGames(Player player) {
-        @Nullable String lostGames = jedis.get(nameSpace + "lostGames:" + player.getUuid());
+        return getLostGames(player.getUuid());
+    }
+
+    public int getLostGames(UUID playerUUID) {
+        @Nullable String lostGames = jedis.get(nameSpace + "lostGames:" + playerUUID.toString());
         if (lostGames == null) {
             return 0;
         }
@@ -42,5 +52,9 @@ public class SpleefDatabase extends AbstractDatabase {
 
     public int getAllGames(Player player) {
         return getWonGames(player) + getLostGames(player);
+    }
+
+    public int getAllGames(UUID playerUUID) {
+        return getWonGames(playerUUID) + getLostGames(playerUUID);
     }
 }
