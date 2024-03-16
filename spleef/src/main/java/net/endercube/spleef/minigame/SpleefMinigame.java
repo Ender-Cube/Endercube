@@ -31,8 +31,8 @@ public class SpleefMinigame extends EndercubeMinigame {
     public static SpleefMinigame spleefMinigame;
     public Instance spleefHub;
     public static SpleefDatabase database;
-    private final int minimumPlayersConfigValue = config.node("minimumPlayers").getInt();
-    private final int maximumPlayersConfigValue = config.node("maximumPlayers").getInt();
+    private final int minimumPlayersConfigValue = config.getConfig().node("minimumPlayers").getInt();
+    private final int maximumPlayersConfigValue = config.getConfig().node("maximumPlayers").getInt();
 
     public SpleefMinigame(EndercubeServer endercubeServer) {
         super(endercubeServer);
@@ -87,8 +87,8 @@ public class SpleefMinigame extends EndercubeMinigame {
 
         spleefHub.setTimeRate(0);
 
-        spleefHub.setTag(Tag.Transient("spawnPos"), configUtils.getPosFromConfig(config.node("hub", "spawn")));
-        spleefHub.setTag(Tag.Integer("deathY"), config.node("hub", "deathY").getInt());
+        spleefHub.setTag(Tag.Transient("spawnPos"), config.getPosFromConfig(config.getConfig().node("hub", "spawn")));
+        spleefHub.setTag(Tag.Integer("deathY"), config.getConfig().node("hub", "deathY").getInt());
 
         // Loop through all maps to load them
         for (File worldFile : worldFiles) {
@@ -107,7 +107,7 @@ public class SpleefMinigame extends EndercubeMinigame {
                 continue;
             }
 
-            CommentedConfigurationNode configNode = config.node("maps", mapName);
+            CommentedConfigurationNode configNode = config.getConfig().node("maps", mapName);
 
             // Load instance
             InstanceContainer currentInstance = MinecraftServer.getInstanceManager().createInstanceContainer(
@@ -120,7 +120,7 @@ public class SpleefMinigame extends EndercubeMinigame {
             loadRadiusNode.comment("The radius to load chunks around when copying the map. Should contain the whole map.\n0 is 1 chunk and 2 is a 3x3");
             logger.debug("Load Radius for " + mapName + " is: " + loadRadiusNode.getInt());
 
-            currentInstance.setTag(Tag.Transient("spawnPos"), configUtils.getPosFromConfig(configNode.node("spawn")));
+            currentInstance.setTag(Tag.Transient("spawnPos"), config.getPosFromConfig(configNode.node("spawn")));
             currentInstance.setTag(Tag.Integer("deathY"), configNode.node("deathY").getInt());
             currentInstance.setTag(Tag.String("name"), mapName);
             currentInstance.setTag(Tag.Integer("chunkLoadRadius"), loadRadiusNode.getInt());

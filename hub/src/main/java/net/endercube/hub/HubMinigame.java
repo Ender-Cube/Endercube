@@ -84,8 +84,8 @@ public class HubMinigame extends EndercubeMinigame {
         hubInstance.setTimeRate(0);
 
         // Set the spawn positions
-        hubInstance.setTag(Tag.Transient("spawnPos"), configUtils.getPosFromConfig(config.node("world", "spawnPosition")));
-        hubInstance.setTag(Tag.Integer("deathY"), Integer.parseInt(configUtils.getOrSetDefault(config.node("world", "deathY"), "9")));
+        hubInstance.setTag(Tag.Transient("spawnPos"), config.getPosFromConfig(config.getConfig().node("world", "spawnPosition")));
+        hubInstance.setTag(Tag.Integer("deathY"), Integer.parseInt(config.getOrSetDefault(config.getConfig().node("world", "deathY"), "9")));
         instances.add(hubInstance);
         return instances;
     }

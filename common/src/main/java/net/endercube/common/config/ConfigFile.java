@@ -1,4 +1,4 @@
-package net.endercube.common.utils;
+package net.endercube.common.config;
 
 import io.leangen.geantyref.TypeToken;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -16,25 +16,56 @@ import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.configurate.serialize.SerializationException;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class ConfigUtils {
+public class ConfigFile {
 
-    private final Logger logger;
-    private final HoconConfigurationLoader LOADER;
-    private final CommentedConfigurationNode CONFIG;
+    private HoconConfigurationLoader configLoader;
+
+    private CommentedConfigurationNode config;
+    private static final Logger logger;
+
+    static {
+        logger = LoggerFactory.getLogger(ConfigFile.class);
+    }
 
     /**
-     * Reads config from disk
+     * Creates a config file
      *
-     * @param CONFIG The {@link HoconConfigurationLoader} to use to save your config
-     * @param LOADER The {@link HoconConfigurationLoader} to use to save your config
+     * @param name    The name of the file (excluding .conf)
+     * @param comment The header for the file
      */
-    public ConfigUtils(HoconConfigurationLoader LOADER, CommentedConfigurationNode CONFIG) {
-        this.logger = LoggerFactory.getLogger(ConfigUtils.class);
-        this.LOADER = LOADER;
-        this.CONFIG = CONFIG;
+    public ConfigFile(String name, String comment) {
+        // Create config
+        String fileName = name + ".conf";
+
+        configLoader = HoconConfigurationLoader.builder()
+                .path(Paths.get("./config/" + fileName))
+                .defaultOptions(configurationOptions -> configurationOptions.header(comment))
+                .build();
+
+
+        try {
+            config = configLoader.load();
+        } catch (ConfigurateException e) {
+            logger.error("An error occurred while loading \"" + fileName + "\": " + e.getMessage());
+            logger.error(Arrays.toString(e.getStackTrace()));
+            MinecraftServer.stopCleanly();
+        }
+
+        // Required to create the config file
+        this.saveConfig();
+    }
+
+    public HoconConfigurationLoader getConfigLoader() {
+        return configLoader;
+    }
+
+    public CommentedConfigurationNode getConfig() {
+        return config;
     }
 
     /**
@@ -42,7 +73,7 @@ public class ConfigUtils {
      */
     public void saveConfig() {
         try {
-            LOADER.save(CONFIG);
+            configLoader.save(config);
         } catch (final ConfigurateException e) {
             logger.error("Unable to save your messages configuration! Sorry! " + e.getMessage());
             MinecraftServer.stopCleanly();
@@ -169,6 +200,4 @@ public class ConfigUtils {
         }
         return outArrayList.toArray(new Vec[0]);
     }
-
-
 }

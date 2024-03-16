@@ -1,9 +1,9 @@
 package net.endercube.common;
 
 import net.endercube.common.commands.GenericRootCommand;
+import net.endercube.common.config.ConfigFile;
 import net.endercube.common.database.AbstractDatabase;
 import net.endercube.common.events.eventTypes.PlayerMinigameEvent;
-import net.endercube.common.utils.ConfigUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -20,15 +20,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongepowered.configurate.CommentedConfigurationNode;
-import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import redis.clients.jedis.JedisPooled;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Override this class to add minigames
@@ -36,9 +31,7 @@ import java.util.Arrays;
 public abstract class EndercubeMinigame {
 
     public static final Logger logger;
-    private HoconConfigurationLoader configLoader;
-    public CommentedConfigurationNode config;
-    protected ConfigUtils configUtils;
+    public ConfigFile config;
     public @NotNull EventNode<Event> eventNode;
     private ArrayList<InstanceContainer> instances;
     private EndercubeServer endercubeServer;
@@ -51,7 +44,7 @@ public abstract class EndercubeMinigame {
     protected EndercubeMinigame(EndercubeServer endercubeServer) {
         this.endercubeServer = endercubeServer;
 
-        createConfig();
+        config = new ConfigFile(getName(), "Config for the " + getName() + " minigame");
 
         // Initialise instances
         instances = new ArrayList<>();
@@ -144,30 +137,5 @@ public abstract class EndercubeMinigame {
      */
     public <T extends AbstractDatabase> T createDatabase(Class<T> clazz) throws Exception {
         return clazz.getConstructor(JedisPooled.class, String.class).newInstance(this.getEndercubeServer().getJedisPooled(), this.getName());
-    }
-
-    private void createConfig() {
-        // Create config and configUtils
-        String fileName = getName() + ".conf";
-
-
-        configLoader = HoconConfigurationLoader.builder()
-                .path(Paths.get("./config/" + fileName))
-                .defaultOptions(configurationOptions -> configurationOptions.header("This is the configuration file for the " + getName() + " minigame"))
-                .build();
-
-
-        try {
-            config = configLoader.load();
-        } catch (ConfigurateException e) {
-            logger.error("An error occurred while loading \"" + fileName + "\": " + e.getMessage());
-            logger.error(Arrays.toString(e.getStackTrace()));
-            MinecraftServer.stopCleanly();
-        }
-
-        configUtils = new ConfigUtils(configLoader, config);
-
-        // Required to create the config file
-        configUtils.saveConfig();
     }
 }

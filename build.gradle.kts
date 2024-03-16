@@ -10,9 +10,10 @@ version = "1.0.0"
 
 dependencies {
     implementation(project(":common"))
+    implementation(project(":discord"))
+    implementation(project(":hub"))
     implementation(project(":parkour"))
     implementation(project(":spleef"))
-    implementation(project(":hub"))
 
     // Jedis (Redis lib)
     implementation("redis.clients:jedis:5.1.1")

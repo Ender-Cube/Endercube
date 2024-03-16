@@ -2,6 +2,7 @@ package net.endercube.endercube;
 
 import net.endercube.common.EndercubeServer;
 import net.endercube.common.commands.GenericRootCommand;
+import net.endercube.discord.Discord;
 import net.endercube.endercube.blocks.Sign;
 import net.endercube.endercube.blocks.Skull;
 import net.endercube.endercube.commands.DiscordCommand;
@@ -12,6 +13,7 @@ import net.endercube.endercube.commands.admin.KickCommand;
 import net.endercube.endercube.commands.admin.ResetParkourTimeCommand;
 import net.endercube.endercube.commands.admin.UnbanCommand;
 import net.endercube.endercube.listeners.AsyncPlayerConfiguration;
+import net.endercube.endercube.listeners.AsyncPlayerPreLogin;
 import net.endercube.endercube.listeners.PlayerDisconnect;
 import net.endercube.endercube.listeners.ServerTickMonitor;
 import net.endercube.hub.HubMinigame;
@@ -41,6 +43,7 @@ public class Main {
                 .addGlobalEvent(new AsyncPlayerConfiguration())
                 .addGlobalEvent(new PlayerDisconnect())
                 .addGlobalEvent(new ServerTickMonitor())
+                .addGlobalEvent(new AsyncPlayerPreLogin())
                 .addBlockHandler(NamespaceID.from("minecraft:sign"), Sign::new)
                 .addBlockHandler(NamespaceID.from("minecraft:skull"), Skull::new)
                 .startServer();
@@ -53,6 +56,8 @@ public class Main {
         jedis = endercubeServer.getJedisPooled();
 
         initCommands();
+
+        Discord.init();
     }
 
     private static void initCommands() {

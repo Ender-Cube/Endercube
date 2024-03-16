@@ -19,7 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static net.endercube.endercube.Main.*;
+import static net.endercube.endercube.Main.endercubeServer;
+import static net.endercube.endercube.Main.logger;
 
 public class AsyncPlayerConfiguration implements EventListener<AsyncPlayerConfigurationEvent> {
     @Override
@@ -31,18 +32,13 @@ public class AsyncPlayerConfiguration implements EventListener<AsyncPlayerConfig
     public @NotNull Result run(@NotNull AsyncPlayerConfigurationEvent event) {
         EndercubePlayer player = (EndercubePlayer) event.getPlayer();
 
-        if (isBanned(player)) {
-            player.kick(getBanMessage(player));
-            return Result.SUCCESS;
-        }
-
         if (endercubeServer == null) {
             logger.warn(player.getUsername() + " Tried to log in before endercubeServer was initialised");
             player.kick("Please try again");
             return Result.EXCEPTION;
         }
-        @Nullable EndercubeMinigame hubMinigame = endercubeServer.getMinigameByName("hub");
 
+        @Nullable EndercubeMinigame hubMinigame = endercubeServer.getMinigameByName("hub");
 
         if (hubMinigame == null) {
             logger.error("hub minigame does not exist. Please create a minigame called \"hub\"");
@@ -60,10 +56,10 @@ public class AsyncPlayerConfiguration implements EventListener<AsyncPlayerConfig
         logger.info(ANSIComponentSerializer.ansi().serialize(playerJoinMessage));
 
         // Set the spawning instance and position
-        event.setSpawningInstance(hubMinigame.getInstances().get(0));
+        event.setSpawningInstance(hubMinigame.getInstances().getFirst());
 
-        // Set the respawnPoint
-        Pos respawnPoint = hubMinigame.getInstances().get(0).getTag(Tag.Transient("spawnPos"));
+        // Set the respawn point
+        Pos respawnPoint = hubMinigame.getInstances().getFirst().getTag(Tag.Transient("spawnPos"));
         player.setRespawnPoint(respawnPoint);
 
         // Init the current minigame
@@ -85,13 +81,5 @@ public class AsyncPlayerConfiguration implements EventListener<AsyncPlayerConfig
         if (operators.contains(player.getUuid())) {
             player.addPermission(new Permission("operator"));
         }
-    }
-
-    private boolean isBanned(EndercubePlayer player) {
-        return jedis.exists("banned:" + player.getUuid());
-    }
-
-    private String getBanMessage(EndercubePlayer player) {
-        return jedis.get("banned:" + player.getUuid());
     }
 }
