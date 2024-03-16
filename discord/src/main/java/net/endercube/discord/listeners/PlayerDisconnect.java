@@ -1,6 +1,5 @@
 package net.endercube.discord.listeners;
 
-import club.minnced.discord.webhook.send.WebhookMessage;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import net.endercube.common.players.EndercubePlayer;
 import net.minestom.server.MinecraftServer;
@@ -19,14 +18,11 @@ public class PlayerDisconnect implements EventListener<PlayerDisconnectEvent> {
     @Override
     public @NotNull Result run(@NotNull PlayerDisconnectEvent event) {
         EndercubePlayer player = (EndercubePlayer) event.getPlayer();
-        // Send a test message
-        WebhookMessage message = new WebhookMessageBuilder()
+        webhookClient.send(new WebhookMessageBuilder()
                 .setUsername(player.getUsername()) // use this username
                 .setAvatarUrl("https://mc-heads.net/avatar/" + player.getUuid()) // use this avatar
                 .setContent("I just left the server :( (" + MinecraftServer.getConnectionManager().getOnlinePlayerCount() + ")")
-                .build();
-
-        webhookClient.send(message);
+                .build());
         return Result.SUCCESS;
     }
 }

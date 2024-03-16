@@ -6,6 +6,7 @@ import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import net.endercube.common.config.ConfigFile;
 import net.endercube.discord.listeners.AsyncPlayerConfiguration;
 import net.endercube.discord.listeners.PlayerDisconnect;
+import net.endercube.discord.listeners.PlayerParkourWorldRecord;
 import net.minestom.server.MinecraftServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,7 @@ public class Discord {
         // Register Events
         MinecraftServer.getGlobalEventHandler()
                 .addListener(new PlayerDisconnect())
+                .addListener(new PlayerParkourWorldRecord())
                 .addListener(new AsyncPlayerConfiguration());
 
         // Say the server has started
