@@ -65,7 +65,7 @@ public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent
         }
 
         if (hub.getPlayers().size() >= minimumPlayers) {
-            int startDelay = spleefMinigame.config.node("startDelay").getInt();
+            int startDelay = spleefMinigame.config.getConfig().node("startDelay").getInt();
             if (startDelay == 0) {
                 logger.error("The start delay must be greater than 0 or it is not defined in config");
                 MinecraftServer.stopCleanly();

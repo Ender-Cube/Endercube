@@ -1,8 +1,8 @@
 package net.endercube.common;
 
 import ch.qos.logback.classic.Level;
+import net.endercube.common.config.ConfigFile;
 import net.endercube.common.players.EndercubePlayer;
-import net.endercube.common.utils.ConfigUtils;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.Event;
 import net.minestom.server.event.EventListener;
@@ -16,15 +16,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongepowered.configurate.CommentedConfigurationNode;
-import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import redis.clients.jedis.JedisPooled;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -34,8 +34,7 @@ import java.util.function.Supplier;
 public class EndercubeServer {
 
     private final ArrayList<EndercubeMinigame> minigames = new ArrayList<>();
-    private final CommentedConfigurationNode globalConfig;
-    private final ConfigUtils globalConfigUtils;
+    private final ConfigFile globalConfig;
 
     private static final Logger logger;
 
@@ -47,7 +46,6 @@ public class EndercubeServer {
 
     private EndercubeServer(EndercubeServerBuilder builder) {
         this.globalConfig = builder.globalConfig;
-        this.globalConfigUtils = builder.globalConfigUtils;
     }
 
     /**
@@ -62,13 +60,10 @@ public class EndercubeServer {
         return this;
     }
 
-    public @NotNull CommentedConfigurationNode getGlobalConfig() {
+    public @NotNull ConfigFile getGlobalConfig() {
         return globalConfig;
     }
 
-    public @NotNull ConfigUtils getGlobalConfigUtils() {
-        return globalConfigUtils;
-    }
 
     @Nullable
     public EndercubeMinigame getMinigameByName(@NotNull String name) {
@@ -80,8 +75,8 @@ public class EndercubeServer {
 
     @NotNull
     public JedisPooled getJedisPooled() {
-        String jedisURL = globalConfigUtils.getOrSetDefault(globalConfig.node("database", "redis", "url"), "localhost");
-        int jedisPort = Integer.parseInt(globalConfigUtils.getOrSetDefault(globalConfig.node("database", "redis", "port"), "6379"));
+        String jedisURL = globalConfig.getOrSetDefault(globalConfig.getConfig().node("database", "redis", "url"), "localhost");
+        int jedisPort = Integer.parseInt(globalConfig.getOrSetDefault(globalConfig.getConfig().node("database", "redis", "port"), "6379"));
         return new JedisPooled(jedisURL, jedisPort);
     }
 
@@ -90,8 +85,7 @@ public class EndercubeServer {
      */
     public static class EndercubeServerBuilder {
         private final EventNode<Event> globalEvents;
-        private CommentedConfigurationNode globalConfig;
-        private ConfigUtils globalConfigUtils;
+        private ConfigFile globalConfig;
         private HashMap<NamespaceID, Supplier<BlockHandler>> blockHandlers = new HashMap<>();
 
         public EndercubeServerBuilder() {
@@ -136,42 +130,9 @@ public class EndercubeServer {
         }
 
         /**
-         * Creates and loads the global config
-         */
-        private void initGlobalConfig() {
-            String fileName = "globalConfig.conf";
-
-            // Create config directories
-            if (!Files.exists(Paths.get("./config/worlds/"))) {
-                logger.info("Creating configuration files");
-
-                try {
-                    Files.createDirectories(Paths.get("./config/worlds/"));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
-                    .path(Paths.get("./config/globalConfig.conf"))
-                    .build();
-
-            try {
-                globalConfig = loader.load();
-            } catch (ConfigurateException e) {
-                logger.error("An error occurred while loading " + fileName + ": " + e.getMessage());
-                logger.error(Arrays.toString(e.getStackTrace()));
-                MinecraftServer.stopCleanly();
-            }
-
-            globalConfigUtils = new ConfigUtils(loader, globalConfig);
-        }
-
-        /**
          * Start Minestom and the like
          */
         public void createServer() {
-
             // Server Initialization
             MinecraftServer minecraftServer = MinecraftServer.init();
 
@@ -187,12 +148,12 @@ public class EndercubeServer {
             // Set encryption
             EncryptionMode encryptionMode;
             try {
-                encryptionMode = EncryptionMode.valueOf(globalConfigUtils.getOrSetDefault(globalConfig.node("connection", "mode"), "online").toUpperCase());
+                encryptionMode = EncryptionMode.valueOf(globalConfig.getOrSetDefault(globalConfig.getConfig().node("connection", "mode"), "online").toUpperCase());
             } catch (IllegalArgumentException e) {
                 logger.warn("Cannot read encryption mode from config, falling back to ONLINE");
                 encryptionMode = EncryptionMode.ONLINE;
             }
-            initEncryption(encryptionMode, globalConfigUtils.getOrSetDefault(globalConfig.node("connection", "velocitySecret"), ""));
+            initEncryption(encryptionMode, globalConfig.getOrSetDefault(globalConfig.getConfig().node("connection", "velocitySecret"), ""));
 
             // Register the void
             // Register minecraft:the_void
@@ -203,7 +164,7 @@ public class EndercubeServer {
             );
 
             // Start server
-            int port = Integer.parseInt(globalConfigUtils.getOrSetDefault(globalConfig.node("connection", "port"), "25565"));
+            int port = Integer.parseInt(globalConfig.getOrSetDefault(globalConfig.getConfig().node("connection", "port"), "25565"));
             minecraftServer.start("0.0.0.0", port);
             logger.info("Started server on port " + port + " with " + encryptionMode + " encryption");
 
@@ -249,12 +210,23 @@ public class EndercubeServer {
 
         public EndercubeServer startServer() {
             // Init config
-            this.initGlobalConfig();
+            globalConfig = new ConfigFile("globalConfig", "This file is for stuff that didn't fit anywhere else");
+
+            // Create world directories
+            if (!Files.exists(Paths.get("./config/worlds/"))) {
+                logger.info("Creating configuration files");
+
+                try {
+                    Files.createDirectories(Paths.get("./config/worlds/"));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
             // Make logging level configurable
             Level logLevel = Level.toLevel(
-                    globalConfigUtils.getOrSetDefault(
-                            globalConfig.node("logLevel"),
+                    globalConfig.getOrSetDefault(
+                            globalConfig.getConfig().node("logLevel"),
                             "INFO"
                     )
             );

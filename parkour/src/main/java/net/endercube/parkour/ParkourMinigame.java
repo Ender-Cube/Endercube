@@ -85,7 +85,7 @@ public class ParkourMinigame extends EndercubeMinigame {
                 String mapName = worldFile.getName();
                 mapName = mapName.substring(0, mapName.length() - 6);
 
-                ConfigurationNode configNode = config.node("maps", mapName);
+                ConfigurationNode configNode = config.getConfig().node("maps", mapName);
 
 
                 InstanceContainer currentInstance = MinecraftServer.getInstanceManager().createInstanceContainer(
@@ -96,12 +96,12 @@ public class ParkourMinigame extends EndercubeMinigame {
                 currentInstance.setTimeRate(0);
 
                 // Set all tags from config
-                currentInstance.setTag(Tag.Transient("checkpointsPosArray"), configUtils.getPosListFromConfig(configNode.node("checkpoints")));
+                currentInstance.setTag(Tag.Transient("checkpointsPosArray"), config.getPosListFromConfig(configNode.node("checkpoints")));
                 currentInstance.setTag(Tag.Integer("death-y"), configNode.node("death-y").getInt());
                 currentInstance.setTag(Tag.String("difficulty"), configNode.node("difficulty").getString());
-                currentInstance.setTag(Tag.Transient("finishPos"), configUtils.getPosFromConfig(configNode.node("finish")));
+                currentInstance.setTag(Tag.Transient("finishPos"), config.getPosFromConfig(configNode.node("finish")));
                 currentInstance.setTag(Tag.Integer("order"), configNode.node("order").getInt());
-                currentInstance.setTag(Tag.Transient("spawnPos"), configUtils.getPosFromConfig(configNode.node("spawn")));
+                currentInstance.setTag(Tag.Transient("spawnPos"), config.getPosFromConfig(configNode.node("spawn")));
                 currentInstance.setTag(Tag.String("name"), mapName);
                 currentInstance.setTag(Tag.String("UI_material"), configNode.node("UIMaterial", "material").getString());
                 currentInstance.setTag(Tag.String("UI_name"), configNode.node("UIMaterial", "name").getString());
