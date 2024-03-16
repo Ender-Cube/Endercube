@@ -2,6 +2,7 @@ package net.endercube.parkour.listeners;
 
 import net.endercube.common.players.EndercubePlayer;
 import net.endercube.parkour.ParkourMinigame;
+import net.endercube.parkour.events.PlayerParkourWorldRecordEvent;
 import net.endercube.parkour.inventories.ParkourMapInventory;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
@@ -11,6 +12,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerMoveEvent;
@@ -22,8 +24,10 @@ import net.minestom.server.timer.Scheduler;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
 import org.jetbrains.annotations.NotNull;
+import redis.clients.jedis.resps.Tuple;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 
 import static net.endercube.common.EndercubeMinigame.logger;
@@ -166,7 +170,18 @@ public class PlayerMove implements EventListener<PlayerMoveEvent> {
 
         logger.debug(player.getUsername() + " finished " + mapName);
 
-        if (Objects.equals(database.getLeaderboard(mapName, 1).getFirst().getElement(), player.getUsername())) {
+        // Get the first place time and ensure it is not null
+        List<Tuple> leaderboard = database.getLeaderboard(mapName, 1);
+        if (leaderboard == null) {
+            return;
+        }
+        Tuple firstPlace = leaderboard.getFirst();
+
+        // If this run is a world record then call the event
+        logger.debug("First place score is: " + firstPlace.getScore() + " by " + firstPlace.getElement());
+        logger.debug("time taken is: " + timeTakenMS);
+        if (Objects.equals(firstPlace.getElement(), player.getUsername()) && firstPlace.getScore() >= timeTakenMS) {
+            MinecraftServer.getGlobalEventHandler().call(new PlayerParkourWorldRecordEvent(player, mapName, timeTakenMS));
             showWRAnimation();
             return;
         }
