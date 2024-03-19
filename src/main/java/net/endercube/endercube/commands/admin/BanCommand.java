@@ -1,17 +1,16 @@
 package net.endercube.endercube.commands.admin;
 
-import net.endercube.common.exceptions.ServiceNotAvailableException;
-import net.endercube.common.exceptions.UsernameDoesNotExistException;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.entity.Player;
+import net.minestom.server.utils.mojang.MojangUtils;
 
+import java.io.IOException;
 import java.util.UUID;
 
-import static net.endercube.common.utils.UUIDUtils.getUUID;
 import static net.endercube.endercube.Main.jedis;
 import static net.endercube.endercube.Main.logger;
 
@@ -52,8 +51,8 @@ public class BanCommand extends Command {
 
         UUID playerUUID;
         try {
-            playerUUID = getUUID(playerUsername);
-        } catch (ServiceNotAvailableException | UsernameDoesNotExistException e) {
+            playerUUID = MojangUtils.getUUID(playerUsername);
+        } catch (IOException e) {
             logger.error("Could not ban " + playerUsername + " with the exception: " + e.getMessage());
             return Component.text("Error: Could not ban " + playerUsername + " with the exception: " + e.getMessage()).color(NamedTextColor.RED);
         }

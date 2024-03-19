@@ -1,19 +1,18 @@
 package net.endercube.spleef.minigame.commands;
 
-import net.endercube.common.exceptions.ServiceNotAvailableException;
-import net.endercube.common.exceptions.UsernameDoesNotExistException;
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.entity.Player;
 import net.minestom.server.utils.MathUtils;
+import net.minestom.server.utils.mojang.MojangUtils;
 
+import java.io.IOException;
 import java.util.UUID;
 
-import static net.endercube.common.EndercubeMinigame.logger;
 import static net.endercube.common.utils.ComponentUtils.getTitle;
-import static net.endercube.common.utils.UUIDUtils.getUUID;
 import static net.endercube.spleef.minigame.SpleefMinigame.database;
 
 public class StatsCommand extends Command {
@@ -46,16 +45,18 @@ public class StatsCommand extends Command {
 
     private Component getStats(String playerName) {
         try {
-            return getStats(getUUID(playerName));
-        } catch (ServiceNotAvailableException e) {
-            return Component.text("Could not get the stats for this player, the Mojang API is down :(").color(NamedTextColor.RED);
-        } catch (UsernameDoesNotExistException e) {
-            return Component.text("That player does not exist! Try someone else...").color(NamedTextColor.RED);
+            return getStats(MojangUtils.getUUID(playerName));
+        } catch (IOException e) {
+            return Component.text("Error: " + e.getMessage()).color(NamedTextColor.RED);
         }
     }
 
     private Component getStats(UUID playerUUID) {
-        logger.debug("Getting stats for " + playerUUID.toString());
+
+        // Tell the user if the player does not exist on the database
+        if (!database.hasPlayed(playerUUID)) {
+            return Component.text("Error: That player has not played spleef").color(NamedTextColor.RED);
+        }
 
         return getTitle(Component.text("Spleef Stats"))
                 .append(
