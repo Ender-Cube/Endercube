@@ -8,6 +8,7 @@ import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.tag.Tag;
 import net.minestom.server.utils.mojang.MojangUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -38,23 +39,27 @@ public class ResetParkourTimeCommand extends Command {
 
         // Actually execute command
         addSyntax(((sender, context) -> {
-            final String player = context.get(playerArgument);
+            final String playerUsername = context.get(playerArgument);
             final String map = context.get(mapArgument);
 
-            // Thanks stackoverflow: https://stackoverflow.com/a/19399768/13247146
-            final UUID playerUUID = UUID.fromString(MojangUtils.fromUsername(player).get("id").getAsString().replaceFirst(
-                    "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5"
-            ));
+            // Get the player's UUID
+            final UUID playerUUID;
+            try {
+                playerUUID = MojangUtils.getUUID(playerUsername);
+            } catch (IOException e) {
+                sender.sendMessage(Component.text("Error: " + e.getMessage()).color(NamedTextColor.RED));
+                return;
+            }
 
             if (Objects.equals(map, "ALL")) {
-                sender.sendMessage("Removing all times from " + player);
+                sender.sendMessage("Removing all times from " + playerUsername);
                 for (String currentMap : getParkourMaps()) {
                     database.removeTime(playerUUID, currentMap);
                 }
                 return;
             }
 
-            sender.sendMessage("Removing times for " + player + " in " + map);
+            sender.sendMessage("Removing times for " + playerUsername + " in " + map);
             database.removeTime(playerUUID, map);
         }), mapArgument, playerArgument);
 

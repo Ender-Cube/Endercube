@@ -35,8 +35,7 @@ allprojects {
 
     dependencies {
         // Minestom
-        // implementation("dev.hollowcube:minestom-ce:5347c0b11f")
-        implementation("net.minestom:minestom-snapshots:fe46ed4ac2")
+        implementation("net.minestom:minestom-snapshots:a31d239b51")
 
         // Configuration API
         implementation("org.spongepowered:configurate-hocon:4.1.2")

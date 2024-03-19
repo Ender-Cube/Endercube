@@ -1,14 +1,18 @@
 package net.endercube.endercube.commands.admin;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.entity.Player;
 import net.minestom.server.utils.mojang.MojangUtils;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import static net.endercube.endercube.Main.jedis;
+import static net.endercube.endercube.Main.logger;
 
 public class BanCommand extends Command {
     public BanCommand() {
@@ -23,7 +27,7 @@ public class BanCommand extends Command {
         addSyntax(((sender, context) -> {
             final String player = context.get(playerArgument);
 
-            ban(player, "You're banned!");
+            sender.sendMessage(ban(player, "You're banned!"));
             sender.sendMessage("Banned " + player);
         }), playerArgument);
 
@@ -31,29 +35,34 @@ public class BanCommand extends Command {
             final String player = context.get(playerArgument);
             final String message = context.get(messageArgument);
 
-            ban(player, message);
+            sender.sendMessage(ban(player, message));
             sender.sendMessage("Banned " + player + " with message: " + message);
         }), playerArgument, messageArgument);
     }
 
-    private UUID getUUID(String playerUsername) {
-        // Thanks stackoverflow: https://stackoverflow.com/a/19399768/13247146
-        return UUID.fromString(
-                MojangUtils.fromUsername(playerUsername)
-                        .get("id")
-                        .getAsString()
-                        .replaceFirst(
-                                "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
-                                "$1-$2-$3-$4-$5"
-                        )
-        );
-    }
+    /**
+     * Bans the player
+     *
+     * @param playerUsername The username of the player to ban
+     * @param message        The ban message
+     * @return An error if there is one in a format to be sent to the player
+     */
+    private Component ban(String playerUsername, String message) {
 
-    private void ban(String playerUsername, String message) {
-        jedis.set("banned:" + getUUID(playerUsername), message);
+        UUID playerUUID;
+        try {
+            playerUUID = MojangUtils.getUUID(playerUsername);
+        } catch (IOException e) {
+            logger.error("Could not ban " + playerUsername + " with the exception: " + e.getMessage());
+            return Component.text("Error: Could not ban " + playerUsername + " with the exception: " + e.getMessage()).color(NamedTextColor.RED);
+        }
+
+        jedis.set("banned:" + playerUUID, message);
         Player onlinePlayer = MinecraftServer.getConnectionManager().getOnlinePlayerByUsername(playerUsername);
         if (onlinePlayer != null) {
             onlinePlayer.kick(message);
         }
+
+        return Component.empty();
     }
 }
