@@ -6,5 +6,5 @@ dependencies {
     implementation(project(":parkour"))
 
     // Polar
-    implementation("dev.hollowcube:polar:1.6.1")
+    implementation("dev.hollowcube:polar:1.7.2")
 }

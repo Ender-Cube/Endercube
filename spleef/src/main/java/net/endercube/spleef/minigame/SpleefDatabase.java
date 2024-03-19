@@ -57,4 +57,14 @@ public class SpleefDatabase extends AbstractDatabase {
     public int getAllGames(UUID playerUUID) {
         return getWonGames(playerUUID) + getLostGames(playerUUID);
     }
+
+    public boolean hasPlayed(Player player) {
+        return hasPlayed(player.getUuid());
+    }
+
+    public boolean hasPlayed(UUID playerUUID) {
+        String wonGamesKey = nameSpace + "wonGames:" + playerUUID.toString();
+        String lostGamesKey = nameSpace + "lostGames:" + playerUUID.toString();
+        return jedis.exists(wonGamesKey, lostGamesKey) > 0;
+    }
 }
