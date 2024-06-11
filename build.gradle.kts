@@ -35,18 +35,19 @@ allprojects {
 
     dependencies {
         // Minestom
-        implementation("net.minestom:minestom-snapshots:a31d239b51")
+        implementation("net.minestom:minestom-snapshots:1c528d8ae2")
+
 
         // Configuration API
         implementation("org.spongepowered:configurate-hocon:4.1.2")
 
         // Kyori stuff (Adventure)
-        implementation("net.kyori:adventure-text-serializer-plain:4.14.0")
-        implementation("net.kyori:adventure-text-minimessage:4.14.0")
-        implementation("net.kyori:adventure-text-serializer-ansi:4.14.0-SNAPSHOT")
+        implementation("net.kyori:adventure-text-serializer-plain:4.16.0")
+        implementation("net.kyori:adventure-text-minimessage:4.16.0")
+        implementation("net.kyori:adventure-text-serializer-ansi:4.17.0")
 
         // Logger
-        implementation("ch.qos.logback:logback-classic:1.4.14")
+        implementation("ch.qos.logback:logback-classic:1.5.6")
 
         // Apache Commons Lang
         implementation("org.apache.commons:commons-lang3:3.14.0")
