@@ -12,7 +12,9 @@ import net.minestom.server.inventory.Inventory;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.ClickType;
 import net.minestom.server.inventory.condition.InventoryConditionResult;
-import net.minestom.server.item.*;
+import net.minestom.server.item.ItemComponent;
+import net.minestom.server.item.ItemStack;
+import net.minestom.server.item.Material;
 import net.minestom.server.sound.SoundEvent;
 import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.Nullable;
@@ -42,19 +44,19 @@ public class ParkourMapInventory {
 
         // Add the top buttons
         itemStacks[3] = ItemStack.of(Material.GREEN_CONCRETE)
-                .withDisplayName(
+                .with(ItemComponent.CUSTOM_NAME,
                         Component.text("Easy Maps")
                                 .color(NamedTextColor.GREEN)
                 );
 
         itemStacks[4] = ItemStack.of(Material.ORANGE_CONCRETE)
-                .withDisplayName(
+                .with(ItemComponent.CUSTOM_NAME,
                         Component.text("Medium Maps")
                                 .color(NamedTextColor.GREEN)
                 );
 
         itemStacks[5] = ItemStack.of(Material.RED_CONCRETE)
-                .withDisplayName(
+                .with(ItemComponent.CUSTOM_NAME,
                         Component.text("Hard Maps")
                                 .color(NamedTextColor.GREEN)
                 );
@@ -62,7 +64,7 @@ public class ParkourMapInventory {
         // Add the hub button if it's configured
         if (hubButton) {
             itemStacks[44] = ItemStack.of(Material.RED_BED)
-                    .withDisplayName(
+                    .with(ItemComponent.CUSTOM_NAME,
                             Component.text("Back to hub")
                                     .color(NamedTextColor.RED)
                     );
@@ -117,11 +119,20 @@ public class ParkourMapInventory {
             if (!Objects.equals(mapInstance.getTag(Tag.String("difficulty")), difficulty)) {
                 return;
             }
-            pre_maps.add(ItemStack
-                    .of(Objects.requireNonNull(Material.fromNamespaceId(mapInstance.getTag(Tag.String("UI_material")))))
-                    .withDisplayName(MiniMessage.miniMessage().deserialize(mapInstance.getTag(Tag.String("UI_name"))))
-                    .withTag(Tag.String("map"), mapInstance.getTag(Tag.String("name")))
-                    .withTag(Tag.Integer("order"), mapInstance.getTag(Tag.Integer("order")))
+            String mapName = mapInstance.getTag(Tag.String("name"));
+            int mapOrder = mapInstance.getTag(Tag.Integer("order"));
+
+            Material UIMaterial = Material.fromNamespaceId(mapInstance.getTag(Tag.String("UI_material")));
+            if (UIMaterial == null) {
+                logger.error("The material for " + mapName + " is incorrect");
+                return;
+            }
+
+            pre_maps.add(
+                    ItemStack.of(UIMaterial)
+                            .with(ItemComponent.CUSTOM_NAME, MiniMessage.miniMessage().deserialize(mapInstance.getTag(Tag.String("UI_name"))))
+                            .withTag(Tag.String("map"), mapName)
+                            .withTag(Tag.Integer("order"), mapOrder)
             );
         });
 
@@ -139,19 +150,14 @@ public class ParkourMapInventory {
 
     private void setGlowing(int slot, boolean state) {
         if (state) {
-            inventory.setItemStack(slot,
-                    inventory
-                            .getItemStack(slot)
-                            .withMeta(builder -> builder
-                                    .enchantment(Enchantment.KNOCKBACK, (short) 1)
-                                    .hideFlag(ItemHideFlag.HIDE_ENCHANTS)
-                            )
+            inventory.setItemStack(
+                    slot,
+                    inventory.getItemStack(slot).with(ItemComponent.ENCHANTMENT_GLINT_OVERRIDE, true)
             );
         } else {
-            inventory.setItemStack(slot,
-                    inventory
-                            .getItemStack(slot)
-                            .withMeta(ItemMeta.Builder::clearEnchantment)
+            inventory.setItemStack(
+                    slot,
+                    inventory.getItemStack(slot).with(ItemComponent.ENCHANTMENT_GLINT_OVERRIDE, false)
             );
         }
 

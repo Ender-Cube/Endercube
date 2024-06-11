@@ -11,7 +11,6 @@ import net.minestom.server.extras.MojangAuth;
 import net.minestom.server.extras.velocity.VelocityProxy;
 import net.minestom.server.instance.block.BlockHandler;
 import net.minestom.server.utils.NamespaceID;
-import net.minestom.server.world.biomes.Biome;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -154,14 +153,6 @@ public class EndercubeServer {
                 encryptionMode = EncryptionMode.ONLINE;
             }
             initEncryption(encryptionMode, globalConfig.getOrSetDefault(globalConfig.getConfig().node("connection", "velocitySecret"), ""));
-
-            // Register the void
-            // Register minecraft:the_void
-            MinecraftServer.getBiomeManager().addBiome(Biome
-                    .builder()
-                    .name(NamespaceID.from("minecraft:the_void"))
-                    .build()
-            );
 
             // Start server
             int port = Integer.parseInt(globalConfig.getOrSetDefault(globalConfig.getConfig().node("connection", "port"), "25565"));
