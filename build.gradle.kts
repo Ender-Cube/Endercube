@@ -37,6 +37,7 @@ allprojects {
         // Minestom
         implementation("net.minestom:minestom-snapshots:1c528d8ae2")
 
+
         // Configuration API
         implementation("org.spongepowered:configurate-hocon:4.1.2")
 
