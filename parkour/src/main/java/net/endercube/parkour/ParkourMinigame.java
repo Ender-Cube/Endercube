@@ -25,6 +25,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import static net.endercube.common.utils.CoordinateUtils.posFromBlockpos;
+
 /**
  * This is the entrypoint for Parkour
  */
@@ -152,7 +154,7 @@ public class ParkourMinigame extends EndercubeMinigame {
             player.teleport(currentInstance.getTag(Tag.Transient("spawnPos")));
             player.setTag(Tag.Long("parkour_startTime"), System.currentTimeMillis()); // Reset timer
         } else {
-            player.teleport(checkpoints[currentCheckpoint]);
+            player.teleport(posFromBlockpos(checkpoints[currentCheckpoint]));
         }
     }
 
