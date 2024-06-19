@@ -19,6 +19,7 @@ import redis.clients.jedis.JedisPooled;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,10 +129,38 @@ public class EndercubeServer {
             return this;
         }
 
+        private String getVelocitySecret() {
+            Path path = Paths.get("./config/velocity.secret");
+
+            try {
+                return Files.readString(path);
+            } catch (IOException e) {
+                logger.error("Failed to read velocity secret from \"./config/velocity.secret\" and velocity is enabled in config. Aborting start");
+                throw new RuntimeException(e);
+            }
+        }
+
         /**
          * Start Minestom and the like
          */
         public void createServer() {
+            // Get config values
+            int port = Integer.parseInt(globalConfig.getOrSetDefault(globalConfig.getConfig().node("connection", "port"), "25565"));
+
+            // Set encryption
+            EncryptionMode encryptionMode;
+            try {
+                encryptionMode = EncryptionMode.valueOf(
+                        globalConfig.getOrSetDefault(
+                                globalConfig.getConfig().node("connection", "mode"),
+                                "online"
+                        ).toUpperCase()
+                );
+            } catch (IllegalArgumentException e) {
+                logger.warn("Cannot read encryption mode from config, falling back to ONLINE");
+                encryptionMode = EncryptionMode.ONLINE;
+            }
+
             // Server Initialization
             MinecraftServer minecraftServer = MinecraftServer.init();
 
@@ -144,18 +173,9 @@ public class EndercubeServer {
                 logger.debug("Added a block handler for " + entry.getKey());
             }
 
-            // Set encryption
-            EncryptionMode encryptionMode;
-            try {
-                encryptionMode = EncryptionMode.valueOf(globalConfig.getOrSetDefault(globalConfig.getConfig().node("connection", "mode"), "online").toUpperCase());
-            } catch (IllegalArgumentException e) {
-                logger.warn("Cannot read encryption mode from config, falling back to ONLINE");
-                encryptionMode = EncryptionMode.ONLINE;
-            }
-            initEncryption(encryptionMode, globalConfig.getOrSetDefault(globalConfig.getConfig().node("connection", "velocitySecret"), ""));
+            initEncryption(encryptionMode, getVelocitySecret());
 
             // Start server
-            int port = Integer.parseInt(globalConfig.getOrSetDefault(globalConfig.getConfig().node("connection", "port"), "25565"));
             minecraftServer.start("0.0.0.0", port);
             logger.info("Started server on port " + port + " with " + encryptionMode + " encryption");
 
