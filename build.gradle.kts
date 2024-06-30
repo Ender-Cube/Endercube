@@ -2,55 +2,55 @@ plugins {
     java
 
     // ShadowJar (https://github.com/johnrengelman/shadow/releases)
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "net.endercube"
 version = "1.0.0"
 
+repositories {
+    mavenCentral()
+    maven("https://jitpack.io")
+
+    // Adventure dev builds
+    maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+        name = "sonatype-oss-snapshots"
+    }
+}
+
 dependencies {
-    implementation(project(":common"))
-    implementation(project(":discord"))
-    implementation(project(":hub"))
-    implementation(project(":parkour"))
-    implementation(project(":spleef"))
+
+    // Minestom
+    implementation("net.minestom:minestom-snapshots:f1d5940855")
+
+    // Polar
+    implementation("dev.hollowcube:polar:1.10.0")
+
+    // GoldenStack/window
+    implementation("com.github.GoldenStack:window:7617978")
+
+
+    // Kyori stuff (Adventure)
+    implementation("net.kyori:adventure-text-serializer-plain:4.16.0")
+    implementation("net.kyori:adventure-text-minimessage:4.16.0")
+    implementation("net.kyori:adventure-text-serializer-ansi:4.17.0")
+
+    // Configuration API
+    implementation("org.spongepowered:configurate-hocon:4.1.2")
 
     // Jedis (Redis lib)
     implementation("redis.clients:jedis:5.1.1")
-}
 
-// Global stuff
-allprojects {
-    apply(plugin = "java")
+    // Discord lib
+    implementation("club.minnced:discord-webhooks:0.8.4")
 
-    repositories {
-        mavenCentral()
-        maven("https://jitpack.io")
+    // Logger
+    implementation("ch.qos.logback:logback-classic:1.5.6")
 
-        // Adventure dev builds
-        maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-            name = "sonatype-oss-snapshots"
-        }
-    }
+    // Apache Commons Lang
+    implementation("org.apache.commons:commons-lang3:3.14.0")
 
-    dependencies {
-        // Minestom
-        implementation("net.minestom:minestom-snapshots:f1d5940855")
 
-        // Configuration API
-        implementation("org.spongepowered:configurate-hocon:4.1.2")
-
-        // Kyori stuff (Adventure)
-        implementation("net.kyori:adventure-text-serializer-plain:4.16.0")
-        implementation("net.kyori:adventure-text-minimessage:4.16.0")
-        implementation("net.kyori:adventure-text-serializer-ansi:4.17.0")
-
-        // Logger
-        implementation("ch.qos.logback:logback-classic:1.5.6")
-
-        // Apache Commons Lang
-        implementation("org.apache.commons:commons-lang3:3.14.0")
-    }
 }
 
 java {
@@ -62,7 +62,7 @@ java {
 tasks {
     jar {
         manifest {
-            attributes["Main-Class"] = "net.endercube.endercube.Main"
+            attributes["Main-Class"] = "net.endercube.Main"
         }
     }
 
