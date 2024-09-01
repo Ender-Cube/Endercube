@@ -1,6 +1,6 @@
 package net.endercube.hub.listeners;
 
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.global.EndercubePlayer;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerMoveEvent;
 import net.minestom.server.tag.Tag;

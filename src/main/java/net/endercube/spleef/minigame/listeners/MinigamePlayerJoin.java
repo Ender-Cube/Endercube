@@ -1,8 +1,8 @@
 package net.endercube.spleef.minigame.listeners;
 
-import net.endercube.common.events.MinigamePlayerJoinEvent;
-import net.endercube.common.players.EndercubePlayer;
-import net.endercube.common.utils.ChunkLoader;
+import net.endercube.gamelib.events.MinigamePlayerJoinEvent;
+import net.endercube.gamelib.utils.ChunkLoader;
+import net.endercube.global.EndercubePlayer;
 import net.endercube.spleef.activeGame.SpleefActiveGame;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Collectors;
 
-import static net.endercube.common.EndercubeMinigame.logger;
+import static net.endercube.gamelib.EndercubeMinigame.logger;
 import static net.endercube.spleef.minigame.SpleefMinigame.spleefMinigame;
 
 public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent> {

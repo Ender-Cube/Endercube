@@ -1,6 +1,6 @@
 package net.endercube.parkour.listeners;
 
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.global.EndercubePlayer;
 import net.endercube.parkour.InventoryItems;
 import net.endercube.parkour.ParkourMinigame;
 import net.endercube.parkour.enums.GrindMode;
@@ -9,7 +9,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.sound.SoundEvent;
 import net.minestom.server.tag.Tag;
 
-import static net.endercube.common.EndercubeMinigame.logger;
+import static net.endercube.gamelib.EndercubeMinigame.logger;
 import static net.endercube.parkour.ParkourMinigame.database;
 
 public class ItemClickHandler {

@@ -1,7 +1,7 @@
 package net.endercube.hub.listeners;
 
-import net.endercube.common.events.MinigamePlayerJoinEvent;
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.gamelib.events.MinigamePlayerJoinEvent;
+import net.endercube.global.EndercubePlayer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.instance.Instance;

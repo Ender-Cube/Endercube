@@ -1,8 +1,8 @@
 package net.endercube.discord.listeners;
 
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
-import net.endercube.common.players.EndercubePlayer;
-import net.endercube.common.utils.ComponentUtils;
+import net.endercube.gamelib.utils.ComponentUtils;
+import net.endercube.global.EndercubePlayer;
 import net.endercube.parkour.events.PlayerParkourWorldRecordEvent;
 import net.minestom.server.event.EventListener;
 import org.jetbrains.annotations.NotNull;

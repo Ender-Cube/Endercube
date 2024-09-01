@@ -1,6 +1,6 @@
 package net.endercube.parkour.listeners;
 
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.global.EndercubePlayer;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import org.jetbrains.annotations.NotNull;

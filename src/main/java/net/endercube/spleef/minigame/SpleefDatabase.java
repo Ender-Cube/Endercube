@@ -1,6 +1,6 @@
 package net.endercube.spleef.minigame;
 
-import net.endercube.common.database.AbstractDatabase;
+import net.endercube.gamelib.database.AbstractDatabase;
 import net.minestom.server.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import redis.clients.jedis.JedisPooled;

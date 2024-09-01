@@ -1,7 +1,7 @@
 package net.endercube.parkour.listeners;
 
-import net.endercube.common.events.MinigamePlayerJoinEvent;
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.gamelib.events.MinigamePlayerJoinEvent;
+import net.endercube.global.EndercubePlayer;
 import net.endercube.parkour.InventoryItems;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.EventListener;
@@ -9,7 +9,7 @@ import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 
-import static net.endercube.common.EndercubeMinigame.logger;
+import static net.endercube.gamelib.EndercubeMinigame.logger;
 import static net.endercube.parkour.ParkourMinigame.database;
 import static net.endercube.parkour.ParkourMinigame.parkourMinigame;
 

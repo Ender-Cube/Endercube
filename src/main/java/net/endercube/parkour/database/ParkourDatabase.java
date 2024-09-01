@@ -1,8 +1,8 @@
 package net.endercube.parkour.database;
 
 
-import net.endercube.common.database.AbstractDatabase;
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.gamelib.database.AbstractDatabase;
+import net.endercube.global.EndercubePlayer;
 import net.endercube.parkour.enums.GrindMode;
 import net.minestom.server.entity.Player;
 import net.minestom.server.utils.mojang.MojangUtils;

@@ -1,7 +1,7 @@
 package net.endercube.spleef.activeGame.listeners;
 
-import net.endercube.common.players.EndercubePlayer;
-import net.endercube.common.utils.ComponentUtils;
+import net.endercube.gamelib.utils.ComponentUtils;
+import net.endercube.global.EndercubePlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.coordinate.Pos;
@@ -14,7 +14,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 
-import static net.endercube.common.EndercubeMinigame.logger;
+import static net.endercube.gamelib.EndercubeMinigame.logger;
 import static net.endercube.spleef.minigame.SpleefMinigame.database;
 import static net.endercube.spleef.minigame.SpleefMinigame.spleefMinigame;
 

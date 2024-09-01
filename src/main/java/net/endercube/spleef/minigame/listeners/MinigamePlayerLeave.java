@@ -1,7 +1,7 @@
 package net.endercube.spleef.minigame.listeners;
 
-import net.endercube.common.events.MinigamePlayerLeaveEvent;
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.gamelib.events.MinigamePlayerLeaveEvent;
+import net.endercube.global.EndercubePlayer;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.tag.Tag;
@@ -9,7 +9,7 @@ import net.minestom.server.timer.Task;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static net.endercube.common.EndercubeMinigame.logger;
+import static net.endercube.gamelib.EndercubeMinigame.logger;
 import static net.endercube.spleef.minigame.SpleefMinigame.spleefMinigame;
 
 public class MinigamePlayerLeave implements EventListener<MinigamePlayerLeaveEvent> {

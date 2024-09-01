@@ -1,8 +1,8 @@
 package net.endercube.spleef.activeGame;
 
-import net.endercube.common.EndercubeActiveGame;
-import net.endercube.common.events.MinigameStartEvent;
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.gamelib.EndercubeActiveGame;
+import net.endercube.gamelib.events.MinigameStartEvent;
+import net.endercube.global.EndercubePlayer;
 import net.endercube.spleef.activeGame.listeners.ActivePlayerMove;
 import net.endercube.spleef.activeGame.listeners.InactivePlayerMove;
 import net.endercube.spleef.activeGame.listeners.PlayerStartDigging;

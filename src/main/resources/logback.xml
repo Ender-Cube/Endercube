@@ -1,6 +1,6 @@
 <configuration>
 
-    <conversionRule conversionWord="highlightex" converterClass="net.endercube.utils.LogbackHighlightConfig"/>
+    <conversionRule conversionWord="highlightex" converterClass="net.endercube.global.LogbackHighlightConfig"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

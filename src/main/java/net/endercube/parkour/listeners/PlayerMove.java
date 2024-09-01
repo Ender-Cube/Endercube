@@ -1,6 +1,6 @@
 package net.endercube.parkour.listeners;
 
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.global.EndercubePlayer;
 import net.endercube.parkour.ParkourMinigame;
 import net.endercube.parkour.events.PlayerParkourWorldRecordEvent;
 import net.endercube.parkour.inventories.ParkourMapInventory;
@@ -30,8 +30,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 
-import static net.endercube.common.EndercubeMinigame.logger;
-import static net.endercube.common.utils.ComponentUtils.toHumanReadableTime;
+import static net.endercube.gamelib.EndercubeMinigame.logger;
+import static net.endercube.gamelib.utils.ComponentUtils.toHumanReadableTime;
 import static net.endercube.parkour.ParkourMinigame.database;
 import static net.endercube.parkour.ParkourMinigame.parkourMinigame;
 

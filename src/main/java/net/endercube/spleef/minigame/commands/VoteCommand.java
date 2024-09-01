@@ -1,6 +1,6 @@
 package net.endercube.spleef.minigame.commands;
 
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.global.EndercubePlayer;
 import net.endercube.spleef.minigame.inventories.MapVoteInventory;
 import net.minestom.server.command.builder.Command;
 

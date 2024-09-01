@@ -1,7 +1,7 @@
 package net.endercube.spleef.activeGame.listeners;
 
 
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.global.EndercubePlayer;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.minestom.server.coordinate.Point;

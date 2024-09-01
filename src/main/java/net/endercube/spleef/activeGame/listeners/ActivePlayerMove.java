@@ -1,6 +1,6 @@
 package net.endercube.spleef.activeGame.listeners;
 
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.global.EndercubePlayer;
 import net.endercube.spleef.minigame.SpleefMinigame;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.EventListener;
@@ -9,7 +9,7 @@ import net.minestom.server.instance.Instance;
 import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 
-import static net.endercube.common.EndercubeMinigame.logger;
+import static net.endercube.gamelib.EndercubeMinigame.logger;
 
 public class ActivePlayerMove implements EventListener<PlayerMoveEvent> {
     @Override

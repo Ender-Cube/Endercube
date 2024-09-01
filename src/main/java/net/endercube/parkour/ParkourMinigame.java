@@ -1,9 +1,9 @@
 package net.endercube.parkour;
 
-import net.endercube.common.EndercubeMinigame;
-import net.endercube.common.EndercubeServer;
-import net.endercube.common.dimensions.FullbrightDimension;
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.gamelib.EndercubeMinigame;
+import net.endercube.gamelib.EndercubeServer;
+import net.endercube.gamelib.dimensions.FullbrightDimension;
+import net.endercube.global.EndercubePlayer;
 import net.endercube.parkour.commands.LeaderboardCommand;
 import net.endercube.parkour.database.ParkourDatabase;
 import net.endercube.parkour.listeners.*;

@@ -12,7 +12,7 @@ import net.minestom.server.utils.mojang.MojangUtils;
 import java.io.IOException;
 import java.util.UUID;
 
-import static net.endercube.common.utils.ComponentUtils.getTitle;
+import static net.endercube.gamelib.utils.ComponentUtils.getTitle;
 import static net.endercube.spleef.minigame.SpleefMinigame.database;
 
 public class StatsCommand extends Command {

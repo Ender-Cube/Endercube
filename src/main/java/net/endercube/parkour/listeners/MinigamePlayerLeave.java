@@ -1,7 +1,7 @@
 package net.endercube.parkour.listeners;
 
-import net.endercube.common.events.MinigamePlayerLeaveEvent;
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.gamelib.events.MinigamePlayerLeaveEvent;
+import net.endercube.global.EndercubePlayer;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.tag.Tag;
 import net.minestom.server.timer.Task;

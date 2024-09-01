@@ -1,7 +1,7 @@
 package net.endercube.parkour.inventories;
 
-import net.endercube.common.events.MinigamePlayerJoinEvent;
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.gamelib.events.MinigamePlayerJoinEvent;
+import net.endercube.global.EndercubePlayer;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-import static net.endercube.common.EndercubeMinigame.logger;
+import static net.endercube.gamelib.EndercubeMinigame.logger;
 import static net.endercube.parkour.ParkourMinigame.parkourMinigame;
 
 public class ParkourMapInventory {

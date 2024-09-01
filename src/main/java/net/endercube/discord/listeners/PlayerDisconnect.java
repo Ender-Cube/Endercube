@@ -1,7 +1,7 @@
 package net.endercube.discord.listeners;
 
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
-import net.endercube.common.players.EndercubePlayer;
+import net.endercube.global.EndercubePlayer;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerDisconnectEvent;

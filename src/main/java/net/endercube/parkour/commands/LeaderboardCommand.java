@@ -1,6 +1,6 @@
 package net.endercube.parkour.commands;
 
-import net.endercube.common.utils.ComponentUtils;
+import net.endercube.gamelib.utils.ComponentUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -15,7 +15,7 @@ import redis.clients.jedis.resps.Tuple;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.endercube.common.EndercubeMinigame.logger;
+import static net.endercube.gamelib.EndercubeMinigame.logger;
 import static net.endercube.parkour.ParkourMinigame.database;
 import static net.endercube.parkour.ParkourMinigame.parkourMinigame;
 

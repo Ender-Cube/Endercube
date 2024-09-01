@@ -1,8 +1,8 @@
 package net.endercube.spleef.minigame;
 
-import net.endercube.common.EndercubeMinigame;
-import net.endercube.common.EndercubeServer;
-import net.endercube.common.dimensions.FullbrightDimension;
+import net.endercube.gamelib.EndercubeMinigame;
+import net.endercube.gamelib.EndercubeServer;
+import net.endercube.gamelib.dimensions.FullbrightDimension;
 import net.endercube.spleef.minigame.commands.StatsCommand;
 import net.endercube.spleef.minigame.listeners.MinigamePlayerJoin;
 import net.endercube.spleef.minigame.listeners.MinigamePlayerLeave;
