@@ -5,7 +5,6 @@ import net.endercube.parkour.ParkourMinigame;
 import net.endercube.parkour.events.PlayerParkourPersonalBestEvent;
 import net.endercube.parkour.events.PlayerParkourWorldRecordEvent;
 import net.endercube.parkour.inventories.ParkourMapInventory;
-import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -89,13 +88,9 @@ public class PlayerMove implements EventListener<PlayerMoveEvent> {
 
             } else {
                 player.sendMessage(parkourMinigame.getChatPrefix()
-                        .append(Component.text("You've missed some checkpoints! Go back and grab them or use the"))
-                        .append(Component.text(" blaze powder ")
-                                .hoverEvent(HoverEvent.showItem(HoverEvent.ShowItem.showItem(Key.key("minecraft:blaze_powder"), 1)))
-                                .decorate(TextDecoration.BOLD)
-                        )
-                        .append(Component.text("to restart the course"))
+                        .append(Component.text("You've missed some checkpoints ☹ Sending you back to the start"))
                 );
+                ParkourMinigame.restartMap(player);
             }
             return Result.SUCCESS;
         }
