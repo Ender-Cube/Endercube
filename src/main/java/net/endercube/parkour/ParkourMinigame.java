@@ -51,6 +51,8 @@ public class ParkourMinigame extends EndercubeMinigame {
                 .addListener(new MinigamePlayerJoin())
                 .addListener(new MinigamePlayerLeave())
                 .addListener(new InventoryPreClick())
+                .addListener(new PlayerParkourPersonalBest())
+                .addListener(new PlayerParkourWorldRecord())
                 .addListener(PlayerSwapItemEvent.class, event -> event.setCancelled(true));
 
         try {

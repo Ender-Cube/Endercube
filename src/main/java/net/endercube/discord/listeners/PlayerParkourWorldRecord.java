@@ -18,11 +18,10 @@ public class PlayerParkourWorldRecord implements EventListener<PlayerParkourWorl
     @Override
     public @NotNull Result run(@NotNull PlayerParkourWorldRecordEvent event) {
         EndercubePlayer player = (EndercubePlayer) event.getPlayer();
-        // Send a test message
         webhookClient.send(new WebhookMessageBuilder()
                 .setUsername(player.getUsername()) // use this username
                 .setAvatarUrl("https://mc-heads.net/avatar/" + player.getUuid()) // use this avatar
-                .setContent(player.getUsername() + " Just got a new world record of " + ComponentUtils.toHumanReadableTime(event.record()) + " on " + event.map() + " \uD83C\uDF89")
+                .setContent(player.getUsername() + " Just got a new world record of " + ComponentUtils.toHumanReadableTime(event.time()) + " on " + event.map() + " \uD83C\uDF89")
                 .build());
         return Result.SUCCESS;
     }

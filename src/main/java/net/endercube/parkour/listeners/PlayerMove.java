@@ -2,6 +2,7 @@ package net.endercube.parkour.listeners;
 
 import net.endercube.global.EndercubePlayer;
 import net.endercube.parkour.ParkourMinigame;
+import net.endercube.parkour.events.PlayerParkourPersonalBestEvent;
 import net.endercube.parkour.events.PlayerParkourWorldRecordEvent;
 import net.endercube.parkour.inventories.ParkourMapInventory;
 import net.kyori.adventure.key.Key;
@@ -11,13 +12,11 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.title.Title;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerMoveEvent;
 import net.minestom.server.instance.Instance;
-import net.minestom.server.network.packet.server.play.EntityStatusPacket;
 import net.minestom.server.sound.SoundEvent;
 import net.minestom.server.tag.Tag;
 import net.minestom.server.timer.Scheduler;
@@ -26,7 +25,6 @@ import net.minestom.server.timer.TaskSchedule;
 import org.jetbrains.annotations.NotNull;
 import redis.clients.jedis.resps.Tuple;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 
@@ -181,23 +179,14 @@ public class PlayerMove implements EventListener<PlayerMoveEvent> {
         logger.debug("First place score is: " + firstPlace.getScore() + " by " + firstPlace.getElement());
         logger.debug("time taken is: " + timeTakenMS);
         if (Objects.equals(firstPlace.getElement(), player.getUsername()) && firstPlace.getScore() >= timeTakenMS) {
+            logger.debug("New WR");
             MinecraftServer.getGlobalEventHandler().call(new PlayerParkourWorldRecordEvent(player, mapName, timeTakenMS));
-            showWRAnimation();
             return;
         }
         if (newPB) {
-            player.sendMessage(parkourMinigame.getChatPrefix().append(Component.text("That run was a PB! Nice job")));
+            logger.debug("New PB");
+            MinecraftServer.getGlobalEventHandler().call(new PlayerParkourPersonalBestEvent(player, mapName, timeTakenMS));
+
         }
-    }
-
-    private void showWRAnimation() {
-        byte totemEffect = (byte) 35;
-        player.sendPacket(new EntityStatusPacket(player.getEntityId(), totemEffect));
-
-        final Title.Times times = Title.Times.times(Duration.ofMillis(100), Duration.ofMillis(1500), Duration.ofMillis(500));
-        final Title title = Title.title(Component.text("New world record!"), Component.empty(), times);
-        player.showTitle(title);
-
-        player.sendMessage(parkourMinigame.getChatPrefix().append(Component.text("That was a new world record!")));
     }
 }
