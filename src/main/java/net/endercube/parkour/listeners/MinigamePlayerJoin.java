@@ -59,7 +59,7 @@ public class MinigamePlayerJoin implements EventListener<MinigamePlayerJoinEvent
     private void addInventoryButtons(EndercubePlayer player) {
         player.getInventory().setItemStack(0, InventoryItems.CHECKPOINT_ITEM);
         player.getInventory().setItemStack(1, InventoryItems.RESTART_ITEM);
-        player.getInventory().setItemStack(4, InventoryItems.VISIBILITY_ITEM_INVISIBLE);
+        player.getInventory().setItemStack(4, InventoryItems.VISIBILITY_ITEM_VISIBLE);
         player.getInventory().setItemStack(8, InventoryItems.HUB_ITEM);
 
         switch (database.getGrindMode(player)) {
