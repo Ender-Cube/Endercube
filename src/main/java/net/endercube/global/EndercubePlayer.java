@@ -4,16 +4,16 @@ import net.endercube.gamelib.events.MinigamePlayerJoinEvent;
 import net.endercube.gamelib.events.MinigamePlayerLeaveEvent;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
+import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
 import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class EndercubePlayer extends Player {
-    public EndercubePlayer(@NotNull UUID uuid, @NotNull String username, @NotNull PlayerConnection playerConnection) {
-        super(uuid, username, playerConnection);
+    public EndercubePlayer(@NotNull PlayerConnection playerConnection, @NotNull GameProfile gameProfile) {
+        super(playerConnection, gameProfile);
     }
 
     /**

@@ -1,7 +1,7 @@
 package net.endercube.spleef.minigame.inventories;
 
-import dev.goldenstack.window.InventoryView;
 import net.endercube.gamelib.enums.Heads;
+import net.goldenstack.window.InventoryView;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.inventory.Inventory;

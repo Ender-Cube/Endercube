@@ -15,7 +15,7 @@ public class AsyncPlayerPreLogin implements EventListener<AsyncPlayerPreLoginEve
 
     @Override
     public @NotNull Result run(@NotNull AsyncPlayerPreLoginEvent event) {
-        EndercubePlayer player = (EndercubePlayer) event.getPlayer();
+        EndercubePlayer player = (EndercubePlayer) event.getConnection().getPlayer();
         if (isBanned(player)) {
             player.kick(getBanMessage(player));
             return Result.SUCCESS;

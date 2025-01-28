@@ -21,19 +21,18 @@ repositories {
 dependencies {
 
     // Minestom
-    implementation("net.minestom:minestom-snapshots:f1d5940855")
+    implementation("net.minestom:minestom-snapshots:32735340d7")
 
     // Polar
-    implementation("dev.hollowcube:polar:1.10.0")
+    implementation("dev.hollowcube:polar:1.12.2")
 
     // GoldenStack/window
-    implementation("com.github.GoldenStack:window:7617978")
-
+    implementation("net.goldenstack:window:1.1")
 
     // Kyori stuff (Adventure)
-    implementation("net.kyori:adventure-text-serializer-plain:4.16.0")
-    implementation("net.kyori:adventure-text-minimessage:4.16.0")
-    implementation("net.kyori:adventure-text-serializer-ansi:4.17.0")
+    implementation("net.kyori:adventure-text-serializer-plain:4.18.0")
+    implementation("net.kyori:adventure-text-minimessage:4.18.0")
+    implementation("net.kyori:adventure-text-serializer-ansi:4.18.0")
 
     // Configuration API
     implementation("org.spongepowered:configurate-hocon:4.1.2")
@@ -49,8 +48,6 @@ dependencies {
 
     // Apache Commons Lang
     implementation("org.apache.commons:commons-lang3:3.14.0")
-
-
 }
 
 java {
