@@ -10,13 +10,13 @@ import net.endercube.global.blocks.Sign;
 import net.endercube.global.blocks.Skull;
 import net.endercube.global.commands.DiscordCommand;
 import net.endercube.global.commands.GitHubCommand;
+import net.endercube.global.commands.GlistCommand;
 import net.endercube.global.commands.PerformanceCommand;
 import net.endercube.global.commands.admin.BanCommand;
 import net.endercube.global.commands.admin.KickCommand;
 import net.endercube.global.commands.admin.ResetParkourTimeCommand;
 import net.endercube.global.commands.admin.UnbanCommand;
 import net.endercube.global.listeners.AsyncPlayerConfiguration;
-import net.endercube.global.listeners.AsyncPlayerPreLogin;
 import net.endercube.global.listeners.PlayerDisconnect;
 import net.endercube.global.listeners.ServerTickMonitor;
 import net.endercube.hub.HubMinigame;
@@ -48,7 +48,6 @@ public class Main {
                 .addGlobalEvent(new AsyncPlayerConfiguration())
                 .addGlobalEvent(new PlayerDisconnect())
                 .addGlobalEvent(new ServerTickMonitor())
-                .addGlobalEvent(new AsyncPlayerPreLogin())
                 .addBlockHandler(NamespaceID.from("minecraft:sign"), Sign::new)
                 .addBlockHandler(NamespaceID.from("minecraft:skull"), Skull::new)
                 .startServer();

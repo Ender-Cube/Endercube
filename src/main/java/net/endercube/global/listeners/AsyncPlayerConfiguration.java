@@ -15,8 +15,7 @@ import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static net.endercube.Main.endercubeServer;
-import static net.endercube.Main.logger;
+import static net.endercube.Main.*;
 
 public class AsyncPlayerConfiguration implements EventListener<AsyncPlayerConfigurationEvent> {
     @Override
@@ -42,14 +41,11 @@ public class AsyncPlayerConfiguration implements EventListener<AsyncPlayerConfig
             return Result.SUCCESS;
         }
 
-        // Tell players, and the log, that someone joined
-        Component playerJoinMessage = player
-                .getName()
-                .append(Component.text(" joined the server"))
-                .color(NamedTextColor.YELLOW);
+        // Kick banned players
+        handleBans(player); // TODO: Test this
 
-        Audiences.players().sendMessage(playerJoinMessage);
-        logger.info(ANSIComponentSerializer.ansi().serialize(playerJoinMessage));
+        // Tell players, and the log, that someone joined
+        announceJoin(player);
 
         // Set the spawning instance and position
         event.setSpawningInstance(hubMinigame.getInstances().getFirst());
@@ -62,6 +58,37 @@ public class AsyncPlayerConfiguration implements EventListener<AsyncPlayerConfig
         player.setCurrentMinigame("hub");
 
         player.setGameMode(GameMode.ADVENTURE);
+
+
         return Result.SUCCESS;
+    }
+
+    /**
+     * Sends a message to all players and the logger that someone joined
+     *
+     * @param player The player that joined
+     */
+    private void announceJoin(EndercubePlayer player) {
+        Component playerJoinMessage = player
+                .getName()
+                .append(Component.text(" joined the server"))
+                .color(NamedTextColor.YELLOW);
+
+        Audiences.players().sendMessage(playerJoinMessage);
+        logger.info(ANSIComponentSerializer.ansi().serialize(playerJoinMessage));
+    }
+
+    private void handleBans(EndercubePlayer player) {
+        if (isBanned(player)) {
+            player.kick(getBanMessage(player));
+        }
+    }
+
+    private boolean isBanned(@NotNull EndercubePlayer player) {
+        return jedis.exists("banned:" + player.getUuid());
+    }
+
+    private String getBanMessage(@NotNull EndercubePlayer player) {
+        return jedis.get("banned:" + player.getUuid());
     }
 }
