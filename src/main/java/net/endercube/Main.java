@@ -82,5 +82,6 @@ public class Main {
         MinecraftServer.getCommandManager().register(new DiscordCommand());
         MinecraftServer.getCommandManager().register(new PerformanceCommand());
         MinecraftServer.getCommandManager().register(new GitHubCommand());
+        MinecraftServer.getCommandManager().register(new GlistCommand());
     }
 }

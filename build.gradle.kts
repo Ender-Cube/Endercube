@@ -47,7 +47,8 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.5.6")
 
     // Apache Commons Lang
-    implementation("org.apache.commons:commons-lang3:3.14.0")
+    implementation("org.apache.commons:commons-lang3:3.17.0")
+    implementation("org.apache.commons:commons-collections4:4.5.0-M3")
 }
 
 java {
