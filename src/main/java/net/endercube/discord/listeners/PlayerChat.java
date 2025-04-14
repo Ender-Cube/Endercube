@@ -16,7 +16,7 @@ public class PlayerChat implements EventListener<PlayerChatEvent> {
     public @NotNull Result run(@NotNull PlayerChatEvent event) {
         String message = event.getRawMessage();
         EndercubePlayer player = (EndercubePlayer) event.getPlayer();
-        Discord.sendMessage(player, message);
+        Discord.discordWebhook.sendMessage(player, message);
 
         return Result.SUCCESS;
     }

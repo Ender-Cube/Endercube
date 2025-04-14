@@ -16,7 +16,7 @@ public class PlayerParkourWorldRecord implements EventListener<PlayerParkourWorl
     @Override
     public @NotNull Result run(@NotNull PlayerParkourWorldRecordEvent event) {
         EndercubePlayer player = (EndercubePlayer) event.getPlayer();
-        Discord.sendMessage(
+        Discord.discordWebhook.sendMessage(
                 player,
                 player.getUsername()
                         + " Just got a new world record of "

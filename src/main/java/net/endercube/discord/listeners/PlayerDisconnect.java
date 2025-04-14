@@ -16,7 +16,7 @@ public class PlayerDisconnect implements EventListener<PlayerDisconnectEvent> {
     @Override
     public @NotNull Result run(@NotNull PlayerDisconnectEvent event) {
         EndercubePlayer player = (EndercubePlayer) event.getPlayer();
-        Discord.sendMessage(player, "I just left the server :( (" + MinecraftServer.getConnectionManager().getOnlinePlayerCount() + ")");
+        Discord.discordWebhook.sendMessage(player, "I just left the server :( (" + MinecraftServer.getConnectionManager().getOnlinePlayerCount() + ")");
         return Result.SUCCESS;
     }
 }

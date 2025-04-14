@@ -16,7 +16,7 @@ public class AsyncPlayerConfiguration implements EventListener<AsyncPlayerConfig
     @Override
     public @NotNull Result run(@NotNull AsyncPlayerConfigurationEvent event) {
         EndercubePlayer player = (EndercubePlayer) event.getPlayer();
-        Discord.sendMessage(player, "I just joined the server! (" + (MinecraftServer.getConnectionManager().getOnlinePlayerCount() + 1) + ")");
+        Discord.discordWebhook.sendMessage(player, "I just joined the server! (" + (MinecraftServer.getConnectionManager().getOnlinePlayerCount() + 1) + ")");
         return Result.SUCCESS;
     }
 }
