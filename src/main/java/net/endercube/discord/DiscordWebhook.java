@@ -2,6 +2,7 @@ package net.endercube.discord;
 
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
+import club.minnced.discord.webhook.send.AllowedMentions;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import net.endercube.gamelib.config.ConfigFile;
 import net.endercube.global.EndercubePlayer;
@@ -41,6 +42,7 @@ public class DiscordWebhook {
                 // use the player's head as the avatar
                 .setAvatarUrl("https://mc-heads.net/avatar/" + player.getUuid())
                 .setContent(message)
+                .setAllowedMentions(AllowedMentions.none())
                 .build()
         );
     }
@@ -51,6 +53,7 @@ public class DiscordWebhook {
                 // use the Endercube logo as the avatar
                 .setAvatarUrl("https://raw.githubusercontent.com/Ender-Cube/Branding/main/Logo/EndercubeSquare_1024x1024.png")
                 .setContent(message)
+                .setAllowedMentions(AllowedMentions.none())
                 .build()
         );
     }
