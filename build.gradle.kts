@@ -40,8 +40,12 @@ dependencies {
     // Jedis (Redis lib)
     implementation("redis.clients:jedis:6.0.0-beta2")
 
-    // Discord lib
+    // Discord libs
     implementation("club.minnced:discord-webhooks:0.8.4")
+    implementation("net.dv8tion:JDA:5.3.2") {
+        // Optionally disable audio natives to reduce jar size by excluding `opus-java`
+        exclude(module = "opus-java")
+    }
 
     // Logger
     implementation("ch.qos.logback:logback-classic:1.5.18")

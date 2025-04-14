@@ -2,8 +2,9 @@ package net.endercube.discord;
 
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
-import club.minnced.discord.webhook.send.WebhookMessageBuilder;
+import net.endercube.discord.bot.DiscordBot;
 import net.endercube.discord.listeners.AsyncPlayerConfiguration;
+import net.endercube.discord.listeners.PlayerChat;
 import net.endercube.discord.listeners.PlayerDisconnect;
 import net.endercube.discord.listeners.PlayerParkourWorldRecord;
 import net.endercube.gamelib.config.ConfigFile;
@@ -14,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class Discord {
 
     public static Logger logger;
-    public static WebhookClient webhookClient;
+    public static DiscordWebhook discordWebhook;
     private static final ConfigFile config;
 
     static {
@@ -26,6 +27,27 @@ public class Discord {
         logger.info("Initialising Discord integration");
 
         // Initialise a webhookClient
+        discordWebhook = new DiscordWebhook();
+
+        // Init the Discord bot
+        DiscordBot.initDiscordBot();
+
+
+        // Register Events
+        MinecraftServer.getGlobalEventHandler()
+                .addListener(new AsyncPlayerConfiguration())
+                .addListener(new PlayerChat())
+                .addListener(new PlayerDisconnect())
+                .addListener(new PlayerParkourWorldRecord());
+
+        // Say the server has started
+        discordWebhook.sendServerMessage("The server has started!");
+
+        // Say when the server has stopped
+        Runtime.getRuntime().addShutdownHook((new Thread(() -> discordWebhook.sendServerMessage("The server is shutting down :("))));
+    }
+
+    private static WebhookClient initWebhook() {
         WebhookClientBuilder builder = new WebhookClientBuilder(
                 config.getOrSetDefault(config.getConfig().node("webhookURL"), "<The webhook's url>")
         );
@@ -38,28 +60,6 @@ public class Discord {
         });
         builder.setWait(true);
 
-        webhookClient = builder.build();
-
-        // Register Events
-        MinecraftServer.getGlobalEventHandler()
-                .addListener(new PlayerDisconnect())
-                .addListener(new PlayerParkourWorldRecord())
-                .addListener(new AsyncPlayerConfiguration());
-
-        // Say the server has started
-        webhookClient.send(new WebhookMessageBuilder()
-                .setUsername("Endercube") // use this username
-                .setAvatarUrl("https://raw.githubusercontent.com/Ender-Cube/Branding/main/Logo/EndercubeSquare_1024x1024.png")
-                .setContent("The server has started!")
-                .build());
-
-        // Say when the server has stopped
-        Runtime.getRuntime().addShutdownHook((new Thread(() -> {
-            webhookClient.send(new WebhookMessageBuilder()
-                    .setUsername("Endercube") // use this username
-                    .setAvatarUrl("https://raw.githubusercontent.com/Ender-Cube/Branding/main/Logo/EndercubeSquare_1024x1024.png") // use this avatar
-                    .setContent("The server is shutting down :(")
-                    .build());
-        })));
+        return builder.build();
     }
 }
