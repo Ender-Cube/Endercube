@@ -117,7 +117,7 @@ public class ConfigFile {
             logger.warn("Please set a name for the map above");
         }
 
-        Material material = Material.fromNamespaceId(materialString);
+        Material material = Material.fromKey(materialString);
 
         if (material == null) {
             logger.warn("The material, " + materialString + " in config of the map above is invalid");

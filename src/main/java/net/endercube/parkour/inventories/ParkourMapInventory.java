@@ -122,7 +122,7 @@ public class ParkourMapInventory {
             String mapName = mapInstance.getTag(Tag.String("name"));
             int mapOrder = mapInstance.getTag(Tag.Integer("order"));
 
-            Material UIMaterial = Material.fromNamespaceId(mapInstance.getTag(Tag.String("UI_material")));
+            Material UIMaterial = Material.fromKey(mapInstance.getTag(Tag.String("UI_material")));
             if (UIMaterial == null) {
                 logger.error("The material for " + mapName + " is incorrect");
                 return;

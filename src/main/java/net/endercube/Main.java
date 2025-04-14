@@ -22,8 +22,8 @@ import net.endercube.global.listeners.ServerTickMonitor;
 import net.endercube.hub.HubMinigame;
 import net.endercube.parkour.ParkourMinigame;
 import net.endercube.spleef.minigame.SpleefMinigame;
+import net.kyori.adventure.key.Key;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +48,8 @@ public class Main {
                 .addGlobalEvent(new AsyncPlayerConfiguration())
                 .addGlobalEvent(new PlayerDisconnect())
                 .addGlobalEvent(new ServerTickMonitor())
-                .addBlockHandler(NamespaceID.from("minecraft:sign"), Sign::new)
-                .addBlockHandler(NamespaceID.from("minecraft:skull"), Skull::new)
+                .addBlockHandler(Key.key("minecraft:sign"), Sign::new)
+                .addBlockHandler(Key.key("minecraft:skull"), Skull::new)
                 .startServer();
 
         endercubeServer

@@ -3,6 +3,7 @@ package net.endercube.gamelib;
 import ch.qos.logback.classic.Level;
 import net.endercube.gamelib.config.ConfigFile;
 import net.endercube.global.EndercubePlayer;
+import net.kyori.adventure.key.Key;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.Event;
 import net.minestom.server.event.EventListener;
@@ -10,7 +11,6 @@ import net.minestom.server.event.EventNode;
 import net.minestom.server.extras.MojangAuth;
 import net.minestom.server.extras.velocity.VelocityProxy;
 import net.minestom.server.instance.block.BlockHandler;
-import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -86,7 +86,7 @@ public class EndercubeServer {
     public static class EndercubeServerBuilder {
         private final EventNode<Event> globalEvents;
         private ConfigFile globalConfig;
-        private HashMap<NamespaceID, Supplier<BlockHandler>> blockHandlers = new HashMap<>();
+        private HashMap<Key, Supplier<BlockHandler>> blockHandlers = new HashMap<>();
 
         public EndercubeServerBuilder() {
             globalEvents = EventNode.all("globalListeners");
@@ -123,7 +123,7 @@ public class EndercubeServer {
          * @param handlerSupplier THe handler for this block
          * @return The builder
          */
-        public EndercubeServerBuilder addBlockHandler(NamespaceID namespace, Supplier<BlockHandler> handlerSupplier) {
+        public EndercubeServerBuilder addBlockHandler(Key namespace, Supplier<BlockHandler> handlerSupplier) {
             // Add block handlers
             blockHandlers.put(namespace, handlerSupplier);
             return this;
@@ -168,7 +168,7 @@ public class EndercubeServer {
             MinecraftServer.getGlobalEventHandler().addChild(globalEvents);
 
             // Init block handlers
-            for (Map.Entry<NamespaceID, Supplier<BlockHandler>> entry : blockHandlers.entrySet()) {
+            for (Map.Entry<Key, Supplier<BlockHandler>> entry : blockHandlers.entrySet()) {
                 MinecraftServer.getBlockManager().registerHandler(entry.getKey(), entry.getValue());
                 logger.debug("Added a block handler for " + entry.getKey());
             }
