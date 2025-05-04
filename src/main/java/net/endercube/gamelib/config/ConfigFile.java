@@ -3,9 +3,9 @@ package net.endercube.gamelib.config;
 import io.leangen.geantyref.TypeToken;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
-import net.minestom.server.item.ItemComponent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import org.jetbrains.annotations.Nullable;
@@ -124,7 +124,7 @@ public class ConfigFile {
             return null;
         }
 
-        return ItemStack.of(material).with(ItemComponent.CUSTOM_NAME, MiniMessage.miniMessage().deserialize(name));
+        return ItemStack.of(material).with(DataComponents.CUSTOM_NAME, MiniMessage.miniMessage().deserialize(name));
     }
 
     @Nullable

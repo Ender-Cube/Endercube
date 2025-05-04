@@ -74,7 +74,7 @@ public class EndercubeServer {
     }
 
     @NotNull
-    public JedisPooled getJedisPooled() {
+    public JedisPooled createJedis() {
         String jedisURL = globalConfig.getOrSetDefault(globalConfig.getConfig().node("database", "redis", "url"), "localhost");
         int jedisPort = Integer.parseInt(globalConfig.getOrSetDefault(globalConfig.getConfig().node("database", "redis", "port"), "6379"));
         return new JedisPooled(jedisURL, jedisPort);
@@ -173,7 +173,7 @@ public class EndercubeServer {
                 logger.debug("Added a block handler for " + entry.getKey());
             }
 
-            initEncryption(encryptionMode, getVelocitySecret());
+            initEncryption(encryptionMode);
 
             // Start server
             minecraftServer.start("0.0.0.0", port);
@@ -190,12 +190,14 @@ public class EndercubeServer {
             VELOCITY
         }
 
-        private void initEncryption(EncryptionMode mode, String velocitySecret) {
+        private void initEncryption(EncryptionMode mode) {
             switch (mode) {
                 case ONLINE -> MojangAuth.init();
                 case OFFLINE -> {
                 }
                 case VELOCITY -> {
+                    String velocitySecret = getVelocitySecret();
+
                     if (!Objects.equals(velocitySecret, "")) {
                         VelocityProxy.enable(velocitySecret);
                         logger.debug("Velocity enabled: " + VelocityProxy.isEnabled());

@@ -9,7 +9,6 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.Command;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
 
@@ -31,7 +30,7 @@ public class GlistCommand extends Command {
                     .forEach((minigame, playerNames) -> {
                         sender.sendMessage(
                                 ComponentUtils.getTitle(Component.text("Players"))
-                                        .append(Component.text(StringUtils.capitalize(minigame))
+                                        .append(Component.text(ComponentUtils.capitalize(minigame))
                                                 .color(NamedTextColor.AQUA)
                                         )
                                         .append(Component.text(": ")
