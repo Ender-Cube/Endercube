@@ -86,6 +86,9 @@ public class ParkourMapInventory {
         setState("easy", null);
     }
 
+    /**
+     * Event handler for InventoryPreClickEvent
+     */
     private void inventoryHandler(InventoryPreClickEvent event) {
         EndercubePlayer player = (EndercubePlayer) event.getPlayer();
         // Stop items from being moved around
