@@ -7,12 +7,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.component.DataComponents;
 import net.minestom.server.entity.Player;
+import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.Inventory;
 import net.minestom.server.inventory.InventoryType;
-import net.minestom.server.inventory.click.ClickType;
-import net.minestom.server.inventory.condition.InventoryConditionResult;
-import net.minestom.server.item.ItemComponent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.sound.SoundEvent;
@@ -44,19 +43,19 @@ public class ParkourMapInventory {
 
         // Add the top buttons
         itemStacks[3] = ItemStack.of(Material.GREEN_CONCRETE)
-                .with(ItemComponent.CUSTOM_NAME,
+                .with(DataComponents.CUSTOM_NAME,
                         Component.text("Easy Maps")
                                 .color(NamedTextColor.GREEN)
                 );
 
         itemStacks[4] = ItemStack.of(Material.ORANGE_CONCRETE)
-                .with(ItemComponent.CUSTOM_NAME,
+                .with(DataComponents.CUSTOM_NAME,
                         Component.text("Medium Maps")
                                 .color(NamedTextColor.GREEN)
                 );
 
         itemStacks[5] = ItemStack.of(Material.RED_CONCRETE)
-                .with(ItemComponent.CUSTOM_NAME,
+                .with(DataComponents.CUSTOM_NAME,
                         Component.text("Hard Maps")
                                 .color(NamedTextColor.GREEN)
                 );
@@ -64,7 +63,7 @@ public class ParkourMapInventory {
         // Add the hub button if it's configured
         if (hubButton) {
             itemStacks[44] = ItemStack.of(Material.RED_BED)
-                    .with(ItemComponent.CUSTOM_NAME,
+                    .with(DataComponents.CUSTOM_NAME,
                             Component.text("Back to hub")
                                     .color(NamedTextColor.RED)
                     );
@@ -74,8 +73,12 @@ public class ParkourMapInventory {
         // put the contents of the itemStack in to the inventory
         inventory.copyContents(itemStacks);
 
-        // Add the inventory condition for all the events of this inventory
-        inventory.addInventoryCondition(this::inventoryCondition);
+        // Add the handler for all the click events of this inventory
+        MinecraftServer.getGlobalEventHandler().addListener(InventoryPreClickEvent.class, event -> {
+            if (event.getInventory() == inventory) {
+                this.inventoryHandler(event);
+            }
+        });
 
         this.inventory = inventory;
 
@@ -83,21 +86,24 @@ public class ParkourMapInventory {
         setState("easy", null);
     }
 
-    private void inventoryCondition(Player badPlayer, int slot, ClickType clickType, InventoryConditionResult inventoryConditionResult) {
-        EndercubePlayer player = (EndercubePlayer) badPlayer;
+    /**
+     * Event handler for InventoryPreClickEvent
+     */
+    private void inventoryHandler(InventoryPreClickEvent event) {
+        EndercubePlayer player = (EndercubePlayer) event.getPlayer();
         // Stop items from being moved around
-        inventoryConditionResult.setCancel(true);
+        event.setCancelled(true);
 
-        if (inventoryConditionResult.getClickedItem() == ItemStack.AIR) return;
+        if (event.getClickedItem() == ItemStack.AIR) return;
 
         // Deal with sending a player to a map
-        if (Arrays.stream(mapSlots).anyMatch(i -> i == slot)) {
-            String map = inventory.getItemStack(slot).getTag(Tag.String("map"));
+        if (Arrays.stream(mapSlots).anyMatch(i -> i == event.getSlot())) {
+            String map = inventory.getItemStack(event.getSlot()).getTag(Tag.String("map"));
             sendToMap(player, map);
             player.sendMessage(parkourMinigame.getChatPrefix().append(Component.text("Sending you to " + map)));
         }
 
-        switch (slot) {
+        switch (event.getSlot()) {
             case 3 -> setState("easy", player);
             case 4 -> setState("medium", player);
             case 5 -> setState("hard", player);
@@ -105,7 +111,6 @@ public class ParkourMapInventory {
                 if (hubButton) {
                     player.gotoHub();
                 }
-
             }
         }
     }
@@ -130,7 +135,7 @@ public class ParkourMapInventory {
 
             pre_maps.add(
                     ItemStack.of(UIMaterial)
-                            .with(ItemComponent.CUSTOM_NAME, MiniMessage.miniMessage().deserialize(mapInstance.getTag(Tag.String("UI_name"))))
+                            .with(DataComponents.CUSTOM_NAME, MiniMessage.miniMessage().deserialize(mapInstance.getTag(Tag.String("UI_name"))))
                             .withTag(Tag.String("map"), mapName)
                             .withTag(Tag.Integer("order"), mapOrder)
             );
@@ -152,12 +157,12 @@ public class ParkourMapInventory {
         if (state) {
             inventory.setItemStack(
                     slot,
-                    inventory.getItemStack(slot).with(ItemComponent.ENCHANTMENT_GLINT_OVERRIDE, true)
+                    inventory.getItemStack(slot).with(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
             );
         } else {
             inventory.setItemStack(
                     slot,
-                    inventory.getItemStack(slot).with(ItemComponent.ENCHANTMENT_GLINT_OVERRIDE, false)
+                    inventory.getItemStack(slot).with(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false)
             );
         }
 

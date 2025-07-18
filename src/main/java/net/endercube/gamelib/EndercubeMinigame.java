@@ -4,6 +4,7 @@ import net.endercube.gamelib.commands.GenericRootCommand;
 import net.endercube.gamelib.config.ConfigFile;
 import net.endercube.gamelib.database.AbstractDatabase;
 import net.endercube.gamelib.events.eventTypes.PlayerMinigameEvent;
+import net.endercube.gamelib.utils.ComponentUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -15,7 +16,6 @@ import net.minestom.server.event.EventFilter;
 import net.minestom.server.event.EventNode;
 import net.minestom.server.event.trait.InstanceEvent;
 import net.minestom.server.instance.InstanceContainer;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -100,7 +100,7 @@ public abstract class EndercubeMinigame {
     public TextComponent getChatPrefix() {
         return Component.text("")
                 .append(Component.text("[").color(NamedTextColor.DARK_GRAY))
-                .append(Component.text(StringUtils.capitalize(this.getName())).color(NamedTextColor.AQUA).decorate(TextDecoration.BOLD))
+                .append(Component.text(ComponentUtils.capitalize(this.getName())).color(NamedTextColor.AQUA).decorate(TextDecoration.BOLD))
                 .append(Component.text("] ").color(NamedTextColor.DARK_GRAY));
     }
 
@@ -136,6 +136,6 @@ public abstract class EndercubeMinigame {
      * @return An instance of the database
      */
     public <T extends AbstractDatabase> T createDatabase(Class<T> clazz) throws Exception {
-        return clazz.getConstructor(JedisPooled.class, String.class).newInstance(this.getEndercubeServer().getJedisPooled(), this.getName());
+        return clazz.getConstructor(JedisPooled.class, String.class).newInstance(this.getEndercubeServer().createJedis(), this.getName());
     }
 }

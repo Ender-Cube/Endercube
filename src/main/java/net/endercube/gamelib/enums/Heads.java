@@ -1,7 +1,7 @@
 package net.endercube.gamelib.enums;
 
+import net.minestom.server.component.DataComponents;
 import net.minestom.server.entity.PlayerSkin;
-import net.minestom.server.item.ItemComponent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.item.component.HeadProfile;
@@ -33,6 +33,6 @@ public enum Heads {
      */
     public ItemStack getItemStack() {
         PlayerSkin playerSkin = new PlayerSkin(Base64.getEncoder().encodeToString(("{textures:{SKIN:{url:\"https://textures.minecraft.net/texture/" + mcURL + "\"}}}").getBytes()), "");
-        return ItemStack.of(Material.PLAYER_HEAD).with(ItemComponent.PROFILE, new HeadProfile(playerSkin));
+        return ItemStack.of(Material.PLAYER_HEAD).with(DataComponents.PROFILE, new HeadProfile(playerSkin));
     }
 }

@@ -57,7 +57,7 @@ public class Main {
                 .addMinigame(new SpleefMinigame(endercubeServer))
                 .addMinigame(new HubMinigame(endercubeServer));
 
-        jedis = endercubeServer.getJedisPooled();
+        jedis = endercubeServer.createJedis();
 
         permissionManager = new PermissionManager();
         final UUID ZAX71_UUID = UUID.fromString("aa64173b-924d-42d0-a8fc-611a46a70258");

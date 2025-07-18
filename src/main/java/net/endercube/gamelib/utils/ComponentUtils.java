@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 /**
  * Utilities for Components
@@ -23,6 +24,36 @@ public final class ComponentUtils {
     }
 
     private final static int CENTER_PX = 154;
+
+    /**
+     * @author Apache Commons
+     */
+    public static String capitalize(String string) {
+        int length = string.length();
+
+        if (length == 0) {
+            return string;
+        } else {
+            int firstCodepoint = string.codePointAt(0);
+            int newCodePoint = Character.toTitleCase(firstCodepoint);
+
+            if (firstCodepoint == newCodePoint) {
+                return string;
+            } else {
+                int[] newCodePoints = new int[length];
+                int outOffset = 0;
+                newCodePoints[outOffset++] = newCodePoint;
+                int codePoint;
+
+                for(int inOffset = Character.charCount(firstCodepoint); inOffset < length; inOffset += Character.charCount(codePoint)) {
+                    codePoint = string.codePointAt(inOffset);
+                    newCodePoints[outOffset++] = codePoint;
+                }
+
+                return new String(newCodePoints, 0, outOffset);
+            }
+        }
+    }
 
     public static Component getTitle(Component text) {
         final int LINE_SIZE = 10;
@@ -51,110 +82,17 @@ public final class ComponentUtils {
     }
 
     /**
-     * @inheritDoc
+     * @see <a href="https://discord.com/channels/706185253441634317/1001092833677152397/1326883302455640104">Discord</a>
      */
-    public static String convertToSmallCaps(String input) {
-        char[] outChars = new char[input.length()];
-        int i = 0;
-        for (char currentChar : input.toCharArray()) {
-            outChars[i] = convertToSmallCaps(currentChar);
-            i++;
-        }
+    public static String convertToSmallCaps(String string) {
+        var input = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        var output = "₀₁₂₃₄₅₆₇₈₉ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀꜱᴛᴜᴠᴡxʏᴢᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀꜱᴛᴜᴠᴡxʏᴢ";
 
-        return new String(outChars);
-    }
-
-    /**
-     * Converts any upper or lower case char to its small caps equivalent. Just returns the input char if it is not a letter
-     *
-     * @param inputChar The char to modify
-     * @return The small caps version of the input char
-     */
-    public static char convertToSmallCaps(char inputChar) {
-        inputChar = Character.toLowerCase(inputChar);
-        switch (inputChar) {
-            case 'a' -> {
-                return 'ᴀ';
-            }
-            case 'b' -> {
-                return 'ʙ';
-            }
-            case 'c' -> {
-                return 'ᴄ';
-            }
-            case 'd' -> {
-                return 'ᴅ';
-            }
-            case 'e' -> {
-                return 'ᴇ';
-            }
-            case 'f' -> {
-                return 'ғ';
-            }
-            case 'g' -> {
-                return 'ɢ';
-            }
-            case 'h' -> {
-                return 'ʜ';
-            }
-            case 'i' -> {
-                return 'ɪ';
-            }
-            case 'j' -> {
-                return 'ᴊ';
-            }
-            case 'k' -> {
-                return 'ᴋ';
-            }
-            case 'l' -> {
-                return 'ʟ';
-            }
-            case 'm' -> {
-                return 'ᴍ';
-            }
-            case 'n' -> {
-                return 'ɴ';
-            }
-            case 'o' -> {
-                return 'ᴏ';
-            }
-            case 'p' -> {
-                return 'ǫ';
-            }
-            case 'q' -> {
-                return 'ǫ';
-            }
-            case 'r' -> {
-                return 'ʀ';
-            }
-            case 's' -> {
-                return 's';
-            }
-            case 't' -> {
-                return 'ᴛ';
-            }
-            case 'u' -> {
-                return 'ᴜ';
-            }
-            case 'v' -> {
-                return 'ᴠ';
-            }
-            case 'w' -> {
-                return 'ᴡ';
-            }
-            case 'x' -> {
-                return 'x';
-            }
-            case 'y' -> {
-                return 'ʏ';
-            }
-            case 'z' -> {
-                return 'ᴢ';
-            }
-            default -> {
-                return inputChar;
-            }
-        }
+        return string.chars()
+                .mapToObj(character -> "" + (input.indexOf(character) < 0
+                        ? (char) character
+                        : output.charAt(input.indexOf(character))))
+                .collect(Collectors.joining());
     }
 
     /**
