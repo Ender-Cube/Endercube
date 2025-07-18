@@ -1,7 +1,6 @@
 plugins {
-    java
-    application
-    id("com.gradleup.shadow") version "9.0.0-beta13"
+    id("java")
+    id("com.gradleup.shadow") version "8.3.0"
 }
 
 group = "net.endercube"
@@ -52,16 +51,24 @@ dependencies {
     implementation("org.apache.commons:commons-collections4:4.5.0")
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
-application.mainClass = "net.endercube.Main"
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21)) // Minestom has a minimum Java version of 21
+    }
+}
 
 tasks {
+    jar {
+        manifest {
+            attributes["Main-Class"] = "net.endercube.Main" // Change this to your main class
+        }
+    }
+
     build {
         dependsOn(shadowJar)
     }
-
     shadowJar {
         mergeServiceFiles()
-        archiveClassifier.set("") // Prevent the -all suffix
+        archiveClassifier.set("") // Prevent the -all suffix on the shadowjar file.
     }
 }
